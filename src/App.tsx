@@ -8,7 +8,7 @@ function App() {
     <BrowserRouter>
       <GlobalStyle />
       <Routes>
-        <Route path="/" element={<Home />} />
+        <Route path="/exam" element={<Home />} />
         <Route path="*" element={<div>Not Found!</div>} />
       </Routes>
     </BrowserRouter>
