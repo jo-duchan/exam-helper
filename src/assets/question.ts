@@ -1,4 +1,5 @@
 const question = [
+  // 네트워크
   {
     Q: ["IoT", "Internet of Things", "사물 인터넷"],
     A: "정보 통신 기술을 기반으로 실세계(Physical World)와 가상 세계(Virtual World)의 다양한 사물들을 인터넷으로 서로 연결하여 진보된 서비스를 제공하기 위한 서비스 기반 기술.",
