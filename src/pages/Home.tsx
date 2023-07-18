@@ -51,7 +51,7 @@ function Home() {
   const confirmHandler = () => {
     const grading = () => {
       setCorrectAnswer(question[qNum].Q);
-      return question[qNum].Q.filter((Q) => Q.includes(value));
+      return question[qNum].Q.filter((Q) => Q === value);
     };
     // console.log(grading().length);
 
@@ -75,9 +75,8 @@ function Home() {
   return (
     <Container>
       <Header>
-        <Score>
-          <Correct>Score: {correct}</Correct>/<Incorrect>{incorrect}</Incorrect>
-        </Score>
+        <Correct>Score: {correct}</Correct>
+        <Incorrect>Miss: {incorrect}</Incorrect>
         <Stage>Stage: {stage}</Stage>
       </Header>
       <InnerWrapper>
@@ -134,7 +133,7 @@ const Header = styled.div`
   gap: 20px;
   align-items: center;
   justify-content: flex-end;
-  padding-inline: 24px;
+  padding-inline: 8vw;
   box-sizing: border-box;
 `;
 
@@ -174,6 +173,7 @@ const Question = styled.div`
 
 const Correctanswer = styled.div`
   display: flex;
+  flex-wrap: wrap;
   gap: 5px;
   font-size: 12px;
 `;
