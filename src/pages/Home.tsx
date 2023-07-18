@@ -13,6 +13,7 @@ function Home() {
   const [incorrect, setIncorrect] = useState(0);
   const [stage, setStage] = useState(0);
   const [state, setState] = useState<"GOOD" | "BAD">("GOOD");
+  const [correctAnswer, setCorrectAnswer] = useState<string[]>([]);
   const qLength = question.length;
 
   useEffect(() => {
@@ -44,7 +45,13 @@ function Home() {
   };
 
   const confirmHandler = () => {
-    if (question[qNum].Q === value) {
+    const grading = () => {
+      setCorrectAnswer(question[qNum].Q);
+      return question[qNum].Q.filter((Q) => Q.includes(value));
+    };
+
+    if (grading()[0]) {
+      console.log("right");
       setState("GOOD");
       setCorrect((prev) => (prev += 1));
     } else {
@@ -69,6 +76,16 @@ function Home() {
         <QuestionWrapper>
           <Label>문제</Label>
           <Question>{question[qNum].A}</Question>
+
+          {state === "BAD" && (
+            <Correctanswer>
+              {correctAnswer.map((ctx, idx) => (
+                <span key={idx}>
+                  {ctx} {correctAnswer.length !== idx + 1 && "/"}
+                </span>
+              ))}
+            </Correctanswer>
+          )}
         </QuestionWrapper>
         <Input
           type="text"
@@ -141,6 +158,12 @@ const Question = styled.div`
   border-radius: 6px;
   font-size: 14px;
   letter-spacing: -0.02em;
+`;
+
+const Correctanswer = styled.div`
+  display: flex;
+  gap: 5px;
+  font-size: 12px;
 `;
 
 const Label = styled.span`
