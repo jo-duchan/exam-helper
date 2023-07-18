@@ -12,6 +12,7 @@ function Home() {
   const [correct, setCorrect] = useState(0);
   const [incorrect, setIncorrect] = useState(0);
   const [stage, setStage] = useState(0);
+  const [overlap, setOverlap] = useState<number[]>([]);
   const [state, setState] = useState<"GOOD" | "BAD">("GOOD");
   const [correctAnswer, setCorrectAnswer] = useState<string[]>([]);
   const qLength = question.length;
@@ -22,18 +23,21 @@ function Home() {
   }, []);
 
   useEffect(() => {
-    if (stage >= 10) {
+    if (stage >= 20) {
       setCorrect(0);
       setIncorrect(0);
       setStage(0);
+      setCorrectAnswer([]);
       nextHandler();
     }
   }, [stage]);
 
   const nextHandler = () => {
     const testNum = Math.floor(Math.random() * qLength);
-
-    if (qNum !== testNum) {
+    const overlapCheck = overlap.filter(
+      (num) => num === qNum || num === testNum
+    ).length;
+    if (overlapCheck === 0 && qNum !== testNum) {
       SetQNum(testNum);
     } else {
       nextHandler();
@@ -49,11 +53,15 @@ function Home() {
       setCorrectAnswer(question[qNum].Q);
       return question[qNum].Q.filter((Q) => Q.includes(value));
     };
+    // console.log(grading().length);
 
-    if (grading()[0]) {
+    if (grading().length > 0) {
       console.log("right");
       setState("GOOD");
       setCorrect((prev) => (prev += 1));
+      setOverlap((prev) => {
+        return [...prev, qNum];
+      });
     } else {
       console.log("miss");
       setState("BAD");
@@ -117,7 +125,7 @@ const Container = styled.div`
 `;
 
 const Header = styled.div`
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
   width: 100%;
