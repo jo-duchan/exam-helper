@@ -139,18 +139,21 @@ const Incorrect = styled.span``;
 const Stage = styled.span``;
 
 const InnerWrapper = styled.div`
+  width: 100%;
   display: flex;
   flex-direction: column;
   gap: 15px;
 `;
 
 const QuestionWrapper = styled.div`
+  width: 100%;
   display: flex;
   flex-direction: column;
   gap: 5px;
 `;
 
 const Question = styled.div`
+  width: 100%;
   margin-bottom: 40px;
   line-height: 1.25em;
   background: #edf4fc;
@@ -158,6 +161,7 @@ const Question = styled.div`
   border-radius: 6px;
   font-size: 14px;
   letter-spacing: -0.02em;
+  box-sizing: border-box;
 `;
 
 const Correctanswer = styled.div`
@@ -173,6 +177,7 @@ const Label = styled.span`
 `;
 
 const Input = styled.input<StyledProps>`
+  width: 100%;
   height: 50px;
   padding: 12px;
   border-radius: 6px;
@@ -206,6 +211,7 @@ const Input = styled.input<StyledProps>`
 `;
 
 const ButtenWrapper = styled.div`
+  width: 100%;
   display: flex;
   gap: 10px;
 `;
