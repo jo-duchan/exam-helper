@@ -1,8 +1,8 @@
 {
   "files": {
-    "main.js": "/build/static/js/main.4cf55ed1.js",
-    "index.html": "/build/index.html",
-    "main.4cf55ed1.js.map": "/build/static/js/main.4cf55ed1.js.map"
+    "main.js": "/exam-helper/build/static/js/main.4cf55ed1.js",
+    "index.html": "/exam-helper/build/index.html",
+    "main.4cf55ed1.js.map": "/exam-helper/build/static/js/main.4cf55ed1.js.map"
   },
-  "entrypoints": ["/build/static/js/main.4cf55ed1.js"]
+  "entrypoints": ["/exam-helper/build/static/js/main.4cf55ed1.js"]
 }
