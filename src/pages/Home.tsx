@@ -53,7 +53,9 @@ function Home() {
   const confirmHandler = () => {
     const grading = () => {
       setCorrectAnswer(question[qNum].Q);
-      return question[qNum].Q.filter((Q) => Q === value);
+      return question[qNum].Q.filter(
+        (Q) => Q.toLocaleUpperCase() === value.toLocaleUpperCase()
+      );
     };
 
     if (grading().length > 0) {
