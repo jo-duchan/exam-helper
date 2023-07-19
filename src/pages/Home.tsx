@@ -39,6 +39,8 @@ function Home() {
     ).length;
     if (overlapCheck === 0 && qNum !== testNum) {
       SetQNum(testNum);
+      setValue("");
+      setState("GOOD");
     } else {
       nextHandler();
     }
@@ -53,23 +55,20 @@ function Home() {
       setCorrectAnswer(question[qNum].Q);
       return question[qNum].Q.filter((Q) => Q === value);
     };
-    // console.log(grading().length);
 
     if (grading().length > 0) {
       console.log("right");
-      setState("GOOD");
       setCorrect((prev) => (prev += 1));
       setOverlap((prev) => {
         return [...prev, qNum];
       });
+      nextHandler();
     } else {
       console.log("miss");
       setState("BAD");
       setIncorrect((prev) => (prev += 1));
     }
     setStage((prev) => (prev += 1));
-    nextHandler();
-    setValue("");
   };
 
   return (
@@ -99,10 +98,12 @@ function Home() {
           state={state}
           onChange={changeHandler}
           value={value || ""}
+          disabled={state === "BAD"}
         />
         <ButtenWrapper>
-          <Done onClick={confirmHandler}>Done</Done>
-          <Pass onClick={nextHandler}>Pass</Pass>
+          {state === "BAD" && <Next onClick={nextHandler}>Next</Next>}
+          {state === "GOOD" && <Done onClick={confirmHandler}>Done</Done>}
+          {state === "GOOD" && <Pass onClick={nextHandler}>Pass</Pass>}
         </ButtenWrapper>
       </InnerWrapper>
     </Container>
@@ -225,7 +226,6 @@ const ButtenWrapper = styled.div`
 `;
 
 const Button = styled.button`
-  width: calc(50% - 5px);
   height: 38px;
   border-radius: 6px;
   border: 1px solid transparent;
@@ -236,6 +236,7 @@ const Button = styled.button`
 `;
 
 const Done = styled(Button)`
+  width: calc(50% - 5px);
   background: #2173df;
   color: #fff;
 
@@ -245,10 +246,21 @@ const Done = styled(Button)`
 `;
 
 const Pass = styled(Button)`
+  width: calc(50% - 5px);
   background: #cbd5e0;
   color: #323a43;
 
   &:active {
     background: #a9b9cc;
+  }
+`;
+
+const Next = styled(Button)`
+  width: 100%;
+  background: #ff2941;
+  color: #fff;
+
+  &:active {
+    background: #eb001a;
   }
 `;
