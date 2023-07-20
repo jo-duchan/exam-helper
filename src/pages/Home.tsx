@@ -11,7 +11,6 @@ function Home() {
   const [value, setValue] = useState("");
   const [correct, setCorrect] = useState(0);
   const [incorrect, setIncorrect] = useState(0);
-  const [stage, setStage] = useState(0);
   const [overlap, setOverlap] = useState<number[]>([]);
   const [state, setState] = useState<"GOOD" | "BAD">("GOOD");
   const [correctAnswer, setCorrectAnswer] = useState<string[]>([]);
@@ -23,14 +22,13 @@ function Home() {
   }, []);
 
   useEffect(() => {
-    if (stage >= 20) {
+    if (correct + incorrect >= 20) {
       setCorrect(0);
       setIncorrect(0);
-      setStage(0);
       setCorrectAnswer([]);
       nextHandler();
     }
-  }, [stage]);
+  }, [correct, incorrect]);
 
   const nextHandler = () => {
     const testNum = Math.floor(Math.random() * qLength);
@@ -70,15 +68,14 @@ function Home() {
       setState("BAD");
       setIncorrect((prev) => (prev += 1));
     }
-    setStage((prev) => (prev += 1));
   };
 
   return (
-    <Container>
+    <Container onSubmit={(e) => e.preventDefault()}>
       <Header>
         <Correct>Score: {correct}</Correct>
         <Incorrect>Miss: {incorrect}</Incorrect>
-        <Stage>Stage: {stage}</Stage>
+        <Stage>Stage: {correct + incorrect}</Stage>
       </Header>
       <InnerWrapper>
         <QuestionWrapper>
@@ -104,7 +101,11 @@ function Home() {
         />
         <ButtenWrapper>
           {state === "BAD" && <Next onClick={nextHandler}>Next</Next>}
-          {state === "GOOD" && <Done onClick={confirmHandler}>Done</Done>}
+          {state === "GOOD" && (
+            <Done type="submit" onClick={confirmHandler}>
+              Done
+            </Done>
+          )}
           {state === "GOOD" && <Pass onClick={nextHandler}>Pass</Pass>}
         </ButtenWrapper>
       </InnerWrapper>
@@ -114,7 +115,7 @@ function Home() {
 
 export default Home;
 
-const Container = styled.div`
+const Container = styled.form`
   position: relative;
   width: 100%;
   height: 100%;

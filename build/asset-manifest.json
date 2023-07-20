@@ -1,10 +1,10 @@
 {
   "files": {
-    "main.js": "/exam-helper/static/js/main.19ac8454.js",
+    "main.js": "/exam-helper/static/js/main.dbf81391.js",
     "index.html": "/exam-helper/index.html",
-    "main.19ac8454.js.map": "/exam-helper/static/js/main.19ac8454.js.map"
+    "main.dbf81391.js.map": "/exam-helper/static/js/main.dbf81391.js.map"
   },
   "entrypoints": [
-    "static/js/main.19ac8454.js"
+    "static/js/main.dbf81391.js"
   ]
 }
