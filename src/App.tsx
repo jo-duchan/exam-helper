@@ -1,19 +1,18 @@
-import React, { Fragment } from "react";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { GlobalStyle } from "styles/common";
+import React from "react";
+import {
+  createBrowserRouter,
+  RouterProvider,
+  BrowserRouterProps,
+} from "react-router-dom";
+
 import Home from "pages/Home";
 
+const router = createBrowserRouter([{ path: "/", element: <Home /> }], {
+  basename: process.env.PUBLIC_URL,
+});
+
 function App() {
-  return (
-    <Fragment>
-      <GlobalStyle />
-      <Home />
-      {/* <Routes>
-        <Route path="/exam" element={<Home />} />
-        <Route path="*" element={<div>Not Found!</div>} />
-      </Routes> */}
-    </Fragment>
-  );
+  return <RouterProvider router={router} />;
 }
 
 export default App;
