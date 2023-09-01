@@ -1,12 +1,16 @@
 import React, { useEffect, useState } from "react";
+import { useLoaderData, json } from "react-router-dom";
 import styled, { css } from "styled-components";
+import Utils from "utils/utils";
+import { Items } from "types/GoogleSheet";
 import question from "assets/question";
 
 interface StyledProps {
   state: "GOOD" | "BAD";
 }
 
-function Home() {
+function QuizPage() {
+  const data = useLoaderData() as [];
   const [qNum, SetQNum] = useState(0);
   const [value, setValue] = useState("");
   const [correct, setCorrect] = useState(0);
@@ -14,11 +18,12 @@ function Home() {
   const [overlap, setOverlap] = useState<number[]>([]);
   const [state, setState] = useState<"GOOD" | "BAD">("GOOD");
   const [correctAnswer, setCorrectAnswer] = useState<string[]>([]);
-  const qLength = question.length;
+  const qLength = data.length;
 
   useEffect(() => {
     // init
     SetQNum(Math.floor(Math.random() * qLength));
+    console.log("데이터", data);
   }, []);
 
   useEffect(() => {
@@ -50,13 +55,11 @@ function Home() {
 
   const confirmHandler = () => {
     const grading = () => {
-      setCorrectAnswer(question[qNum].Q);
-      return question[qNum].Q.filter(
-        (Q) => Q.toLocaleUpperCase() === value.toLocaleUpperCase()
-      );
+      setCorrectAnswer(data[qNum][1]);
+      return data[qNum][1] === value.toLocaleUpperCase();
     };
 
-    if (grading().length > 0) {
+    if (grading()) {
       console.log("right");
       setCorrect((prev) => (prev += 1));
       setOverlap((prev) => {
@@ -64,7 +67,7 @@ function Home() {
       });
       nextHandler();
     } else {
-      console.log("miss");
+      console.log("miss", data[qNum][1], value.toLocaleUpperCase());
       setState("BAD");
       setIncorrect((prev) => (prev += 1));
     }
@@ -80,15 +83,16 @@ function Home() {
       <InnerWrapper>
         <QuestionWrapper>
           <Label>문제</Label>
-          <Question>{question[qNum].A}</Question>
+          <Question>{data[qNum][0]}</Question>
 
           {state === "BAD" && (
             <Correctanswer>
-              {correctAnswer.map((ctx, idx) => (
+              {/* {correctAnswer.map((ctx, idx) => (
                 <span key={idx}>
                   {ctx} {correctAnswer.length !== idx + 1 && "/"}
                 </span>
-              ))}
+              ))} */}
+              {correctAnswer}
             </Correctanswer>
           )}
         </QuestionWrapper>
@@ -113,7 +117,25 @@ function Home() {
   );
 }
 
-export default Home;
+export default QuizPage;
+
+export async function loader() {
+  const sheetId = "1L57FP3cSkyWt2aOb6hlCb0dd1qWpm1Q2N25cXxWiFz4";
+  const url = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?`;
+
+  const response = await fetch(url);
+  const data = await response.text();
+  const convert = JSON.parse(data.substring(47).slice(0, -2));
+
+  if (!response.ok) {
+    throw json({ message: "Could not find Google Sheet." }, { status: 500 });
+  }
+
+  const items = convert.table.rows.map(({ c }: { c: Items }) =>
+    Utils.cleanRow(c)
+  );
+  return items;
+}
 
 const Container = styled.form`
   position: relative;

@@ -1,15 +1,18 @@
 import React from "react";
-import {
-  createBrowserRouter,
-  RouterProvider,
-  BrowserRouterProps,
-} from "react-router-dom";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
-import Home from "pages/Home";
+import QuizPage, { loader as QuizLoader } from "pages/Quiz";
+import Connect, { loader as ConnectLoader } from "pages/Connect";
 
-const router = createBrowserRouter([{ path: "/", element: <Home /> }], {
-  basename: process.env.PUBLIC_URL,
-});
+const router = createBrowserRouter(
+  [
+    { path: "/", element: <QuizPage />, loader: QuizLoader },
+    { path: "/connect", element: <Connect />, loader: ConnectLoader },
+  ],
+  {
+    basename: process.env.PUBLIC_URL,
+  }
+);
 
 function App() {
   return <RouterProvider router={router} />;
