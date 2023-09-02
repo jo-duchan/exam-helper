@@ -75,11 +75,11 @@ function QuizPage() {
 
   return (
     <Container onSubmit={(e) => e.preventDefault()}>
-      <Header>
+      {/* <Header>
         <Correct>Score: {correct}</Correct>
         <Incorrect>Miss: {incorrect}</Incorrect>
         <Stage>Stage: {correct + incorrect}</Stage>
-      </Header>
+      </Header> */}
       <InnerWrapper>
         <QuestionWrapper>
           <Label>문제</Label>
