@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { useLoaderData, json } from "react-router-dom";
+import { useLoaderData, json, redirect } from "react-router-dom";
 import styled, { css } from "styled-components";
 import Utils from "utils/utils";
 import { Items } from "types/GoogleSheet";
+import useScore from "hook/useScore";
 import question from "assets/question";
 
 interface StyledProps {
@@ -120,7 +121,13 @@ function QuizPage() {
 export default QuizPage;
 
 export async function loader() {
-  const sheetId = "1L57FP3cSkyWt2aOb6hlCb0dd1qWpm1Q2N25cXxWiFz4";
+  // const sheetId = "1L57FP3cSkyWt2aOb6hlCb0dd1qWpm1Q2N25cXxWiFz4";
+  const sheetId = localStorage.getItem("sheetId");
+
+  if (!sheetId) {
+    return redirect("/connect");
+  }
+
   const url = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?`;
 
   const response = await fetch(url);
