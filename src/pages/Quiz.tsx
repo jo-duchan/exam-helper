@@ -24,7 +24,7 @@ function QuizPage() {
   useEffect(() => {
     // init
     SetQNum(Math.floor(Math.random() * qLength));
-    console.log("데이터", data);
+    // console.log("데이터", data);
   }, []);
 
   useEffect(() => {
@@ -121,7 +121,7 @@ function QuizPage() {
 export default QuizPage;
 
 export async function loader() {
-  // const sheetId = "1L57FP3cSkyWt2aOb6hlCb0dd1qWpm1Q2N25cXxWiFz4";
+  // const sheetId = "1C6s6eftLfOlqxz3uEDJUh1WrFDato05Tn15oVK9LAJU";
   const sheetId = localStorage.getItem("sheetId");
 
   if (!sheetId) {
@@ -129,7 +129,6 @@ export async function loader() {
   }
 
   const url = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?`;
-
   const response = await fetch(url);
   const data = await response.text();
   const convert = JSON.parse(data.substring(47).slice(0, -2));
@@ -141,6 +140,7 @@ export async function loader() {
   const items = convert.table.rows.map(({ c }: { c: Items }) =>
     Utils.cleanRow(c)
   );
+
   return items;
 }
 
