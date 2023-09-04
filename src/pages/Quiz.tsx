@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useLoaderData, json, redirect } from "react-router-dom";
+import type { LoaderFunctionArgs } from "react-router";
 import styled, { css } from "styled-components";
 import Utils from "utils/utils";
 import { Items } from "types/GoogleSheet";
@@ -8,6 +9,10 @@ import question from "assets/question";
 
 interface StyledProps {
   state: "GOOD" | "BAD";
+}
+
+interface MyParams {
+  sheetName: string;
 }
 
 function QuizPage() {
@@ -120,7 +125,13 @@ function QuizPage() {
 
 export default QuizPage;
 
-export async function loader() {
+export async function loader({
+  request,
+  params,
+}: {
+  request: Request;
+  params: any;
+}) {
   // const sheetId = "1C6s6eftLfOlqxz3uEDJUh1WrFDato05Tn15oVK9LAJU";
   const sheetId = localStorage.getItem("sheetId");
 
@@ -128,10 +139,16 @@ export async function loader() {
     return redirect("/connect");
   }
 
-  const url = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?`;
+  // const url = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?`;
+  const base = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?`;
+  const sheetName = params.sheetName;
+  const query = encodeURIComponent("Select *");
+  const url = `${base}&sheet=${sheetName}&tq=${query}`;
   const response = await fetch(url);
   const data = await response.text();
   const convert = JSON.parse(data.substring(47).slice(0, -2));
+  //
+  console.log(convert);
 
   if (!response.ok) {
     throw json({ message: "Could not find Google Sheet." }, { status: 500 });
