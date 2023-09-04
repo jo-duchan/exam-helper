@@ -136,7 +136,9 @@ export async function loader() {
   if (!response.ok) {
     throw json({ message: "Could not find Google Sheet." }, { status: 500 });
   }
-
+  if (convert.table.rows.length <= 0) {
+    throw json({ message: "No Google Sheet values found." }, { status: 500 });
+  }
   const items = convert.table.rows.map(({ c }: { c: Items }) =>
     Utils.cleanRow(c)
   );

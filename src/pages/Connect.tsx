@@ -7,9 +7,10 @@ function Connect() {
   const navigate = useNavigate();
 
   const submitHandler = () => {
-    const sheetId = inputRef.current?.value;
+    const sheetUrl = inputRef.current?.value;
 
-    if (sheetId) {
+    if (sheetUrl) {
+      const sheetId = sheetUrl.slice(39, 83);
       localStorage.setItem("sheetId", sheetId);
       navigate("/");
       return;
