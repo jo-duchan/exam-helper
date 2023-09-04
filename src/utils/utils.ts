@@ -1,14 +1,7 @@
 import { Items, Item } from "types/GoogleSheet";
 
 const cleanRow = (row: Items) => {
-  function replaceNull(item: Item | null) {
-    if (item == null) {
-      return { v: "" };
-    }
-    return item;
-  }
-
-  const replaceItems = row.filter((item) => item !== null);
+  const replaceItems = row.filter((item, index) => item !== null && index < 2);
   const replaceItem = replaceItems.filter((item) => item.v !== null);
   const data = replaceItem.map((item) => item.v.toString());
   return data;
