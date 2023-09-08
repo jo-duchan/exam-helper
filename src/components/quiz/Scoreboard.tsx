@@ -9,12 +9,11 @@ interface Props {
 
 function Scoreboard({ score, miss, totalStage }: Props) {
   const progress = ((score + miss) / totalStage) * 100;
-  console.log(progress);
   return (
     <Container>
       <p>{score}</p>
       <p>{miss}</p>
-      <p>{`${progress}%, ${totalStage}`}</p>
+      <p>{`${progress}%`}</p>
     </Container>
   );
 }

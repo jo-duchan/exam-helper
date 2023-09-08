@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useLoaderData, json, redirect } from "react-router-dom";
-import type { LoaderFunctionArgs } from "react-router";
+import { useLoaderData, json, redirect, useNavigate } from "react-router-dom";
 import styled, { css } from "styled-components";
 import Utils from "utils/utils";
 import { Items } from "types/GoogleSheet";
@@ -18,6 +17,8 @@ interface MyParams {
 
 function QuizPage() {
   const data = useLoaderData() as [];
+  const navigate = useNavigate();
+  const setFinalScore = useScore.Action();
   const [qNum, SetQNum] = useState(0);
   const [value, setValue] = useState("");
   const [score, setScore] = useState(0);
@@ -42,6 +43,8 @@ function QuizPage() {
       setMiss(0);
       setCorrectAnswer("");
       nextStage();
+      setFinalScore((score / totalStage) * 100);
+      navigate("/complete");
     }
   }, [score, miss]);
 
