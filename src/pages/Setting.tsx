@@ -2,7 +2,7 @@ import React, { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
-function Connect() {
+function Setting() {
   const sheetUrlInputRef = useRef<HTMLInputElement>(null);
   const sheetNameInputRef = useRef<HTMLInputElement>(null);
   const [sheetId, setSheetId] = useState<string>("");
@@ -96,7 +96,7 @@ function Connect() {
   );
 }
 
-export default Connect;
+export default Setting;
 
 const Container = styled.div`
   & h1 {

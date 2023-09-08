@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
-import Navigation from "components/Navigation";
+import Navigation from "components/common/Navigation";
 
 function RootLayout() {
   const navigate = useNavigate();

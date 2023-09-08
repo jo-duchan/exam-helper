@@ -6,7 +6,7 @@ function Navigation() {
   return (
     <Container>
       <NavLink to={"/"}>home</NavLink>
-      <NavLink to={"/connect"}>connect</NavLink>
+      <NavLink to={"/setting"}>setting</NavLink>
     </Container>
   );
 }

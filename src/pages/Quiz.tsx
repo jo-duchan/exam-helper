@@ -5,7 +5,8 @@ import styled, { css } from "styled-components";
 import Utils from "utils/utils";
 import { Items } from "types/GoogleSheet";
 import useScore from "hook/useScore";
-import question from "assets/question";
+import Scoreboard from "components/quiz/Scoreboard";
+import Question from "components/quiz/Question";
 
 interface StyledProps {
   state: "GOOD" | "BAD";
@@ -19,39 +20,42 @@ function QuizPage() {
   const data = useLoaderData() as [];
   const [qNum, SetQNum] = useState(0);
   const [value, setValue] = useState("");
-  const [correct, setCorrect] = useState(0);
-  const [incorrect, setIncorrect] = useState(0);
+  const [score, setScore] = useState(0);
+  const [miss, setMiss] = useState(0);
   const [overlap, setOverlap] = useState<number[]>([]);
   const [state, setState] = useState<"GOOD" | "BAD">("GOOD");
-  const [correctAnswer, setCorrectAnswer] = useState<string[]>([]);
-  const qLength = data.length;
-
+  const [correctAnswer, setCorrectAnswer] = useState<string>("");
+  // 로컬스테이지에서 세팅된 값 가져와서 data.length보다 크면 data.length로
+  const totalStage = data.length;
+  const randomNumber = () => {
+    return Math.floor(Math.random() * data.length);
+  };
   useEffect(() => {
     // init
-    SetQNum(Math.floor(Math.random() * qLength));
+    SetQNum(randomNumber());
     // console.log("데이터", data);
   }, []);
 
   useEffect(() => {
-    if (correct + incorrect >= 20) {
-      setCorrect(0);
-      setIncorrect(0);
-      setCorrectAnswer([]);
-      nextHandler();
+    if (score + miss >= totalStage) {
+      setScore(0);
+      setMiss(0);
+      setCorrectAnswer("");
+      nextStage();
     }
-  }, [correct, incorrect]);
+  }, [score, miss]);
 
-  const nextHandler = () => {
-    const testNum = Math.floor(Math.random() * qLength);
+  const nextStage = () => {
+    const random = randomNumber();
     const overlapCheck = overlap.filter(
-      (num) => num === qNum || num === testNum
+      (num) => num === qNum || num === random
     ).length;
-    if (overlapCheck === 0 && qNum !== testNum) {
-      SetQNum(testNum);
+    if (overlapCheck === 0 && qNum !== random) {
+      SetQNum(random);
       setValue("");
       setState("GOOD");
     } else {
-      nextHandler();
+      nextStage();
     }
   };
 
@@ -67,41 +71,24 @@ function QuizPage() {
 
     if (grading()) {
       console.log("right");
-      setCorrect((prev) => (prev += 1));
+      setScore((prev) => (prev += 1));
       setOverlap((prev) => {
         return [...prev, qNum];
       });
-      nextHandler();
+      nextStage();
     } else {
       console.log("miss", data[qNum][1], value.toLocaleUpperCase());
       setState("BAD");
-      setIncorrect((prev) => (prev += 1));
+      setMiss((prev) => (prev += 1));
     }
   };
 
   return (
-    <Container onSubmit={(e) => e.preventDefault()}>
-      {/* <Header>
-        <Correct>Score: {correct}</Correct>
-        <Incorrect>Miss: {incorrect}</Incorrect>
-        <Stage>Stage: {correct + incorrect}</Stage>
-      </Header> */}
+    <Container>
+      <Scoreboard score={score} miss={miss} totalStage={data.length} />
       <InnerWrapper>
-        <QuestionWrapper>
-          <Label>문제</Label>
-          <Question>{data[qNum][0]}</Question>
-
-          {state === "BAD" && (
-            <Correctanswer>
-              {/* {correctAnswer.map((ctx, idx) => (
-                <span key={idx}>
-                  {ctx} {correctAnswer.length !== idx + 1 && "/"}
-                </span>
-              ))} */}
-              {correctAnswer}
-            </Correctanswer>
-          )}
-        </QuestionWrapper>
+        <Question data={data[qNum][0]} />
+        {state === "BAD" && <Correctanswer>{correctAnswer}</Correctanswer>}
         <Input
           type="text"
           state={state}
@@ -110,13 +97,13 @@ function QuizPage() {
           disabled={state === "BAD"}
         />
         <ButtenWrapper>
-          {state === "BAD" && <Next onClick={nextHandler}>Next</Next>}
+          {state === "BAD" && <Next onClick={nextStage}>Next</Next>}
           {state === "GOOD" && (
             <Done type="submit" onClick={confirmHandler}>
               Done
             </Done>
           )}
-          {state === "GOOD" && <Pass onClick={nextHandler}>Pass</Pass>}
+          {state === "GOOD" && <Pass onClick={nextStage}>Pass</Pass>}
         </ButtenWrapper>
       </InnerWrapper>
     </Container>
@@ -132,14 +119,12 @@ export async function loader({
   request: Request;
   params: any;
 }) {
-  // const sheetId = "1C6s6eftLfOlqxz3uEDJUh1WrFDato05Tn15oVK9LAJU";
   const sheetId = localStorage.getItem("sheetId");
 
   if (!sheetId) {
     return redirect("/connect");
   }
 
-  // const url = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?`;
   const base = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?`;
   const sheetName = params.sheetName;
   const query = encodeURIComponent("Select *");
@@ -147,8 +132,6 @@ export async function loader({
   const response = await fetch(url);
   const data = await response.text();
   const convert = JSON.parse(data.substring(47).slice(0, -2));
-  //
-  console.log(convert);
 
   if (!response.ok) {
     throw json({ message: "Could not find Google Sheet." }, { status: 500 });
@@ -156,6 +139,7 @@ export async function loader({
   if (convert.table.rows.length <= 0) {
     throw json({ message: "No Google Sheet values found." }, { status: 500 });
   }
+
   const items = convert.table.rows.map(({ c }: { c: Items }) =>
     Utils.cleanRow(c)
   );
@@ -163,39 +147,18 @@ export async function loader({
   return items;
 }
 
-const Container = styled.form`
+const Container = styled.div`
   position: relative;
   width: 100%;
   height: 100%;
   min-height: 100%;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   padding-inline: 8vw;
   box-sizing: border-box;
 `;
-
-const Header = styled.div`
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 50px;
-  display: flex;
-  gap: 20px;
-  align-items: center;
-  justify-content: flex-end;
-  padding-inline: 8vw;
-  box-sizing: border-box;
-`;
-
-const Score = styled.div``;
-
-const Correct = styled.span``;
-
-const Incorrect = styled.span``;
-
-const Stage = styled.span``;
 
 const InnerWrapper = styled.div`
   width: 100%;
@@ -204,36 +167,11 @@ const InnerWrapper = styled.div`
   gap: 15px;
 `;
 
-const QuestionWrapper = styled.div`
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-`;
-
-const Question = styled.div`
-  width: 100%;
-  margin-bottom: 40px;
-  line-height: 1.25em;
-  background: #edf4fc;
-  padding: 30px 20px;
-  border-radius: 6px;
-  font-size: 14px;
-  letter-spacing: -0.02em;
-  box-sizing: border-box;
-`;
-
 const Correctanswer = styled.div`
   display: flex;
   flex-wrap: wrap;
   gap: 5px;
   font-size: 12px;
-`;
-
-const Label = styled.span`
-  font-size: 14px;
-  color: #323a43;
-  font-weight: 700;
 `;
 
 const Input = styled.input<StyledProps>`

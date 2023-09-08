@@ -1,5 +1,5 @@
 import React from "react";
-import { Link, json, useLoaderData } from "react-router-dom";
+import { Link, json, useLoaderData, redirect } from "react-router-dom";
 import styled from "styled-components";
 
 function HomePage() {
@@ -28,10 +28,11 @@ export async function loader() {
   const data = localStorage.getItem("sheetName");
 
   if (!data) {
-    throw json(
-      { message: "Could not find Google Sheet Name." },
-      { status: 500 }
-    );
+    // throw json(
+    //   { message: "Could not find Google Sheet Name." },
+    //   { status: 500 }
+    // );
+    return redirect("/connect");
   }
   const sheetName = JSON.parse(data);
 
