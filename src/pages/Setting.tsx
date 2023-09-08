@@ -1,6 +1,8 @@
 import React, { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
+import { ref, set } from "firebase/database";
+import { db } from "../firebase";
 
 function Setting() {
   const sheetUrlInputRef = useRef<HTMLInputElement>(null);
@@ -41,21 +43,27 @@ function Setting() {
     });
   };
 
-  const submitHandler = () => {
-    if (sheetId.length !== 44) {
-      window.alert("Google Sheets URL을 확인하세요.");
-      sheetUrlInputRef.current?.focus();
-      return;
-    }
-
-    if (sheetName.length <= 0) {
-      window.alert("SheetName를 추가해 주세요.");
-      sheetNameInputRef.current?.focus();
-      return;
-    }
-    localStorage.setItem("sheetId", sheetId);
-    localStorage.setItem("sheetName", JSON.stringify(sheetName));
-    navigate("/");
+  const submitHandler = async () => {
+    // if (sheetId.length !== 44) {
+    //   window.alert("Google Sheets URL을 확인하세요.");
+    //   sheetUrlInputRef.current?.focus();
+    //   return;
+    // }
+    // if (sheetName.length <= 0) {
+    //   window.alert("SheetName를 추가해 주세요.");
+    //   sheetNameInputRef.current?.focus();
+    //   return;
+    // }
+    // localStorage.setItem("sheetId", sheetId);
+    // localStorage.setItem("sheetName", JSON.stringify(sheetName));
+    // navigate("/");
+    set(ref(db, "users/"), {
+      dawilawdilawd: {
+        username: "dudu22",
+        email: "joduchan@naver.com22",
+      },
+    });
+    console.log(process.env.REACT_APP_API_KEY);
   };
 
   return (
