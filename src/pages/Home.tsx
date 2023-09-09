@@ -25,18 +25,18 @@ function HomePage() {
 export default HomePage;
 
 export async function loader() {
-  const data = localStorage.getItem("sheetName");
+  const data = localStorage.getItem("userKey");
 
   if (!data) {
     // throw json(
     //   { message: "Could not find Google Sheet Name." },
     //   { status: 500 }
     // );
-    return redirect("/connect");
+    return redirect("/signin");
   }
-  const sheetName = JSON.parse(data);
+  const userKey = JSON.parse(data);
 
-  return sheetName;
+  return userKey;
 }
 
 const Container = styled.div`

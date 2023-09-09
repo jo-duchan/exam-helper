@@ -2,7 +2,7 @@ import React, { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { ref, set } from "firebase/database";
-import { db } from "../firebase";
+import { db } from "firebase-config";
 
 function Setting() {
   const sheetUrlInputRef = useRef<HTMLInputElement>(null);
@@ -44,6 +44,7 @@ function Setting() {
   };
 
   const submitHandler = async () => {
+    // sheetKey, SheetName 변경해서 서버에 저장할 수 있도록 수정 예정.
     // if (sheetId.length !== 44) {
     //   window.alert("Google Sheets URL을 확인하세요.");
     //   sheetUrlInputRef.current?.focus();
@@ -63,12 +64,11 @@ function Setting() {
         email: "joduchan@naver.com22",
       },
     });
-    console.log(process.env.REACT_APP_API_KEY);
   };
 
   return (
     <Container>
-      <h1>ConnectPage</h1>
+      <h1>SettingPage</h1>
       <label>
         Google Sheets URL
         <div className="input-wrapper">
