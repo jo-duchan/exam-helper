@@ -1,6 +1,6 @@
 import React from "react";
 import { Link, json, useLoaderData, redirect } from "react-router-dom";
-import { getDatabase, ref, child, get } from "firebase/database";
+import { ref, child, get } from "firebase/database";
 import { db } from "firebase-config";
 import styled from "styled-components";
 
@@ -24,13 +24,13 @@ function HomePage() {
 export default HomePage;
 
 export async function loader() {
-  const userkey = localStorage.getItem("userKey");
-  if (!userkey) {
+  const userKey = localStorage.getItem("userKey");
+  if (!userKey) {
     return redirect("/signin");
   }
 
   const dbRef = ref(db);
-  const data = await get(child(dbRef, `users/${userkey}/sheetName`))
+  const data = await get(child(dbRef, `users/${userKey}/sheetName`))
     .then((snapshot) => {
       if (snapshot.exists()) {
         console.log(snapshot.val());
