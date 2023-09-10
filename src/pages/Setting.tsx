@@ -1,69 +1,75 @@
-import React, { useState, useRef } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useState, useRef, useEffect } from "react";
+import { useNavigate, json, useLoaderData } from "react-router-dom";
 import styled from "styled-components";
-import { ref, set } from "firebase/database";
+import { nanoid } from "nanoid";
+import { ref, child, set, get } from "firebase/database";
 import { db } from "firebase-config";
+import Utils from "utils/utils";
 
 function Setting() {
-  const sheetUrlInputRef = useRef<HTMLInputElement>(null);
-  const sheetNameInputRef = useRef<HTMLInputElement>(null);
-  const [sheetId, setSheetId] = useState<string>("");
-  const [sheetName, setSheetName] = useState<string[]>([]);
-
   const navigate = useNavigate();
+  const { sheetUrl: initSheetUrl, sheetName: initSheetName } =
+    useLoaderData() as {
+      [key: string]: string | string[];
+    };
 
-  const sheetUrlHandler = () => {
-    const sheetUrl = sheetUrlInputRef.current?.value;
+  const sheetUrlRef = useRef<HTMLInputElement>(null);
+  const sheetNameRef = useRef<HTMLInputElement>(null);
+  const [sheetNameList, setSheetNameList] = useState<string[]>([]);
 
-    if (sheetUrl) {
-      const sheetKey = sheetUrl.slice(39, 83);
-      setSheetId(sheetKey);
-      return;
+  useEffect(() => {
+    //init
+
+    if (initSheetUrl && initSheetName.length) {
+      console.log("init");
+      sheetUrlRef.current!.value = initSheetUrl as string;
+      setSheetNameList(() => {
+        return [...(initSheetName as string[])];
+      });
     }
+  }, [initSheetUrl, initSheetName]);
 
-    // 팝업이나 토스트로 대체
-    window.alert("Google Sheets Key를 입력해 주세요.");
-  };
-
-  const addSheetNameHandler = () => {
-    const value = sheetNameInputRef.current?.value;
+  const handleAddSheetName = () => {
+    const value = sheetNameRef.current?.value;
 
     if (value) {
-      setSheetName((prev) => {
+      setSheetNameList((prev) => {
         return [...prev, value];
       });
-      sheetNameInputRef.current.value = "";
+      sheetNameRef.current.value = "";
     }
   };
 
-  const removeItemHandler = (index: number) => {
-    setSheetName((prev) => {
-      const newList = prev.filter((item, idx) => idx !== index);
-      return newList;
+  const HandleRemoveSheetName = (index: number) => {
+    Utils.longPress.setup(() => {
+      if (window.confirm("해당 시트 이름을 지우겠습니까?")) {
+        setSheetNameList((prev) => {
+          const newList = prev.filter((item, idx) => idx !== index);
+          return newList;
+        });
+      }
     });
   };
 
-  const submitHandler = async () => {
-    // sheetKey, SheetName 변경해서 서버에 저장할 수 있도록 수정 예정.
-    // if (sheetId.length !== 44) {
-    //   window.alert("Google Sheets URL을 확인하세요.");
-    //   sheetUrlInputRef.current?.focus();
-    //   return;
-    // }
-    // if (sheetName.length <= 0) {
-    //   window.alert("SheetName를 추가해 주세요.");
-    //   sheetNameInputRef.current?.focus();
-    //   return;
-    // }
-    // localStorage.setItem("sheetId", sheetId);
-    // localStorage.setItem("sheetName", JSON.stringify(sheetName));
+  const leave = () => {
+    Utils.longPress.cancel();
+  };
+
+  const handleSubmit = async () => {
+    const userKey = localStorage.getItem("userKey");
+    const sheetUrl = sheetUrlRef.current?.value;
+    const sheetName = sheetNameList;
+
+    // 유효성 검사 추가하기.
+
     // navigate("/");
-    set(ref(db, "users/"), {
-      dawilawdilawd: {
-        username: "dudu22",
-        email: "joduchan@naver.com22",
-      },
-    });
+    // Update 작업 중
+    // await set(ref(db, "users/"), {
+    //   dawilawdilawd: {
+    //     username: "dudu22",
+    //     email: "joduchan@naver.com22",
+    //   },
+    // });
   };
 
   return (
@@ -72,32 +78,31 @@ function Setting() {
       <label>
         Google Sheets URL
         <div className="input-wrapper">
-          <input type="text" ref={sheetUrlInputRef} />
-          <button type="button" onClick={sheetUrlHandler}>
-            Done
-          </button>
+          <input type="text" ref={sheetUrlRef} />
         </div>
       </label>
       <label>
         SheetName
         <div className="input-wrapper">
-          <input type="text" ref={sheetNameInputRef} />
-          <button type="button" onClick={addSheetNameHandler}>
+          <input type="text" ref={sheetNameRef} />
+          <button type="button" onClick={handleAddSheetName}>
             Done
           </button>
         </div>
       </label>
       <div className="category-list">
-        {sheetName.map((item, index) => (
+        {sheetNameList.map((item, index) => (
           <div
-            key={Math.random().toString()}
-            onClick={() => removeItemHandler(index)}
+            key={nanoid()}
+            onMouseDown={() => HandleRemoveSheetName(index)}
+            onMouseUp={leave}
+            onMouseLeave={leave}
           >
             {item}
           </div>
         ))}
       </div>
-      <button type="button" onClick={submitHandler}>
+      <button type="button" onClick={handleSubmit}>
         Submit
       </button>
     </Container>
@@ -105,6 +110,24 @@ function Setting() {
 }
 
 export default Setting;
+
+export async function loader() {
+  const userKey = localStorage.getItem("userKey");
+  const dbRef = ref(db);
+  const data = await get(child(dbRef, `users/${userKey}`))
+    .then((snapshot) => {
+      if (snapshot.exists()) {
+        console.log(snapshot.val());
+        return snapshot.val();
+      } else {
+        throw json({ message: "No data available" }, { status: 500 });
+      }
+    })
+    .catch((error) => {
+      throw json({ message: error }, { status: 500 });
+    });
+  return data;
+}
 
 const Container = styled.div`
   & h1 {

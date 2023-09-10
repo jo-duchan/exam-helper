@@ -17,6 +17,10 @@ const longPress = {
   },
 };
 
+const convertSheetUrl = (url: string) => {
+  return url.slice(39, 83);
+};
+
 const Utils = { cleanRow, longPress };
 
 export default Utils;

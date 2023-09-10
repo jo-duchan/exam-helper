@@ -16,7 +16,6 @@ function SignInPage() {
     const userKey = userKeyRef.current?.value;
 
     const dbRef = ref(db);
-
     const data = await get(child(dbRef, `users/${userKey}/userKey`))
       .then((snapshot) => {
         if (snapshot.exists()) {
