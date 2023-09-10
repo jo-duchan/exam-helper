@@ -1,5 +1,7 @@
 import React from "react";
 import { Link, json, useLoaderData, redirect } from "react-router-dom";
+import { getDatabase, ref, child, get } from "firebase/database";
+import { db } from "firebase-config";
 import styled from "styled-components";
 
 function HomePage() {
@@ -8,9 +10,6 @@ function HomePage() {
   return (
     <Container>
       <h1>HomePage</h1>
-      {/* <p>
-        <Link to="/quiz">START</Link>
-      </p> */}
       <div className="link-list">
         {sheetName.map((item) => (
           <Link key={item} to={`/quiz/${item}`}>
@@ -25,18 +24,26 @@ function HomePage() {
 export default HomePage;
 
 export async function loader() {
-  const data = localStorage.getItem("userKey");
+  const userkey = localStorage.getItem("userKey");
+  const dbRef = ref(db);
+  const data = await get(child(dbRef, `users/${userkey}/sheetName`))
+    .then((snapshot) => {
+      if (snapshot.exists()) {
+        console.log(snapshot.val());
+        return snapshot.val();
+      } else {
+        throw json({ message: "No data available" }, { status: 500 });
+      }
+    })
+    .catch((error) => {
+      throw json({ message: error }, { status: 500 });
+    });
 
-  if (!data) {
-    // throw json(
-    //   { message: "Could not find Google Sheet Name." },
-    //   { status: 500 }
-    // );
+  if (!userkey) {
     return redirect("/signin");
   }
-  const userKey = JSON.parse(data);
 
-  return userKey;
+  return data;
 }
 
 const Container = styled.div`
