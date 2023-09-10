@@ -1,5 +1,5 @@
 import React, { useRef, useState } from "react";
-import { useNavigate, redirect } from "react-router-dom";
+import { useNavigate, redirect, json } from "react-router-dom";
 import styled from "styled-components";
 import { nanoid } from "nanoid";
 import { ref, set } from "firebase/database";
@@ -26,7 +26,6 @@ function SignUpPage() {
   };
 
   const HandleRemoveSheetName = (index: number) => {
-    console.log("touch start");
     Utils.longPress.setup(() => {
       if (window.confirm("해당 시트 이름을 지우겠습니까?")) {
         setSheetNameList((prev) => {
@@ -38,7 +37,6 @@ function SignUpPage() {
   };
 
   const leave = () => {
-    console.log("touch leave");
     Utils.longPress.cancel();
   };
 
@@ -62,10 +60,14 @@ function SignUpPage() {
       created,
       sheetUrl,
       sheetName,
-    });
-
-    localStorage.setItem("userKey", userKey);
-    navigate("/");
+    })
+      .then(() => {
+        localStorage.setItem("userKey", userKey);
+        navigate("/");
+      })
+      .catch((error) => {
+        throw json({ message: error }, { status: 500 });
+      });
   };
   return (
     <Container>
