@@ -1,17 +1,20 @@
 import React, { useState, useRef, useEffect } from "react";
-import { useNavigate, json, useLoaderData } from "react-router-dom";
+import { useNavigate, json, useLoaderData, redirect } from "react-router-dom";
 import styled from "styled-components";
 import { nanoid } from "nanoid";
-import { ref, child, set, get } from "firebase/database";
+import { ref, child, update, get } from "firebase/database";
 import { db } from "firebase-config";
 import Utils from "utils/utils";
 
-function Setting() {
+function SettingPage() {
   const navigate = useNavigate();
-  const { sheetUrl: initSheetUrl, sheetName: initSheetName } =
-    useLoaderData() as {
-      [key: string]: string | string[];
-    };
+  const {
+    sheetUrl: initSheetUrl,
+    sheetName: initSheetName,
+    userKey,
+  } = useLoaderData() as {
+    [key: string]: string | string[];
+  };
 
   const sheetUrlRef = useRef<HTMLInputElement>(null);
   const sheetNameRef = useRef<HTMLInputElement>(null);
@@ -56,7 +59,7 @@ function Setting() {
   };
 
   const handleSubmit = async () => {
-    const userKey = localStorage.getItem("userKey");
+    // const userKey = localStorage.getItem("userKey");
     const sheetUrl = sheetUrlRef.current?.value;
     const sheetName = sheetNameList;
 
@@ -70,6 +73,19 @@ function Setting() {
     //     email: "joduchan@naver.com22",
     //   },
     // });
+    await update(ref(db, `users/${userKey}`), {
+      sheetUrl,
+      sheetName,
+    })
+      .then(() => {
+        window.alert("업데이트가 완료되었습니다.");
+        navigate("/");
+        // return redirect("/");
+      })
+      .catch((e) => {
+        window.alert("업데이트에 실패했습니다.");
+        console.log(e);
+      });
   };
 
   return (
@@ -109,7 +125,7 @@ function Setting() {
   );
 }
 
-export default Setting;
+export default SettingPage;
 
 export async function loader() {
   const userKey = localStorage.getItem("userKey");

@@ -8,7 +8,7 @@ import SignUpPage, { loader as SignUpLoader } from "pages/SignUp";
 import HomePage from "pages/Home";
 import QuizPage, { loader as QuizLoader } from "pages/Quiz";
 import CompletePage, { loader as CompleteLoader } from "pages/Complete";
-import Setting, { loader as SettingLoader } from "pages/Setting";
+import SettingPage, { loader as SettingLoader } from "pages/Setting";
 
 const router = createBrowserRouter(
   [
@@ -22,9 +22,9 @@ const router = createBrowserRouter(
         { index: true, element: <HomePage /> },
         { path: "quiz/:sheetName", element: <QuizPage />, loader: QuizLoader },
         { path: "complete", element: <CompletePage />, loader: CompleteLoader },
-        { path: "setting", element: <Setting />, loader: SettingLoader },
       ],
     },
+    { path: "/setting", element: <SettingPage />, loader: SettingLoader },
     { path: "/signin", element: <SignInPage /> },
     { path: "/signup", element: <SignUpPage />, loader: SignUpLoader },
   ],
