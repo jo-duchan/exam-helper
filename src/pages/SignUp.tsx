@@ -115,6 +115,7 @@ export async function loader() {
   if (data) {
     return redirect("/");
   }
+  return null;
 }
 
 const Container = styled.div`

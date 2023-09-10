@@ -25,6 +25,10 @@ export default HomePage;
 
 export async function loader() {
   const userkey = localStorage.getItem("userKey");
+  if (!userkey) {
+    return redirect("/signin");
+  }
+
   const dbRef = ref(db);
   const data = await get(child(dbRef, `users/${userkey}/sheetName`))
     .then((snapshot) => {
@@ -38,10 +42,6 @@ export async function loader() {
     .catch((error) => {
       throw json({ message: error }, { status: 500 });
     });
-
-  if (!userkey) {
-    return redirect("/signin");
-  }
 
   return data;
 }
