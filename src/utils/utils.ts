@@ -1,4 +1,4 @@
-import { Items, Item } from "types/GoogleSheet";
+import { Items } from "types/GoogleSheet";
 
 const cleanRow = (row: Items) => {
   const replaceItems = row.filter((item, index) => item !== null && index < 2);
@@ -7,6 +7,16 @@ const cleanRow = (row: Items) => {
   return data;
 };
 
-const Utils = { cleanRow };
+const longPress = {
+  timer: 0,
+  setup(action: () => void) {
+    this.timer = setTimeout(action, 1000, action);
+  },
+  cancel() {
+    clearTimeout(this.timer);
+  },
+};
+
+const Utils = { cleanRow, longPress };
 
 export default Utils;
