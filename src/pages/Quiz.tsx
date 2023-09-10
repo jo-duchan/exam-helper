@@ -125,7 +125,7 @@ export async function loader({
   const sheetId = localStorage.getItem("sheetId");
 
   if (!sheetId) {
-    return redirect("/connect");
+    // return redirect("/connect");
   }
 
   const base = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?`;

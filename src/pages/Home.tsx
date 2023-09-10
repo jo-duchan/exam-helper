@@ -1,11 +1,11 @@
 import React from "react";
-import { Link, json, useLoaderData, redirect } from "react-router-dom";
-import { ref, child, get } from "firebase/database";
-import { db } from "firebase-config";
+import { Link, useRouteLoaderData } from "react-router-dom";
 import styled from "styled-components";
 
 function HomePage() {
-  const sheetName = useLoaderData() as string[];
+  const { sheetName } = useRouteLoaderData("root-loader") as {
+    sheetName: string[];
+  };
 
   return (
     <Container>
@@ -22,29 +22,6 @@ function HomePage() {
 }
 
 export default HomePage;
-
-export async function loader() {
-  const userKey = localStorage.getItem("userKey");
-  if (!userKey) {
-    return redirect("/signin");
-  }
-
-  const dbRef = ref(db);
-  const data = await get(child(dbRef, `users/${userKey}/sheetName`))
-    .then((snapshot) => {
-      if (snapshot.exists()) {
-        console.log(snapshot.val());
-        return snapshot.val();
-      } else {
-        throw json({ message: "No data available" }, { status: 500 });
-      }
-    })
-    .catch((error) => {
-      throw json({ message: error }, { status: 500 });
-    });
-
-  return data;
-}
 
 const Container = styled.div`
   & h1 {
