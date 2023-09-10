@@ -4,7 +4,7 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import RootLayout from "pages/RootLayout";
 import ErrorPage from "pages/Error";
 import SignInPage from "pages/SignIn";
-import SignUpPage from "pages/SignUp";
+import SignUpPage, { loader as SignUpLoader } from "pages/SignUp";
 import HomePage, { loader as HomeLoader } from "pages/Home";
 import QuizPage, { loader as QuizLoader } from "pages/Quiz";
 import CompletePage, { loader as CompleteLoader } from "pages/Complete";
@@ -24,7 +24,7 @@ const router = createBrowserRouter(
       ],
     },
     { path: "/signin", element: <SignInPage /> },
-    { path: "/signup", element: <SignUpPage /> },
+    { path: "/signup", element: <SignUpPage />, loader: SignUpLoader },
   ],
   {
     basename: process.env.PUBLIC_URL,
