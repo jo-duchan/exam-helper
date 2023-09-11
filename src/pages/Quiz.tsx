@@ -125,7 +125,8 @@ export async function loader({
   const sheetId = localStorage.getItem("sheetId");
 
   if (!sheetId) {
-    // return redirect("/connect");
+    window.alert("Google SpreadSheet Url을 다시 확인해 주세요.");
+    return redirect("/");
   }
 
   const base = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?`;

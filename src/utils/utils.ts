@@ -21,6 +21,6 @@ const convertSheetUrl = (url: string) => {
   return url.slice(39, 83);
 };
 
-const Utils = { cleanRow, longPress };
+const Utils = { cleanRow, longPress, convertSheetUrl };
 
 export default Utils;

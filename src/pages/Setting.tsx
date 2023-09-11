@@ -132,7 +132,6 @@ export async function loader() {
   const data = await get(child(dbRef, `users/${userKey}`))
     .then((snapshot) => {
       if (snapshot.exists()) {
-        console.log(snapshot.val());
         return snapshot.val();
       } else {
         throw json({ message: "No data available" }, { status: 500 });
