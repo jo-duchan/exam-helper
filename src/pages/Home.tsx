@@ -1,9 +1,11 @@
 import React from "react";
-import { Link, useRouteLoaderData } from "react-router-dom";
+import { Link, useRouteLoaderData, redirect, json } from "react-router-dom";
 import styled from "styled-components";
+import { ref, child, get } from "firebase/database";
+import { db } from "firebase-config";
 
 function HomePage() {
-  const { sheetName } = useRouteLoaderData("root-loader") as {
+  const { sheetName } = useRouteLoaderData("main-loader") as {
     sheetName: string[];
   };
 

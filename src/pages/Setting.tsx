@@ -80,7 +80,6 @@ function SettingPage() {
       .then(() => {
         window.alert("업데이트가 완료되었습니다.");
         navigate("/");
-        // return redirect("/");
       })
       .catch((e) => {
         window.alert("업데이트에 실패했습니다.");
