@@ -6,7 +6,7 @@ import ErrorPage from "pages/Error";
 import MainLoader from "pages/MainLoader";
 import HomePage from "pages/Home";
 import QuizPage, { loader as QuizLoader } from "pages/Quiz";
-import CompletePage, { loader as CompleteLoader } from "pages/Complete";
+import CompletePage from "pages/Complete";
 import SettingPage, { loader as SettingLoader } from "pages/Setting";
 import SignInPage from "pages/SignIn";
 import SignUpPage, { loader as SignUpLoader } from "pages/SignUp";
@@ -33,7 +33,6 @@ const router = createBrowserRouter(
             {
               path: "complete",
               element: <CompletePage />,
-              loader: CompleteLoader,
             },
           ],
         },

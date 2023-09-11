@@ -1,19 +1,20 @@
 import React, { useEffect } from "react";
-import { useLoaderData, useNavigate } from "react-router-dom";
+import { useNavigate, useRouteLoaderData } from "react-router-dom";
 import useScore from "hook/useScore";
 
 function CompletePage() {
-  const data = useLoaderData() as [];
+  const { name } = useRouteLoaderData("main-loader") as {
+    name: string;
+  };
   const finalScore = useScore.Value();
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const newData = [...data, finalScore];
-    localStorage.setItem("scoreList", JSON.stringify(newData));
-  }, [finalScore]);
   return (
     <>
-      <h1>CompletePage{finalScore}</h1>
+      <h1>CompletePage</h1>
+      <p>
+        {name}님 점수: {finalScore}
+      </p>
       <div onClick={() => navigate(-1)}>다시 문제풀기</div>
       <div>기록 자랑하기</div>
     </>
@@ -21,14 +22,3 @@ function CompletePage() {
 }
 
 export default CompletePage;
-
-export async function loader() {
-  const scoreList = localStorage.getItem("scoreList");
-
-  if (!scoreList) {
-    localStorage.setItem("scoreList", JSON.stringify([]));
-    return;
-  }
-
-  return JSON.parse(scoreList);
-}

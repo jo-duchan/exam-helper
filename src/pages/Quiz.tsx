@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useLoaderData, json, redirect, useNavigate } from "react-router-dom";
 import styled, { css } from "styled-components";
+import { ref, set, push } from "firebase/database";
+import { db } from "firebase-config";
 import Utils from "utils/utils";
 import { Items } from "types/GoogleSheet";
 import useScore from "hook/useScore";
@@ -38,13 +40,26 @@ function QuizPage() {
   }, []);
 
   useEffect(() => {
-    if (score + miss >= totalStage) {
-      setScore(0);
-      setMiss(0);
-      setCorrectAnswer("");
-      nextStage();
-      setFinalScore((score / totalStage) * 100);
+    const updateScoreList = async (score: number) => {
+      const date = Date.now();
+      const userKey = localStorage.getItem("userKey");
+      const listRef = ref(db, `users/${userKey}/scoreList`);
+      const newListRef = push(listRef);
+      await set(newListRef, {
+        score,
+        date,
+      });
+    };
+
+    const finishStage = async () => {
+      const finalScore = (score / totalStage) * 100;
+      setFinalScore(finalScore);
+      await updateScoreList(finalScore);
       navigate("/complete");
+    };
+
+    if (score + miss >= totalStage) {
+      finishStage();
     }
   }, [score, miss]);
 
