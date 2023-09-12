@@ -1,9 +1,21 @@
-import { redirect, json } from "react-router-dom";
+import { Outlet, redirect, json } from "react-router-dom";
 import { ref, child, get } from "firebase/database";
 import { db } from "firebase-config";
 import Utils from "utils/utils";
+import Navigation from "components/common/Navigation";
 
-export default async function MainLoader() {
+function MainLayout() {
+  return (
+    <>
+      <Navigation />
+      <Outlet />
+    </>
+  );
+}
+
+export default MainLayout;
+
+export async function loader() {
   const userKey = localStorage.getItem("userKey");
   if (!userKey) {
     return redirect("/signin");

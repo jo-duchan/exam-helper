@@ -5,6 +5,7 @@ import { nanoid } from "nanoid";
 import { ref, child, update, get } from "firebase/database";
 import { db } from "firebase-config";
 import Utils from "utils/utils";
+import BackNavigation from "components/common/BackNavigation";
 
 function SettingPage() {
   const navigate = useNavigate();
@@ -89,6 +90,7 @@ function SettingPage() {
 
   return (
     <Container>
+      <BackNavigation />
       <h1>SettingPage</h1>
       <label>
         Google Sheets URL

@@ -1,9 +1,7 @@
 import React from "react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-
-import RootLayout from "pages/RootLayout";
 import ErrorPage from "pages/Error";
-import MainLoader from "pages/MainLoader";
+import MainLayout, { loader as MainLoader } from "pages/MainLoader";
 import HomePage from "pages/Home";
 import QuizPage, { loader as QuizLoader } from "pages/Quiz";
 import CompletePage from "pages/Complete";
@@ -16,11 +14,11 @@ const router = createBrowserRouter(
     {
       path: "/",
       id: "root-loader",
-      element: <RootLayout />,
       errorElement: <ErrorPage />,
       children: [
         {
           path: "",
+          element: <MainLayout />,
           id: "main-loader",
           loader: MainLoader,
           children: [
