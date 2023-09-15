@@ -13,12 +13,15 @@ interface StyledProps {
   state: "GOOD" | "BAD";
 }
 
-interface MyParams {
+interface LoaderData {
+  items: [];
   sheetName: string;
 }
 
+type WrongList = string[][];
+
 function QuizPage() {
-  const data = useLoaderData() as [];
+  const { items: data, sheetName } = useLoaderData() as LoaderData;
   const navigate = useNavigate();
   const setFinalScore = useScore.Action();
   const [qNum, SetQNum] = useState(0);
@@ -28,6 +31,7 @@ function QuizPage() {
   const [overlap, setOverlap] = useState<number[]>([]);
   const [state, setState] = useState<"GOOD" | "BAD">("GOOD");
   const [correctAnswer, setCorrectAnswer] = useState<string>("");
+  const [wrongList, setWrongList] = useState<WrongList>([]);
   // 로컬스테이지에서 세팅된 값 가져와서 data.length보다 크면 data.length로
   const totalStage = data.length;
   const randomNumber = () => {
@@ -46,8 +50,10 @@ function QuizPage() {
       const listRef = ref(db, `users/${userKey}/scoreList`);
       const newListRef = push(listRef);
       await set(newListRef, {
+        sheetName,
         score,
         date,
+        wrongList,
       });
     };
 
@@ -98,6 +104,9 @@ function QuizPage() {
       console.log("miss", data[qNum][1], value.toLocaleUpperCase());
       setState("BAD");
       setMiss((prev) => (prev += 1));
+      setWrongList((prev) => {
+        return [...prev, [data[qNum][0], data[qNum][1]]];
+      });
     }
   };
 
@@ -163,7 +172,7 @@ export async function loader({
     Utils.cleanRow(c)
   );
 
-  return items;
+  return { items, sheetName };
 }
 
 const Container = styled.div`
