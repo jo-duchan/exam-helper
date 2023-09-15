@@ -8,6 +8,7 @@ import CompletePage from "pages/Complete";
 import SettingPage, { loader as SettingLoader } from "pages/Setting";
 import SignInPage from "pages/SignIn";
 import SignUpPage, { loader as SignUpLoader } from "pages/SignUp";
+import StatsPage, { loader as StatsLoader } from "pages/Stats";
 
 const router = createBrowserRouter(
   [
@@ -34,6 +35,7 @@ const router = createBrowserRouter(
             },
           ],
         },
+        { path: "stats", element: <StatsPage />, loader: StatsLoader },
         { path: "setting", element: <SettingPage />, loader: SettingLoader },
         { path: "signin", element: <SignInPage /> },
         { path: "signup", element: <SignUpPage />, loader: SignUpLoader },
