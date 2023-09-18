@@ -8,7 +8,7 @@
 
 ### 팀 구성
 
-조두찬(본인) - PM, FE Developer    김인중 - Product Designer
+조두찬(본인) - PM, FE Developer.    김인중 - Product Designer
 
 ### 기술 스택
 
