@@ -6,7 +6,7 @@
 
 ## 공식 문서
 
-[Exam Helper](https://exam-helper.notion.site/Exam-Helper-10-d437612b838042a89e0bea1a7c22e066?pvs=4)]
+[Exam Helper](https://exam-helper.notion.site/Exam-Helper-10-d437612b838042a89e0bea1a7c22e066?pvs=4)
 
 ### 팀 구성
 
