@@ -1,7 +1,8 @@
 import { Link, useRouteLoaderData } from "react-router-dom";
 import styled from "styled-components";
+import { Heading, Body } from "styles/typography-system";
 
-function HomePage() {
+function MainPage() {
   const { sheetName } = useRouteLoaderData("main-loader") as {
     sheetName: string[];
   };
@@ -20,10 +21,12 @@ function HomePage() {
   );
 }
 
-export default HomePage;
+export default MainPage;
 
 const Container = styled.div`
   & h1 {
+    /* ${Heading}; */
+    /* ${Body.Bold.XL}; */
     margin-bottom: 20px;
   }
 

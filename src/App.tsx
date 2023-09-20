@@ -2,7 +2,7 @@ import React from "react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import ErrorPage from "pages/Error";
 import MainLayout, { loader as MainLoader } from "pages/MainLoader";
-import HomePage from "pages/Home";
+import MainPage from "pages/Main";
 import QuizPage, { loader as QuizLoader } from "pages/Quiz";
 import CompletePage from "pages/Complete";
 import SettingPage, { loader as SettingLoader } from "pages/Setting";
@@ -23,7 +23,7 @@ const router = createBrowserRouter(
           id: "main-loader",
           loader: MainLoader,
           children: [
-            { index: true, element: <HomePage /> },
+            { index: true, element: <MainPage /> },
             {
               path: "quiz/:sheetName",
               element: <QuizPage />,
