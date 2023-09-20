@@ -1,7 +1,7 @@
 import React from "react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import ErrorPage from "pages/Error";
-import MainLayout, { loader as MainLoader } from "pages/MainLoader";
+import MainLoader from "pages/MainLoader";
 import MainPage from "pages/Main";
 import QuizPage, { loader as QuizLoader } from "pages/Quiz";
 import CompletePage from "pages/Complete";
@@ -19,7 +19,6 @@ const router = createBrowserRouter(
       children: [
         {
           path: "",
-          element: <MainLayout />,
           id: "main-loader",
           loader: MainLoader,
           children: [

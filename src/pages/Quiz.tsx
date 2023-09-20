@@ -4,7 +4,7 @@ import styled, { css } from "styled-components";
 import { ref, set, push } from "firebase/database";
 import { db } from "firebase-config";
 import Utils from "utils/utils";
-import { Items } from "types/GoogleSheet";
+import { Items } from "types/google-sheet";
 import useScore from "hook/useScore";
 import Scoreboard from "components/quiz/Scoreboard";
 import Question from "components/quiz/Question";

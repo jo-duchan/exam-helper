@@ -24,7 +24,7 @@ function SettingPage() {
   useEffect(() => {
     //init
 
-    if (initSheetUrl && initSheetName.length) {
+    if (initSheetUrl && initSheetName) {
       console.log("init");
       sheetUrlRef.current!.value = initSheetUrl as string;
       setSheetNameList(() => {

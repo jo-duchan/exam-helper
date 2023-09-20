@@ -1,4 +1,4 @@
-import { Items } from "types/GoogleSheet";
+import { Items } from "types/google-sheet";
 
 const cleanRow = (row: Items) => {
   const replaceItems = row.filter((item, index) => item !== null && index < 2);
