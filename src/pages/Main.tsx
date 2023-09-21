@@ -6,7 +6,8 @@ import { Admin } from "types/admin-data";
 import { User } from "types/user-data";
 import Navigation from "components/main/Navigation";
 import Banner from "components/main/Banner";
-import PlayList from "components/main/PlayList";
+import Actions from "components/main/Actions";
+import Tip from "components/main/Tip";
 import Fire from "assets/img/fire.png";
 
 interface LoaderData {
@@ -30,13 +31,13 @@ function MainPage() {
       <Banner data={admin.banner} />
       <ContentSection>
         <Title>
-          <span>이잼님! 오늘 퀴즈에</span>
+          <span>{data.name}님! 오늘 퀴즈에</span>
           <span>
             도전해 보세요! <img src={Fire} alt="불 이미지" />
           </span>
         </Title>
-        <PlayList sheetName={data.sheetName} />
-        <div className="link-list"></div>
+        <Actions sheetNames={data.sheetName} scoreList={data.scoreList} />
+        <Tip />
       </ContentSection>
     </Container>
   );

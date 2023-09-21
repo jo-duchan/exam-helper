@@ -1,5 +1,8 @@
 export type Banner = {
-  [key: string]: string;
+  [key: string]: {
+    img: string;
+    link: string;
+  };
 };
 
 export type SheetUrl = string;

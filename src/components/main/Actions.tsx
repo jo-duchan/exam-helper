@@ -1,32 +1,57 @@
-import React from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
+import { format } from "date-fns";
 import { Heading, Body } from "styles/typography-system";
 import Color from "styles/color-system";
-import { ScoreList } from "types/user-data";
+import { ScoreList, WrongList } from "types/user-data";
 import { ReactComponent as Arrow } from "assets/icon/arrow.svg";
 import AddSheetImg from "assets/img/empty.png";
 
 interface Props {
-  sheetName: string[] | undefined;
-  //   scoreList: ScoreList;
+  sheetNames: string[] | undefined;
   scoreList?: ScoreList;
 }
 
-function PlayList({ sheetName, scoreList }: Props) {
+function Actions({ sheetNames, scoreList = {} }: Props) {
+  const hasSheetName = (sheetName: string) => {
+    const data = Object.keys(scoreList).find(
+      (item) => scoreList[item].sheetName === sheetName
+    );
+
+    return data!;
+  };
+
+  const renderDate = (key: string) => {
+    if (hasSheetName(key)) {
+      return format(scoreList[hasSheetName(key)].date, "yy.MM.dd");
+    }
+
+    return "00.00.00";
+  };
+
+  const renderScore = (key: string) => {
+    if (hasSheetName(key)) {
+      return (
+        <>
+          <span className="score">{scoreList[hasSheetName(key)].score}</span>
+          <span className="unit">점</span>
+        </>
+      );
+    }
+
+    return <span className="score">000</span>;
+  };
+
   return (
     <Container>
-      {sheetName?.map((item) => (
+      {sheetNames?.map((item) => (
         <Item key={item} to={`/quiz/${item}`}>
           <PlayBtn>
             <DateSection>
               <span className="tag">최근 점수</span>
-              <span className="date">23.09.12</span>
+              <span className="date">{renderDate(item)}</span>
             </DateSection>
-            <ScoreSection>
-              <span className="score">80</span>
-              <span className="unit">점</span>
-            </ScoreSection>
+            <ScoreSection>{renderScore(item)}</ScoreSection>
             <LabelSection>
               <span className="label">{item}</span>
               <Arrow fill={Color.Gray[100]} />
@@ -34,7 +59,7 @@ function PlayList({ sheetName, scoreList }: Props) {
           </PlayBtn>
         </Item>
       ))}
-      <Item to={""}>
+      <Item to={"/setting"}>
         <AddSheetBtn>
           <img src={AddSheetImg} alt="시트 추가" />
           <span className="label">시트 추가</span>
@@ -44,7 +69,7 @@ function PlayList({ sheetName, scoreList }: Props) {
   );
 }
 
-export default PlayList;
+export default Actions;
 
 const Container = styled.div`
   display: flex;
@@ -140,7 +165,7 @@ const AddSheetBtn = styled.div`
   left: 0;
   width: 100%;
   height: 100%;
-  border: 2px dashed #e5e8eb;
+  border: 2px dashed ${Color.Gray[400]};
   box-sizing: border-box;
   border-radius: 24px;
   overflow: hidden;

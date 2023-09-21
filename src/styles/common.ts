@@ -1,6 +1,7 @@
 import styled, { createGlobalStyle } from "styled-components";
 import reset from "styled-reset";
 import Color from "styles/color-system";
+import ZIndex from "styles/z-index";
 
 const GlobalStyle = createGlobalStyle`
 ${reset};
@@ -22,6 +23,16 @@ html, body {
     height: 100%;
     background: ${Color.Gray[100]};
     margin-inline: auto;
+}
+
+#overlays {
+    position: fixed;
+    left: 50%;
+    transform: translate3d(-50%, 0, 0);
+    width: var(--gobal-width);
+    height: 100%;
+    pointer-events: none;
+    ${ZIndex["MAX"]};
 }
 `;
 
