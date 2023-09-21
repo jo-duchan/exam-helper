@@ -1,10 +1,17 @@
 import { css } from "styled-components";
 
-const Heading = css`
-  font-size: 26px;
-  font-weight: 700;
-  line-height: 34px;
-`;
+const Heading = {
+  H1: css`
+    font-size: 32px;
+    font-weight: 700;
+    line-height: 34px;
+  `,
+  H2: css`
+    font-size: 26px;
+    font-weight: 700;
+    line-height: 34px;
+  `,
+};
 
 const Body = {
   Bold: {

@@ -1,5 +1,7 @@
 const Color = {
   Primary: {
+    400: "#80A9FA",
+    500: "#568CF8",
     700: "#2C6FF6",
   },
   Gray: {

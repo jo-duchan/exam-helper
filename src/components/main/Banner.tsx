@@ -4,7 +4,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay } from "swiper";
 import "swiper/css";
 import "swiper/css/pagination";
-import { Admin } from "types/admin";
+import { Admin } from "types/admin-data";
 import { nanoid } from "nanoid";
 
 interface Props {

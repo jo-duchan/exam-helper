@@ -1,22 +1,25 @@
 import { useEffect } from "react";
-import { Link, useRouteLoaderData } from "react-router-dom";
+import { useRouteLoaderData } from "react-router-dom";
 import styled from "styled-components";
 import { Heading, Body } from "styles/typography-system";
-import { Admin } from "types/admin";
+import { Admin } from "types/admin-data";
+import { User } from "types/user-data";
 import Navigation from "components/main/Navigation";
 import Banner from "components/main/Banner";
+import PlayList from "components/main/PlayList";
+import Fire from "assets/img/fire.png";
 
 interface LoaderData {
-  sheetName: string[] | undefined;
+  data: User;
   admin: Admin;
 }
 
 function MainPage() {
-  const { sheetName, admin } = useRouteLoaderData("main-loader") as LoaderData;
+  const { data, admin } = useRouteLoaderData("main-loader") as LoaderData;
 
   useEffect(() => {
-    console.log(admin.banner);
-    if (!sheetName) {
+    console.log(admin.banner, data.sheetName, data);
+    if (!data.sheetName) {
       console.log("Tutorial!");
     }
   }, []);
@@ -26,14 +29,14 @@ function MainPage() {
       <Navigation />
       <Banner data={admin.banner} />
       <ContentSection>
-        <h1>HomePage</h1>
-        <div className="link-list">
-          {sheetName?.map((item) => (
-            <Link key={item} to={`/quiz/${item}`}>
-              {item}
-            </Link>
-          ))}
-        </div>
+        <Title>
+          <span>이잼님! 오늘 퀴즈에</span>
+          <span>
+            도전해 보세요! <img src={Fire} alt="불 이미지" />
+          </span>
+        </Title>
+        <PlayList sheetName={data.sheetName} />
+        <div className="link-list"></div>
       </ContentSection>
     </Container>
   );
@@ -49,4 +52,20 @@ const Container = styled.div`
 const ContentSection = styled.div`
   padding-inline: 25px;
   box-sizing: border-box;
+`;
+
+const Title = styled.h1`
+  ${Heading.H2};
+  margin-bottom: 30px;
+
+  & span {
+    display: flex;
+  }
+
+  & span img {
+    width: 32px;
+    height: 32px;
+    object-fit: cover;
+    margin-bottom: 2px;
+  }
 `;
