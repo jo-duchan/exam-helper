@@ -1,5 +1,8 @@
 import React from "react";
 import styled from "styled-components";
+import Color from "styles/color-system";
+import { Body } from "styles/typography-system";
+import { ReactComponent as QTalk } from "assets/icon/q-talk.svg";
 
 interface Props {
   data: string;
@@ -8,7 +11,9 @@ interface Props {
 function Question({ data }: Props) {
   return (
     <Container>
-      <Label>문제</Label>
+      <Assets>
+        <QTalk />
+      </Assets>
       <Content>{data}</Content>
     </Container>
   );
@@ -17,26 +22,27 @@ function Question({ data }: Props) {
 export default Question;
 
 const Container = styled.div`
-  width: 100%;
+  /* position: relative; */
   display: flex;
   flex-direction: column;
-  gap: 5px;
+  align-items: center;
+  width: 100%;
+  height: 187px;
+  background: ${Color.Gray[100]};
+  border-radius: 24px;
+  margin-bottom: 30px;
+  overflow: hidden auto;
 `;
 
-const Label = styled.span`
-  font-size: 14px;
-  color: #323a43;
-  font-weight: 700;
+const Assets = styled.div`
+  margin-top: 20px;
+  margin-bottom: 34px;
 `;
 
 const Content = styled.div`
   width: 100%;
-  margin-bottom: 40px;
-  line-height: 1.25em;
-  background: #edf4fc;
-  padding: 30px 20px;
-  border-radius: 6px;
-  font-size: 14px;
-  letter-spacing: -0.02em;
-  box-sizing: border-box;
+  text-align: center;
+  color: ${Color.Gray[800]};
+  ${Body.Bold.XL};
+  margin-bottom: 20px;
 `;

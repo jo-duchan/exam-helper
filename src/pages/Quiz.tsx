@@ -6,6 +6,7 @@ import { db } from "firebase-config";
 import Utils from "utils/utils";
 import { Items } from "types/google-sheet";
 import useScore from "hook/useScore";
+import Navigation from "components/common/Navigation";
 import Scoreboard from "components/quiz/Scoreboard";
 import Question from "components/quiz/Question";
 
@@ -112,8 +113,9 @@ function QuizPage() {
 
   return (
     <Container>
+      <Navigation label="퀴즈" />
       <Scoreboard score={score} miss={miss} totalStage={data.length} />
-      <InnerWrapper>
+      <ContentSection>
         <Question data={data[qNum][0]} />
         {state === "BAD" && <Correctanswer>{correctAnswer}</Correctanswer>}
         <Input
@@ -132,7 +134,7 @@ function QuizPage() {
           )}
           {state === "GOOD" && <Pass onClick={nextStage}>Pass</Pass>}
         </ButtenWrapper>
-      </InnerWrapper>
+      </ContentSection>
     </Container>
   );
 }
@@ -176,24 +178,16 @@ export async function loader({
 }
 
 const Container = styled.div`
-  position: relative;
   width: 100%;
-  height: 100%;
   min-height: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding-inline: 8vw;
+`;
+
+const ContentSection = styled.div`
+  padding-inline: 25px;
   box-sizing: border-box;
 `;
 
-const InnerWrapper = styled.div`
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-`;
+//수정 포인트
 
 const Correctanswer = styled.div`
   display: flex;

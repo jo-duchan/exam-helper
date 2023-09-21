@@ -5,7 +5,7 @@ import { nanoid } from "nanoid";
 import { ref, set } from "firebase/database";
 import { db } from "firebase-config";
 import Utils from "utils/utils";
-import BackNavigation from "components/common/BackNavigation";
+import Navigation from "components/common/Navigation";
 
 function SignUpPage() {
   const navigate = useNavigate();
@@ -72,7 +72,7 @@ function SignUpPage() {
   };
   return (
     <Container>
-      <BackNavigation />
+      <Navigation label="회원가입" />
       <h1>SignUpPage</h1>
       <label>
         Name

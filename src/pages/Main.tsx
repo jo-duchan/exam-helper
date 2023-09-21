@@ -4,7 +4,7 @@ import styled from "styled-components";
 import { Heading, Body } from "styles/typography-system";
 import { Admin } from "types/admin-data";
 import { User } from "types/user-data";
-import Navigation from "components/main/Navigation";
+import MainNavigation from "components/main/MainNavigation";
 import Banner from "components/main/Banner";
 import Actions from "components/main/Actions";
 import Tip from "components/main/Tip";
@@ -27,7 +27,7 @@ function MainPage() {
 
   return (
     <Container>
-      <Navigation />
+      <MainNavigation />
       <Banner data={admin.banner} />
       <ContentSection>
         <Title>

@@ -34,6 +34,12 @@ html, body {
     pointer-events: none;
     ${ZIndex["MAX"]};
 }
+
+button {
+    background: initial;
+    border: initial;
+    padding: initial;
+}
 `;
 
 export { GlobalStyle };

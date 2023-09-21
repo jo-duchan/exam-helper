@@ -33,7 +33,6 @@ const Container = styled.div`
   height: 85px;
   display: flex;
   align-items: center;
-  /* justify-content: space-between; */
   background: ${Color.Gray[100]};
   border-radius: 16px 16px 0 0;
   padding: 20px 25px 22px 25px;
@@ -48,6 +47,7 @@ const Container = styled.div`
   & .text-content {
     display: flex;
     flex-direction: column;
+    gap: 2px;
     margin-left: 15px;
   }
 

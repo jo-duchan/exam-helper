@@ -4,7 +4,7 @@ import styled from "styled-components";
 import { ReactComponent as Home } from "assets/icon/home.svg";
 import { ReactComponent as Setting } from "assets/icon/setting.svg";
 
-function Navigation() {
+function MainNavigation() {
   return (
     <Container>
       <NavSection to={"/"}>
@@ -17,7 +17,7 @@ function Navigation() {
   );
 }
 
-export default Navigation;
+export default MainNavigation;
 
 const Container = styled.div`
   display: flex;
