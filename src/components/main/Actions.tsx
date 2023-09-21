@@ -14,9 +14,9 @@ interface Props {
 
 function Actions({ sheetNames, scoreList = {} }: Props) {
   const hasSheetName = (sheetName: string) => {
-    const data = Object.keys(scoreList).find(
-      (item) => scoreList[item].sheetName === sheetName
-    );
+    const data = Object.keys(scoreList)
+      .reverse()
+      .find((item) => scoreList[item].sheetName === sheetName);
 
     return data!;
   };
