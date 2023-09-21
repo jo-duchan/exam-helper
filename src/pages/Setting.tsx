@@ -23,10 +23,13 @@ function SettingPage() {
 
   useEffect(() => {
     //init
-
-    if (initSheetUrl && initSheetName) {
-      console.log("init");
+    if (initSheetUrl) {
+      console.log("init SheetUrl");
       sheetUrlRef.current!.value = initSheetUrl as string;
+    }
+
+    if (initSheetName.length > 0) {
+      console.log("init SheetName");
       setSheetNameList(() => {
         return [...(initSheetName as string[])];
       });

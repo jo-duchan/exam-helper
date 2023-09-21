@@ -20,7 +20,7 @@ html, body {
     font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
     display: flex;
     width: var(--gobal-width);
-    height: 100%;
+    min-height: 100%;
     background: ${Color.Gray[100]};
     margin-inline: auto;
 }

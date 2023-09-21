@@ -76,6 +76,7 @@ const Container = styled.div`
   flex-wrap: wrap;
   gap: 16px;
   width: 100%;
+  margin-bottom: 165px;
 `;
 
 const Item = styled(Link)`
