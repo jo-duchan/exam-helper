@@ -1,12 +1,14 @@
-import React from "react";
 import styled from "styled-components";
 import ReactDOM from "react-dom";
+import { useNavigate } from "react-router-dom";
 import Color from "styles/color-system";
 import { Body } from "styles/typography-system";
 import Record from "assets/img/record.png";
+import Button from "components/common/Button";
 
 function Tip() {
   const portalElement = document.getElementById("overlays");
+  const navigate = useNavigate();
 
   const renderContent = () => {
     return (
@@ -16,7 +18,12 @@ function Tip() {
           <span className="title">성장기록</span>
           <span className="desciption">나의 성장을 한눈에 확인해 보세요!</span>
         </div>
-        <button>확인하기</button>
+        <Button
+          label="확인하기"
+          size="S"
+          width="83px"
+          onClick={() => navigate("/stats")}
+        />
       </Container>
     );
   };
@@ -33,11 +40,13 @@ const Container = styled.div`
   height: 85px;
   display: flex;
   align-items: center;
+  justify-content: space-between;
   background: ${Color.Gray[100]};
   border-radius: 16px 16px 0 0;
   padding: 20px 25px 22px 25px;
   box-sizing: border-box;
   box-shadow: 0px -8px 16px 0px rgba(0, 0, 0, 0.06);
+  pointer-events: auto;
 
   & img {
     width: 40px;
@@ -48,7 +57,6 @@ const Container = styled.div`
     display: flex;
     flex-direction: column;
     gap: 2px;
-    margin-left: 15px;
   }
 
   & .text-content .title {
@@ -61,7 +69,7 @@ const Container = styled.div`
     ${Body.SemiBold.M};
   }
 
-  & button {
+  /* & button {
     margin-left: auto;
     padding: 10px 18px 10px 18px;
     box-sizing: border-box;
@@ -72,5 +80,5 @@ const Container = styled.div`
 
     color: ${Color.Gray[100]};
     ${Body.Medium.M};
-  }
+  } */
 `;

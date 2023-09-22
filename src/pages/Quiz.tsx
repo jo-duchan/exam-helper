@@ -10,6 +10,7 @@ import Navigation from "components/common/Navigation";
 import Scoreboard from "components/quiz/Scoreboard";
 import Question from "components/quiz/Question";
 import Button from "components/common/Button";
+import Textarea from "components/quiz/Textarea";
 
 interface StyledProps {
   state: "GOOD" | "BAD";
@@ -35,7 +36,7 @@ function QuizPage() {
   const [correctAnswer, setCorrectAnswer] = useState<string>("");
   const [wrongList, setWrongList] = useState<WrongList>([]);
   // 로컬스테이지에서 세팅된 값 가져와서 data.length보다 크면 data.length로
-  const totalStage = data.length;
+  const totalStage = data.length - 1;
   const randomNumber = () => {
     return Math.floor(Math.random() * data.length);
   };
@@ -85,7 +86,7 @@ function QuizPage() {
     }
   };
 
-  const changeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setValue(e.target.value);
   };
 
@@ -115,17 +116,11 @@ function QuizPage() {
   return (
     <Container>
       <Navigation label="퀴즈" />
-      <Scoreboard score={score} miss={miss} totalStage={data.length} />
+      <Scoreboard score={score} miss={miss} totalStage={totalStage} />
       <ContentSection>
         <Question data={data[qNum][0]} />
         {state === "BAD" && <Correctanswer>{correctAnswer}</Correctanswer>}
-        <Input
-          type="text"
-          state={state}
-          onChange={changeHandler}
-          value={value || ""}
-          disabled={state === "BAD"}
-        />
+        <Textarea value={value} onChange={handleChange} />
         <ButtenWrapper>
           <Button label="패스" size="L" sort="gray" onClick={nextStage} />
           <Button label="완료" size="L" onClick={handleConfirm} />
@@ -190,40 +185,6 @@ const Correctanswer = styled.div`
   flex-wrap: wrap;
   gap: 5px;
   font-size: 12px;
-`;
-
-const Input = styled.input<StyledProps>`
-  width: 100%;
-  height: 50px;
-  padding: 12px;
-  border-radius: 6px;
-  outline: initial;
-  border: 2px solid transparent;
-  background: #f1f4f9;
-  font-size: 18px;
-  box-sizing: border-box;
-  transition: 200ms ease-in-out;
-  ${({ state }) =>
-    state === "GOOD" &&
-    css`
-      border-color: #2173df;
-      color: #2173df;
-
-      &:focus {
-        border-color: #2173df;
-      }
-    `}
-
-  ${({ state }) =>
-    state === "BAD" &&
-    css`
-      border-color: #ff2941;
-      color: #ff2941;
-
-      &:focus {
-        border-color: #ff2941;
-      }
-    `}
 `;
 
 const ButtenWrapper = styled.div`
