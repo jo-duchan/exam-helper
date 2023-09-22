@@ -9,6 +9,7 @@ import useScore from "hook/useScore";
 import Navigation from "components/common/Navigation";
 import Scoreboard from "components/quiz/Scoreboard";
 import Question from "components/quiz/Question";
+import Button from "components/common/Button";
 
 interface StyledProps {
   state: "GOOD" | "BAD";
@@ -88,7 +89,7 @@ function QuizPage() {
     setValue(e.target.value);
   };
 
-  const confirmHandler = () => {
+  const handleConfirm = () => {
     const grading = () => {
       setCorrectAnswer(data[qNum][1]);
       return data[qNum][1] === value.toLocaleUpperCase();
@@ -126,13 +127,8 @@ function QuizPage() {
           disabled={state === "BAD"}
         />
         <ButtenWrapper>
-          {state === "BAD" && <Next onClick={nextStage}>Next</Next>}
-          {state === "GOOD" && (
-            <Done type="submit" onClick={confirmHandler}>
-              Done
-            </Done>
-          )}
-          {state === "GOOD" && <Pass onClick={nextStage}>Pass</Pass>}
+          <Button label="패스" size="L" sort="gray" onClick={nextStage} />
+          <Button label="완료" size="L" onClick={handleConfirm} />
         </ButtenWrapper>
       </ContentSection>
     </Container>
@@ -234,44 +230,5 @@ const ButtenWrapper = styled.div`
   width: 100%;
   display: flex;
   gap: 10px;
-`;
-
-const Button = styled.button`
-  height: 38px;
-  border-radius: 6px;
-  border: 1px solid transparent;
-  cursor: pointer;
-  user-select: none;
-  font-weight: 600;
-  transition: 200ms ease-in-out;
-`;
-
-const Done = styled(Button)`
-  width: calc(50% - 5px);
-  background: #2173df;
-  color: #fff;
-
-  &:active {
-    background: #1c65c4;
-  }
-`;
-
-const Pass = styled(Button)`
-  width: calc(50% - 5px);
-  background: #cbd5e0;
-  color: #323a43;
-
-  &:active {
-    background: #a9b9cc;
-  }
-`;
-
-const Next = styled(Button)`
-  width: 100%;
-  background: #ff2941;
-  color: #fff;
-
-  &:active {
-    background: #eb001a;
-  }
+  margin-top: 10px;
 `;

@@ -1,10 +1,91 @@
-import React from "react";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
+import Color from "styles/color-system";
+import { Body } from "styles/typography-system";
+import { Sort, Size, Status } from "types/button";
 
-function Button() {
-  return <Container></Container>;
+interface Props {
+  sort?: Sort;
+  size?: Size;
+  status?: Status;
+  label: string;
+  width?: string;
+  onClick: () => void;
+}
+
+interface StyledProps {
+  sort: Sort;
+  size: Size;
+  width: string;
+}
+
+function Button({
+  sort = "primary",
+  size = "M",
+  status = "default",
+  label,
+  width = "100%",
+  onClick,
+}: Props) {
+  return (
+    <Container
+      sort={sort}
+      size={size}
+      width={width}
+      disabled={status === "disabled"}
+      onClick={onClick}
+    >
+      {label}
+    </Container>
+  );
 }
 
 export default Button;
 
-const Container = styled.button``;
+const Container = styled.button.attrs({ type: "button" })<StyledProps>`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: ${({ width }) => width};
+  box-sizing: border-box;
+  cursor: pointer;
+  user-select: none;
+
+  ${({ size }) => {
+    switch (size) {
+      case "S":
+        return css`
+          height: 38px;
+          border-radius: 8px;
+          ${Body.Medium.M};
+        `;
+      case "M":
+        return css`
+          height: 48px;
+          border-radius: 12px;
+          ${Body.SemiBold.L};
+        `;
+      case "L":
+        return css`
+          height: 56px;
+          border-radius: 16px;
+          ${Body.SemiBold.L};
+        `;
+    }
+  }}
+
+  ${({ sort }) =>
+    sort === "primary"
+      ? css`
+          color: ${Color.Gray[100]};
+          background: ${Color.Primary[700]};
+        `
+      : css`
+          color: ${Color.Gray[700]};
+          background: ${Color.Gray[300]};
+        `}
+
+  &:disabled {
+    color: ${Color.Gray[500]};
+    background: ${Color.Gray[600]};
+  }
+`;
