@@ -61,7 +61,7 @@ function QuizPage() {
     };
 
     const finishStage = async () => {
-      const finalScore = (score / totalStage) * 100;
+      const finalScore = Math.floor((score / totalStage) * 100);
       setFinalScore(finalScore);
       await updateScoreList(finalScore);
       navigate("/complete");

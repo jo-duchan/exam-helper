@@ -92,6 +92,8 @@ const PlayBtn = styled.div`
   position: absolute;
   top: 0;
   left: 0;
+  display: flex;
+  flex-direction: column;
   width: 100%;
   height: 100%;
   background: ${Color.Primary[700]};
@@ -126,7 +128,6 @@ const DateSection = styled.div`
 const ScoreSection = styled.div`
   display: flex;
   align-items: center;
-  margin-bottom: 15.909%;
 
   & .score {
     font-family: "Black Ops One";
