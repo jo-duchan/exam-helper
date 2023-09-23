@@ -49,6 +49,7 @@ const Container = styled.button.attrs({ type: "button" })<StyledProps>`
   box-sizing: border-box;
   cursor: pointer;
   user-select: none;
+  transition: color, background 300ms ease-in-out;
 
   ${({ size }) => {
     switch (size) {
@@ -85,7 +86,9 @@ const Container = styled.button.attrs({ type: "button" })<StyledProps>`
         `}
 
   &:disabled {
-    color: ${Color.Gray[500]};
-    background: ${Color.Gray[600]};
+    color: ${({ sort }) =>
+      sort === "primary" ? Color.Gray[200] : Color.Gray[500]};
+    background: ${({ sort }) =>
+      sort === "primary" ? Color.Primary[400] : Color.Gray[200]};
   }
 `;

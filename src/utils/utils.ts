@@ -21,6 +21,10 @@ const convertSheetUrl = (url: string) => {
   return url.slice(39, 83);
 };
 
-const Utils = { cleanRow, longPress, convertSheetUrl };
+const random = (length: number) => {
+  return Math.floor(Math.random() * length);
+};
+
+const Utils = { cleanRow, longPress, convertSheetUrl, random };
 
 export default Utils;

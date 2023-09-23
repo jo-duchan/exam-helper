@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useLoaderData, json, redirect, useNavigate } from "react-router-dom";
-import styled, { css } from "styled-components";
+import styled from "styled-components";
+import Color from "styles/color-system";
+import { Body } from "styles/typography-system";
 import { ref, set, push } from "firebase/database";
 import { db } from "firebase-config";
 import Utils from "utils/utils";
@@ -13,7 +15,7 @@ import Button from "components/common/Button";
 import Textarea from "components/quiz/Textarea";
 
 interface StyledProps {
-  state: "GOOD" | "BAD";
+  show: boolean;
 }
 
 interface LoaderData {
@@ -22,6 +24,7 @@ interface LoaderData {
 }
 
 type WrongList = string[][];
+const TIMEING = 1000;
 
 function QuizPage() {
   const { items: data, sheetName } = useLoaderData() as LoaderData;
@@ -32,18 +35,15 @@ function QuizPage() {
   const [score, setScore] = useState(0);
   const [miss, setMiss] = useState(0);
   const [overlap, setOverlap] = useState<number[]>([]);
-  const [state, setState] = useState<"GOOD" | "BAD">("GOOD");
+  const [state, setState] = useState<"HIT" | "MISS" | "DEFAULT">("DEFAULT");
   const [correctAnswer, setCorrectAnswer] = useState<string>("");
   const [wrongList, setWrongList] = useState<WrongList>([]);
   // 로컬스테이지에서 세팅된 값 가져와서 data.length보다 크면 data.length로
-  const totalStage = data.length - 1;
-  const randomNumber = () => {
-    return Math.floor(Math.random() * data.length);
-  };
+  const totalStage = data.length;
+
   useEffect(() => {
     // init
-    SetQNum(randomNumber());
-    // console.log("데이터", data);
+    SetQNum(Utils.random(totalStage));
   }, []);
 
   useEffect(() => {
@@ -73,14 +73,11 @@ function QuizPage() {
   }, [score, miss]);
 
   const nextStage = () => {
-    const random = randomNumber();
-    const overlapCheck = overlap.filter(
-      (num) => num === qNum || num === random
-    ).length;
+    const random = Utils.random(totalStage);
+    const overlapCheck = overlap.filter((num) => num === random).length;
     if (overlapCheck === 0 && qNum !== random) {
       SetQNum(random);
       setValue("");
-      setState("GOOD");
     } else {
       nextStage();
     }
@@ -93,23 +90,31 @@ function QuizPage() {
   const handleConfirm = () => {
     const grading = () => {
       setCorrectAnswer(data[qNum][1]);
-      return data[qNum][1] === value.toLocaleUpperCase();
+      return data[qNum][1] === value.toLocaleUpperCase().trim();
     };
 
     if (grading()) {
-      console.log("right");
+      // HIT
+      setState("HIT");
       setScore((prev) => (prev += 1));
       setOverlap((prev) => {
         return [...prev, qNum];
       });
-      nextStage();
+      setTimeout(() => {
+        nextStage();
+        setState("DEFAULT");
+      }, TIMEING);
     } else {
-      console.log("miss", data[qNum][1], value.toLocaleUpperCase());
-      setState("BAD");
+      // MISS
+      setState("MISS");
       setMiss((prev) => (prev += 1));
       setWrongList((prev) => {
         return [...prev, [data[qNum][0], data[qNum][1]]];
       });
+      setTimeout(() => {
+        nextStage();
+        setState("DEFAULT");
+      }, TIMEING);
     }
   };
 
@@ -119,11 +124,29 @@ function QuizPage() {
       <Scoreboard score={score} miss={miss} totalStage={totalStage} />
       <ContentSection>
         <Question data={data[qNum][0]} />
-        {state === "BAD" && <Correctanswer>{correctAnswer}</Correctanswer>}
-        <Textarea value={value} onChange={handleChange} />
+        <CorrectAnswer show={state === "MISS"}>
+          정답: {correctAnswer}
+        </CorrectAnswer>
+        <Textarea
+          value={value}
+          placeholder="정답을 입력해 주세요."
+          state={state}
+          onChange={handleChange}
+        />
         <ButtenWrapper>
-          <Button label="패스" size="L" sort="gray" onClick={nextStage} />
-          <Button label="완료" size="L" onClick={handleConfirm} />
+          <Button
+            label="문제 패스"
+            size="L"
+            sort="gray"
+            status={state !== "DEFAULT" ? "disabled" : "default"}
+            onClick={nextStage}
+          />
+          <Button
+            label="완료"
+            size="L"
+            status={state !== "DEFAULT" ? "disabled" : "default"}
+            onClick={handleConfirm}
+          />
         </ButtenWrapper>
       </ContentSection>
     </Container>
@@ -178,13 +201,14 @@ const ContentSection = styled.div`
   box-sizing: border-box;
 `;
 
-//수정 포인트
-
-const Correctanswer = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  gap: 5px;
-  font-size: 12px;
+const CorrectAnswer = styled.div<StyledProps>`
+  width: 100%;
+  text-align: center;
+  margin-bottom: 12px;
+  color: ${Color.Red};
+  ${Body.Medium.M}
+  opacity: ${({ show }) => (show ? 1 : 0)};
+  transition: opacity 300ms ease-in-out;
 `;
 
 const ButtenWrapper = styled.div`

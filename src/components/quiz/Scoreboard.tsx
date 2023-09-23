@@ -46,7 +46,7 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   gap: 12px;
-  margin-bottom: 81px;
+  margin-bottom: 60px;
 `;
 
 const Progress = styled.div<StyledProps>`

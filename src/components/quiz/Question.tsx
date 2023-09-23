@@ -1,4 +1,3 @@
-import React from "react";
 import styled from "styled-components";
 import Color from "styles/color-system";
 import { Body } from "styles/typography-system";
@@ -22,7 +21,6 @@ function Question({ data }: Props) {
 export default Question;
 
 const Container = styled.div`
-  /* position: relative; */
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -30,7 +28,7 @@ const Container = styled.div`
   height: 187px;
   background: ${Color.Gray[100]};
   border-radius: 24px;
-  margin-bottom: 30px;
+  margin-bottom: 21px;
   overflow: hidden auto;
 `;
 
