@@ -1,11 +1,27 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useNavigate, json, useLoaderData, redirect } from "react-router-dom";
-import styled from "styled-components";
-import { nanoid } from "nanoid";
 import { ref, child, update, get } from "firebase/database";
 import { db } from "firebase-config";
+import styled from "styled-components";
+import Color from "styles/color-system";
+import { Heading, Body } from "styles/typography-system";
+import { nanoid } from "nanoid";
 import Utils from "utils/utils";
+import { User } from "types/user-data";
 import Navigation from "components/common/Navigation";
+import Input from "components/common/Input";
+import Button from "components/common/Button";
+
+interface LoaderData {
+  sheetUrl: string;
+  sheetName: string[];
+  userKey: string;
+}
+
+interface StyledProps {
+  paddingTop: number;
+  paddingBtm: number;
+}
 
 function SettingPage() {
   const navigate = useNavigate();
@@ -13,19 +29,18 @@ function SettingPage() {
     sheetUrl: initSheetUrl,
     sheetName: initSheetName,
     userKey,
-  } = useLoaderData() as {
-    [key: string]: string | string[];
-  };
+  } = useLoaderData() as LoaderData;
 
   const sheetUrlRef = useRef<HTMLInputElement>(null);
   const sheetNameRef = useRef<HTMLInputElement>(null);
   const [sheetNameList, setSheetNameList] = useState<string[]>([]);
 
   useEffect(() => {
+    if (!sheetUrlRef.current) return; //임시
     //init
     if (initSheetUrl) {
       console.log("init SheetUrl");
-      sheetUrlRef.current!.value = initSheetUrl as string;
+      sheetUrlRef.current.value = initSheetUrl as string;
     }
 
     if (initSheetName.length > 0) {
@@ -94,7 +109,34 @@ function SettingPage() {
   return (
     <Container>
       <Navigation label="설정" />
-      <h1>SettingPage</h1>
+      <ContentSection>
+        <SettingSection paddingTop={40} paddingBtm={30}>
+          <Title>구글 시트 설정</Title>
+          <Input label="구글 시트 URL" onChange={() => console.log("")} />
+          <SheetNameSectioin>
+            <div className="input-wrapper">
+              <Input
+                label="구글 시트 URL"
+                width="calc(100% - 136px)"
+                onChange={() => console.log("")}
+              />
+              <Button
+                label="완료"
+                size="M"
+                width="128px"
+                onClick={() => console.log("")}
+              />
+            </div>
+            <div className="chip-wrapper"></div>
+          </SheetNameSectioin>
+        </SettingSection>
+        <SettingSection paddingTop={30} paddingBtm={40}>
+          <Title>퀴즈 시스템 설정</Title>
+          <Input label="전체 스테이지" onChange={() => console.log("")} />
+          <Button label="저장하기" onClick={() => console.log("")} />
+        </SettingSection>
+      </ContentSection>
+      {/* <h1>SettingPage</h1>
       <label>
         Google Sheets URL
         <div className="input-wrapper">
@@ -124,7 +166,7 @@ function SettingPage() {
       </div>
       <button type="button" onClick={handleSubmit}>
         Submit
-      </button>
+      </button> */}
     </Container>
   );
 }
@@ -149,27 +191,39 @@ export async function loader() {
 }
 
 const Container = styled.div`
-  & h1 {
-    margin-bottom: 20px;
-  }
-  & label {
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
-    margin-bottom: 20px;
-  }
-  & input {
-    width: 200px;
-    margin-right: 10px;
-  }
+  width: 100%;
+  min-height: 100%;
+`;
+
+const ContentSection = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  background: ${Color.Gray[200]};
+`;
+
+const SettingSection = styled.div<StyledProps>`
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding-inline: 25px;
+  padding-top: ${({ paddingTop }) => `${paddingTop}px`};
+  padding-bottom: ${({ paddingBtm }) => `${paddingBtm}px`};
+  box-sizing: border-box;
+  background: ${Color.Gray[100]};
+`;
+
+const Title = styled.h2`
+  color: ${Color.Gray[800]};
+  ${Heading.H2};
+`;
+
+const SheetNameSectioin = styled.div`
+  display: flex;
 
   & .input-wrapper {
     display: flex;
-  }
-
-  & .category-list {
-    display: flex;
-    gap: 10px;
-    margin-bottom: 30px;
+    gap: 8px;
+    align-items: end;
   }
 `;

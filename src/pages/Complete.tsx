@@ -35,7 +35,6 @@ interface LoaderData {
 
 function CompletePage() {
   const data = useLoaderData() as LoaderData;
-  console.log("cop2", data);
   const userName = localStorage.getItem("userName");
   const navigate = useNavigate();
   const captureRef = useRef<HTMLDivElement>(null);
