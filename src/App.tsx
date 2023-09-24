@@ -1,10 +1,9 @@
 import React from "react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import ErrorPage from "pages/Error";
-import MainLoader from "pages/MainLoader";
-import MainPage from "pages/Main";
+import MainPage, { loader as MainLoader } from "pages/Main";
 import QuizPage, { loader as QuizLoader } from "pages/Quiz";
-import CompletePage from "pages/Complete";
+import CompletePage, { loader as CompleteLoader } from "pages/Complete";
 import SettingPage, { loader as SettingLoader } from "pages/Setting";
 import SignInPage from "pages/SignIn";
 import SignUpPage, { loader as SignUpLoader } from "pages/SignUp";
@@ -22,15 +21,16 @@ const router = createBrowserRouter(
           id: "main-loader",
           loader: MainLoader,
           children: [
-            { index: true, element: <MainPage /> },
+            { index: true, element: <MainPage />, loader: MainLoader },
             {
               path: "quiz/:sheetName",
               element: <QuizPage />,
               loader: QuizLoader,
             },
             {
-              path: "complete",
+              path: "complete/:scoreListId",
               element: <CompletePage />,
+              loader: CompleteLoader,
             },
           ],
         },

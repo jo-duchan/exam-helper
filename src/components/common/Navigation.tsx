@@ -12,7 +12,7 @@ function Navigation({ label }: Props) {
   const navigate = useNavigate();
 
   const handleBack = () => {
-    navigate(-1);
+    navigate("..");
   };
   return (
     <Container>
@@ -42,6 +42,8 @@ const BackButton = styled.button`
   display: flex;
   align-items: center;
   justify-content: center;
+  cursor: pointer;
+  user-select: none;
 
   & svg {
     width: 24px;

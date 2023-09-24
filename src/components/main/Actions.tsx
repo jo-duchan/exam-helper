@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import styled from "styled-components";
-import { format } from "date-fns";
+import Utils from "utils/utils";
 import { Heading, Body } from "styles/typography-system";
 import Color from "styles/color-system";
 import { ScoreList, WrongList } from "types/user-data";
@@ -23,7 +23,7 @@ function Actions({ sheetNames, scoreList = {} }: Props) {
 
   const renderDate = (key: string) => {
     if (hasSheetName(key)) {
-      return format(scoreList[hasSheetName(key)].date, "yy.MM.dd");
+      return Utils.dateFormat(scoreList[hasSheetName(key)].date);
     }
 
     return "00.00.00";

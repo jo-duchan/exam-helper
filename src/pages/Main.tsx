@@ -1,9 +1,12 @@
 import { useEffect } from "react";
-import { useRouteLoaderData } from "react-router-dom";
+import { useLoaderData, redirect, json } from "react-router-dom";
+import { ref, child, get } from "firebase/database";
+import { db } from "firebase-config";
 import styled from "styled-components";
 import { Heading, Body } from "styles/typography-system";
 import { Admin } from "types/admin-data";
 import { User } from "types/user-data";
+import Utils from "utils/utils";
 import MainNavigation from "components/main/MainNavigation";
 import Banner from "components/main/Banner";
 import Actions from "components/main/Actions";
@@ -16,7 +19,7 @@ interface LoaderData {
 }
 
 function MainPage() {
-  const { data, admin } = useRouteLoaderData("main-loader") as LoaderData;
+  const { data, admin } = useLoaderData() as LoaderData;
 
   useEffect(() => {
     console.log(admin.banner, data.sheetName, data);
@@ -44,6 +47,43 @@ function MainPage() {
 }
 
 export default MainPage;
+
+export async function loader() {
+  const userKey = localStorage.getItem("userKey");
+  if (!userKey) {
+    return redirect("/signin");
+  }
+
+  const dbRef = ref(db);
+  const data = await get(child(dbRef, `users/${userKey}/`))
+    .then((snapshot) => {
+      if (snapshot.exists()) {
+        return snapshot.val();
+      } else {
+        throw json({ message: "No data available" }, { status: 500 });
+      }
+    })
+    .catch((error) => {
+      throw json({ message: error }, { status: 500 });
+    });
+
+  localStorage.setItem("sheetId", Utils.convertSheetUrl(data.sheetUrl));
+  localStorage.setItem("userName", data.name);
+
+  const admin = await get(child(dbRef, `admin`))
+    .then((snapshot) => {
+      if (snapshot.exists()) {
+        return snapshot.val();
+      } else {
+        throw json({ message: "No data available" }, { status: 500 });
+      }
+    })
+    .catch((error) => {
+      throw json({ message: error }, { status: 500 });
+    });
+
+  return { data, admin };
+}
 
 const Container = styled.div`
   width: 100%;

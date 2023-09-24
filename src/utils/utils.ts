@@ -1,4 +1,5 @@
 import { Items } from "types/google-sheet";
+import { format } from "date-fns";
 
 const cleanRow = (row: Items) => {
   const replaceItems = row.filter((item, index) => item !== null && index < 2);
@@ -25,6 +26,10 @@ const random = (length: number) => {
   return Math.floor(Math.random() * length);
 };
 
-const Utils = { cleanRow, longPress, convertSheetUrl, random };
+const dateFormat = (date: number) => {
+  return format(date, "yy.MM.dd");
+};
+
+const Utils = { cleanRow, longPress, convertSheetUrl, random, dateFormat };
 
 export default Utils;

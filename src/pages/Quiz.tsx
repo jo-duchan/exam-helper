@@ -7,7 +7,6 @@ import { ref, set, push } from "firebase/database";
 import { db } from "firebase-config";
 import Utils from "utils/utils";
 import { Items } from "types/google-sheet";
-import useScore from "hook/useScore";
 import Navigation from "components/common/Navigation";
 import Scoreboard from "components/quiz/Scoreboard";
 import Question from "components/quiz/Question";
@@ -29,7 +28,6 @@ const TIMEING = 1000;
 function QuizPage() {
   const { items: data, sheetName } = useLoaderData() as LoaderData;
   const navigate = useNavigate();
-  const setFinalScore = useScore.Action();
   const [qNum, SetQNum] = useState(0);
   const [value, setValue] = useState("");
   const [score, setScore] = useState(0);
@@ -47,8 +45,7 @@ function QuizPage() {
   }, []);
 
   useEffect(() => {
-    const updateScoreList = async (score: number) => {
-      const date = Date.now();
+    const updateScoreList = async (score: number, date: number) => {
       const userKey = localStorage.getItem("userKey");
       const listRef = ref(db, `users/${userKey}/scoreList`);
       const newListRef = push(listRef);
@@ -58,13 +55,14 @@ function QuizPage() {
         date,
         wrongList,
       });
+      return newListRef.key;
     };
 
     const finishStage = async () => {
+      const date = Date.now();
       const finalScore = Math.floor((score / totalStage) * 100);
-      setFinalScore(finalScore);
-      await updateScoreList(finalScore);
-      navigate("/complete");
+      const scoreListId = await updateScoreList(finalScore, date);
+      navigate(`/complete/${scoreListId}`);
     };
 
     if (score + miss >= totalStage) {
@@ -79,7 +77,7 @@ function QuizPage() {
       SetQNum(random);
       setValue("");
     } else {
-      nextStage();
+      setTimeout(nextStage, 0);
     }
   };
 

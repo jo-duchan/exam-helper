@@ -3,6 +3,9 @@ import reset from "styled-reset";
 import Color from "styles/color-system";
 import ZIndex from "styles/z-index";
 
+const fontFamily =
+  '"Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif';
+
 const GlobalStyle = createGlobalStyle`
 ${reset};
 
@@ -17,12 +20,16 @@ html, body {
 }
 
 #root {
-    font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
+    font-family: ${fontFamily};
     display: flex;
     width: var(--gobal-width);
     min-height: 100%;
     background: ${Color.Gray[100]};
     margin-inline: auto;
+}
+
+textarea {
+    font-family: ${fontFamily};
 }
 
 #overlays {

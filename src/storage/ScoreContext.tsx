@@ -6,19 +6,27 @@ import {
   useState,
 } from "react";
 
+export type ValueType = {
+  date: number;
+  score: number;
+};
+
 interface Props {
   children: ReactNode;
 }
 
-type ActionType = Dispatch<SetStateAction<number>> | undefined;
+type ActionType = Dispatch<SetStateAction<ValueType>> | undefined;
 
-const defaultValue = 0;
+const defaultValue = {
+  date: 0,
+  score: 0,
+};
 
-export const ScoreValue = createContext<number | undefined>(undefined);
+export const ScoreValue = createContext<ValueType | undefined>(undefined);
 export const ScoreAction = createContext<ActionType>(undefined);
 
 function ScoreContext({ children }: Props) {
-  const [scoreValue, setScoreValue] = useState<number>(defaultValue);
+  const [scoreValue, setScoreValue] = useState<ValueType>(defaultValue);
 
   return (
     <ScoreAction.Provider value={setScoreValue}>
