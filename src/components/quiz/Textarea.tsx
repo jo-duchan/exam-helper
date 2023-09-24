@@ -35,7 +35,7 @@ const Container = styled.textarea<StyledProps>`
   border-radius: 24px;
   box-sizing: border-box;
   outline: initial;
-  border: 1px solid;
+  border: 2px solid;
   transition: color, border-color 300ms ease-in-out;
 
   ${Body.Medium.L};

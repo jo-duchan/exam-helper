@@ -131,7 +131,7 @@ const ScoreSection = styled.div`
 
   & .score {
     font-family: "Black Ops One";
-    font-size: 56px;
+    font-size: 48px;
     font-weight: 400;
     line-height: normal;
     letter-spacing: -2px;
