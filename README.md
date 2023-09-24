@@ -21,3 +21,4 @@
 * styled-components
 * Firebase Realtime Database
 * Google Visualization API
+* Amazon S3
