@@ -5,7 +5,8 @@ import { Body } from "styles/typography-system";
 import { ReactComponent as Error } from "assets/icon/error.svg";
 
 interface Props {
-  value?: string;
+  value?: string | number;
+  type?: "text" | "number";
   label?: string;
   placeholder?: string;
   width?: string;
@@ -19,8 +20,14 @@ interface StyledProps {
   error?: boolean;
 }
 
+const mode: { [key: string]: "text" | "numeric" } = {
+  text: "text",
+  number: "numeric",
+};
+
 function Input({
-  value = "",
+  value,
+  type = "text",
   status = "default",
   label,
   placeholder,
@@ -33,8 +40,9 @@ function Input({
       <Label>
         {label}
         <InputField
-          value={value}
-          type="text"
+          value={value || ""}
+          type={type}
+          inputMode={mode[type]}
           placeholder={placeholder}
           disabled={status === "disabled"}
           error={status === "error"}
