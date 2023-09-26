@@ -12,6 +12,7 @@ import Banner from "components/main/Banner";
 import Actions from "components/main/Actions";
 import Tip from "components/main/Tip";
 import Fire from "assets/img/fire.png";
+import useOverlay from "hook/useOverlay";
 
 interface LoaderData {
   data: User;
