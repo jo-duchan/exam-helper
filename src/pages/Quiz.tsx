@@ -1,5 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { useLoaderData, json, redirect, useNavigate } from "react-router-dom";
+import {
+  useLoaderData,
+  json,
+  redirect,
+  useNavigate,
+  useSearchParams,
+} from "react-router-dom";
 import styled from "styled-components";
 import Color from "styles/color-system";
 import { Body } from "styles/typography-system";
@@ -36,12 +42,19 @@ function QuizPage() {
   const [state, setState] = useState<"HIT" | "MISS" | "DEFAULT">("DEFAULT");
   const [correctAnswer, setCorrectAnswer] = useState<string>("");
   const [wrongList, setWrongList] = useState<WrongList>([]);
-  // 로컬스테이지에서 세팅된 값 가져와서 data.length보다 크면 data.length로
-  const totalStage = data.length;
+  const [serchParams] = useSearchParams();
+
+  const setTotalStage = () => {
+    const setData = parseInt(serchParams.get("mode")!) || 0;
+    if (0 < setData && setData < data.length) {
+      return setData;
+    }
+    return data.length;
+  };
 
   useEffect(() => {
     // init
-    SetQNum(Utils.random(totalStage));
+    SetQNum(Utils.random(setTotalStage()));
   }, []);
 
   useEffect(() => {
@@ -60,18 +73,18 @@ function QuizPage() {
 
     const finishStage = async () => {
       const date = Date.now();
-      const finalScore = Math.floor((score / totalStage) * 100);
+      const finalScore = Math.floor((score / setTotalStage()) * 100);
       const scoreListId = await updateScoreList(finalScore, date);
       navigate(`/complete/${scoreListId}`);
     };
 
-    if (score + miss >= totalStage) {
+    if (score + miss >= setTotalStage()) {
       finishStage();
     }
   }, [score, miss]);
 
   const nextStage = () => {
-    const random = Utils.random(totalStage);
+    const random = Utils.random(setTotalStage());
     const overlapCheck = overlap.filter((num) => num === random).length;
     if (overlapCheck === 0 && qNum !== random) {
       SetQNum(random);
@@ -119,7 +132,7 @@ function QuizPage() {
   return (
     <Container>
       <Navigation label="퀴즈" />
-      <Scoreboard score={score} miss={miss} totalStage={totalStage} />
+      <Scoreboard score={score} miss={miss} totalStage={setTotalStage()} />
       <ContentSection>
         <Question data={data[qNum][0]} />
         <CorrectAnswer show={state === "MISS"}>

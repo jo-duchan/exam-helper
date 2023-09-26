@@ -38,7 +38,7 @@ function MainPage() {
             도전해 보세요! <img src={Fire} alt="불 이미지" />
           </span>
         </Title>
-        <Actions sheetNames={data.sheetNameList} scoreList={data.scoreList} />
+        <Actions data={data} />
         <Tip />
       </ContentSection>
     </Container>

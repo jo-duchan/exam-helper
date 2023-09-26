@@ -3,16 +3,16 @@ import styled from "styled-components";
 import Utils from "utils/utils";
 import { Heading, Body } from "styles/typography-system";
 import Color from "styles/color-system";
-import { ScoreList, WrongList } from "types/user-data";
+import { User } from "types/user-data";
 import { ReactComponent as Arrow } from "assets/icon/arrow.svg";
 import AddSheetImg from "assets/img/empty.png";
 
 interface Props {
-  sheetNames: string[] | undefined;
-  scoreList?: ScoreList;
+  data: User;
 }
 
-function Actions({ sheetNames, scoreList = {} }: Props) {
+function Actions({ data }: Props) {
+  const { sheetNameList, scoreList, totalStage } = data;
   const hasSheetName = (sheetName: string) => {
     const data = Object.keys(scoreList)
       .reverse()
@@ -44,8 +44,8 @@ function Actions({ sheetNames, scoreList = {} }: Props) {
 
   return (
     <Container>
-      {sheetNames?.map((item) => (
-        <Item key={item} to={`/quiz/${item}`}>
+      {sheetNameList?.map((item) => (
+        <Item key={item} to={`/quiz/${item}?mode=${totalStage}`}>
           <PlayBtn>
             <DateSection>
               <span className="tag">최근 점수</span>

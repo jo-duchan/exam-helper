@@ -92,7 +92,6 @@ function SettingPage() {
       totalStage,
     })
       .then(() => {
-        console.log(sheetNameList);
         window.alert("업데이트가 완료되었습니다.");
         navigate("/");
       })

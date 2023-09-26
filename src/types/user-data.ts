@@ -19,6 +19,7 @@ export type User = {
   name: string;
   scoreList: ScoreList;
   sheetNameList: string[] | undefined;
+  totalStage: number;
   sheetUrl: string;
   userKey: string;
 };
