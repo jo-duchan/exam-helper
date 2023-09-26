@@ -16,23 +16,16 @@ const router = createBrowserRouter(
       id: "root-loader",
       errorElement: <ErrorPage />,
       children: [
+        { index: true, element: <MainPage />, loader: MainLoader },
         {
-          path: "",
-          id: "main-loader",
-          loader: MainLoader,
-          children: [
-            { index: true, element: <MainPage />, loader: MainLoader },
-            {
-              path: "quiz/:sheetName",
-              element: <QuizPage />,
-              loader: QuizLoader,
-            },
-            {
-              path: "complete/:scoreListId",
-              element: <CompletePage />,
-              loader: CompleteLoader,
-            },
-          ],
+          path: "quiz/:sheetName",
+          element: <QuizPage />,
+          loader: QuizLoader,
+        },
+        {
+          path: "complete/:scoreListId",
+          element: <CompletePage />,
+          loader: CompleteLoader,
         },
         { path: "stats", element: <StatsPage />, loader: StatsLoader },
         { path: "setting", element: <SettingPage />, loader: SettingLoader },

@@ -18,7 +18,7 @@ export type User = {
   email: string;
   name: string;
   scoreList: ScoreList;
-  sheetName: string[] | undefined;
+  sheetNameList: string[] | undefined;
   sheetUrl: string;
   userKey: string;
 };

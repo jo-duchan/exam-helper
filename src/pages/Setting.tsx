@@ -1,10 +1,10 @@
 import { useState, useEffect } from "react";
-import { useNavigate, json, useLoaderData, redirect } from "react-router-dom";
+import { useNavigate, json, useLoaderData } from "react-router-dom";
 import { ref, child, update, get } from "firebase/database";
 import { db } from "firebase-config";
 import styled from "styled-components";
 import Color from "styles/color-system";
-import { Heading, Body } from "styles/typography-system";
+import { Heading } from "styles/typography-system";
 import { nanoid } from "nanoid";
 import Navigation from "components/common/Navigation";
 import Input from "components/common/Input";
@@ -13,7 +13,7 @@ import Chip from "components/common/Chip";
 
 interface LoaderData {
   sheetUrl: string;
-  sheetName: string[];
+  sheetNameList: string[];
   totalStage: string;
   userKey: string;
 }
@@ -27,7 +27,7 @@ function SettingPage() {
   const navigate = useNavigate();
   const {
     sheetUrl: initSheetUrl,
-    sheetName: initSheetNameList,
+    sheetNameList: initSheetNameList,
     totalStage: initTotalStage,
     userKey,
   } = useLoaderData() as LoaderData;
@@ -36,6 +36,10 @@ function SettingPage() {
   const [sheetName, setSheetName] = useState<string>("");
   const [sheetNameList, setSheetNameList] = useState<string[]>([]);
   const [totalStage, setTotalStage] = useState<number>(0);
+
+  const [sheetUrlValid, setSheetUrlValid] = useState<boolean>(true);
+  const [sheetNameListValid, setSheetNameListValid] = useState<boolean>(true);
+  const [totalStageValid, setTotalStageValid] = useState<boolean>(true);
 
   useEffect(() => {
     // init
@@ -54,28 +58,41 @@ function SettingPage() {
   };
 
   const HandleRemoveSheetNameList = (index: number) => {
-    if (window.confirm("해당 시트 이름을 지우겠습니까?")) {
-      setSheetNameList((prev) => {
-        const newList = prev.filter((item, idx) => idx !== index);
-        return newList;
-      });
-    }
+    setSheetNameList((prev) => {
+      const newList = prev.filter((item, idx) => idx !== index);
+      return newList;
+    });
   };
 
   const handleSubmit = async () => {
-    const updateSheetUrl = sheetUrl;
-    const updateSheetName = sheetNameList;
-    const updateTotalStage = totalStage;
+    if (sheetUrl === "") {
+      setSheetUrlValid(false);
+      return;
+    } else {
+      setSheetUrlValid(true);
+    }
 
-    console.log(updateSheetUrl, updateSheetName, updateTotalStage);
+    if (sheetNameList.length <= 0) {
+      setSheetNameListValid(false);
+      return;
+    } else {
+      setSheetNameListValid(true);
+    }
 
-    return;
-    // 유효성 검사 추가하기.
+    if (totalStage <= 0 || !totalStage) {
+      setTotalStageValid(false);
+      return;
+    } else {
+      setTotalStageValid(true);
+    }
+
     await update(ref(db, `users/${userKey}`), {
-      updateSheetUrl,
-      updateSheetName,
+      sheetUrl,
+      sheetNameList,
+      totalStage,
     })
       .then(() => {
+        console.log(sheetNameList);
         window.alert("업데이트가 완료되었습니다.");
         navigate("/");
       })
@@ -94,6 +111,8 @@ function SettingPage() {
           <Input
             label="구글 시트 URL"
             placeholder="URL을 입력해 주세요."
+            status={!sheetUrlValid ? "error" : "default"}
+            errorMsg="구글 시트 URL을 확인해 주세요."
             value={sheetUrl}
             onChange={(e) => setSheetUrl(e.currentTarget.value)}
           />
@@ -103,6 +122,8 @@ function SettingPage() {
                 label="구글 시트 이름"
                 width="calc(100% - 136px)"
                 placeholder="시트 이름을 입력해 주세요."
+                status={!sheetNameListValid ? "error" : "default"}
+                errorMsg="구글 시트 이름을 하나 이상 추가해 주세요."
                 value={sheetName}
                 onChange={(e) => setSheetName(e.currentTarget.value)}
               />
@@ -129,6 +150,8 @@ function SettingPage() {
           <Input
             label="문제 수"
             placeholder="스테이지를 입력해 주세요."
+            status={!totalStageValid ? "error" : "default"}
+            errorMsg="문제 수는 1 이상 설정해 주세요."
             type="number"
             value={totalStage}
             onChange={(e) => setTotalStage(parseInt(e.currentTarget.value))}
