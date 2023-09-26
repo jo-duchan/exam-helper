@@ -147,10 +147,10 @@ function SettingPage() {
         <SettingSection paddingTop={30} paddingBtm={40}>
           <Title>퀴즈 시스템 설정</Title>
           <Input
-            label="문제 수"
+            label="총 문항 수"
             placeholder="스테이지를 입력해 주세요."
             status={!totalStageValid ? "error" : "default"}
-            errorMsg="문제 수는 1 이상 설정해 주세요."
+            errorMsg="총 문항 수는 1개 이상 설정해 주세요."
             type="number"
             value={totalStage}
             onChange={(e) => setTotalStage(parseInt(e.currentTarget.value))}
