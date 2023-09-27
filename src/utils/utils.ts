@@ -30,6 +30,19 @@ const dateFormat = (date: number) => {
   return format(date, "yy.MM.dd");
 };
 
-const Utils = { cleanRow, longPress, convertSheetUrl, random, dateFormat };
+const vibration = (time: number) => {
+  if ("vibrate" in navigator) {
+    navigator.vibrate(time);
+  }
+};
+
+const Utils = {
+  cleanRow,
+  longPress,
+  convertSheetUrl,
+  random,
+  dateFormat,
+  vibration,
+};
 
 export default Utils;

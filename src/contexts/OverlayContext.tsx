@@ -7,6 +7,7 @@ import {
   OverlayType,
 } from "types/overlay";
 import RenderOverlay from "components/overlays/RenderOverlay";
+import Progress from "components/overlays/Progress";
 
 interface Props {
   children: React.ReactNode;
@@ -76,7 +77,7 @@ function OverlayContext({ children }: Props) {
         handleAddItem(element, type),
       handleHide: (id: string, type?: OverlayType) =>
         handleRemoveItem(id, type),
-      showProgress: () => handleAddItem(<div>임시</div>, "PROGRESS"),
+      showProgress: () => handleAddItem(<Progress />, "PROGRESS"),
       hideProgress: () => handleRemoveProgress(),
       showToast: (message: string) =>
         handleAddItem(<div>{message}</div>, "TOAST"),

@@ -6,13 +6,14 @@ import {
   useNavigate,
   useSearchParams,
 } from "react-router-dom";
-import styled from "styled-components";
+import styled, { keyframes, css } from "styled-components";
 import Color from "styles/color-system";
 import { Body } from "styles/typography-system";
 import { ref, set, push } from "firebase/database";
 import { db } from "firebase-config";
 import Utils from "utils/utils";
 import { Items } from "types/google-sheet";
+import useOverlay from "hook/useOverlay";
 import Navigation from "components/common/Navigation";
 import Scoreboard from "components/quiz/Scoreboard";
 import Question from "components/quiz/Question";
@@ -20,7 +21,8 @@ import Button from "components/common/Button";
 import Textarea from "components/quiz/Textarea";
 
 interface StyledProps {
-  show: boolean;
+  show?: boolean;
+  vibration?: boolean;
 }
 
 interface LoaderData {
@@ -34,6 +36,7 @@ const TIMEING = 1000;
 function QuizPage() {
   const { items: data, sheetName } = useLoaderData() as LoaderData;
   const navigate = useNavigate();
+  const { showProgress } = useOverlay();
   const [qNum, SetQNum] = useState(0);
   const [value, setValue] = useState("");
   const [score, setScore] = useState(0);
@@ -43,6 +46,7 @@ function QuizPage() {
   const [correctAnswer, setCorrectAnswer] = useState<string>("");
   const [wrongList, setWrongList] = useState<WrongList>([]);
   const [serchParams] = useSearchParams();
+  const [vibration, setVibration] = useState(false);
 
   const setTotalStage = () => {
     const setData = parseInt(serchParams.get("mode")!) || 0;
@@ -55,6 +59,7 @@ function QuizPage() {
   useEffect(() => {
     // init
     SetQNum(Utils.random(setTotalStage()));
+    // showProgress();
   }, []);
 
   useEffect(() => {
@@ -122,15 +127,18 @@ function QuizPage() {
       setWrongList((prev) => {
         return [...prev, [data[qNum][0], data[qNum][1]]];
       });
+      setVibration(true);
+      Utils.vibration(450);
       setTimeout(() => {
         nextStage();
         setState("DEFAULT");
+        setVibration(false);
       }, TIMEING);
     }
   };
 
   return (
-    <Container>
+    <Container vibration={vibration}>
       <Navigation label="퀴즈" />
       <Scoreboard score={score} miss={miss} totalStage={setTotalStage()} />
       <ContentSection>
@@ -202,9 +210,24 @@ export async function loader({
   return { items, sheetName };
 }
 
-const Container = styled.div`
+const vibrationKeyframe = keyframes`
+  from {
+    transform: rotate(0.5deg);
+  }
+  to {
+    transform: rotate(-0.5deg);
+  }
+`;
+
+const Container = styled.div<StyledProps>`
   width: 100%;
   min-height: 100%;
+
+  ${({ vibration }) =>
+    vibration &&
+    css`
+      animation: ${vibrationKeyframe} 90ms 5;
+    `}
 `;
 
 const ContentSection = styled.div`
