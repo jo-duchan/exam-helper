@@ -51,28 +51,46 @@ function CompletePage() {
     return "low";
   };
 
-  const handleShare = () => {
-    console.log("handleShare");
+  const getCanvas = async (fileName: string) => {
     if (!captureRef.current) return;
-    html2canvas(captureRef.current)
-      .then((canvas) => {
-        onSaveImg(
-          canvas.toDataURL("image/png"),
-          `exam-helper-${Utils.dateFormat(data.date)}-${data.score}.png`
-        );
-      })
-      .catch((error) => {
-        window.alert(error);
+
+    try {
+      const canvas = await html2canvas(captureRef.current);
+      const blob = await new Promise((resolve) => canvas.toBlob(resolve));
+      const file = new File([blob as BlobPart], fileName, {
+        type: "image/jpeg",
       });
+      const url = canvas.toDataURL("image/jpeg");
+
+      return { file, url };
+    } catch {
+      window.alert("캔버스 변환에 실패했습니다.");
+    }
   };
 
-  const onSaveImg = (url: string, name: string) => {
-    const link = document.createElement("a");
-    document.body.appendChild(link);
-    link.href = url;
-    link.download = name;
-    link.click();
-    document.body.removeChild(link);
+  const handleShare = async () => {
+    const fileName = `exam-helper-${Utils.dateFormat(data.date)}-${
+      data.score
+    }.jpeg`;
+    const shareData = (await getCanvas(fileName)) as any;
+
+    try {
+      if (navigator.share ?? false) {
+        await navigator.share({
+          title: "함께 성장해요 이그잼 헬퍼!",
+          files: [shareData.file],
+        });
+      } else {
+        const link = document.createElement("a");
+        document.body.appendChild(link);
+        link.href = shareData.url;
+        link.download = fileName;
+        link.click();
+        document.body.removeChild(link);
+      }
+    } catch {
+      window.alert("취소 했습니다.");
+    }
   };
 
   const handleWrongAnswerList = () => {
