@@ -11,6 +11,7 @@ import Color from "styles/color-system";
 import { Body } from "styles/typography-system";
 import { ref, set, push } from "firebase/database";
 import { db } from "firebase-config";
+import { NOT_FOUND_SHEET, NOT_FOUND_SHEET_VALUE } from "assets/data/error-case";
 import Utils from "utils/utils";
 import { Items } from "types/google-sheet";
 import useOverlay from "hook/useOverlay";
@@ -197,15 +198,17 @@ export async function loader({
   const sheetName = params.sheetName;
   const query = encodeURIComponent("Select *");
   const url = `${base}&sheet=${sheetName}&tq=${query}`;
-  const response = await fetch(url);
+  const response = await fetch(url).catch(() => {
+    throw json({ message: NOT_FOUND_SHEET }, { status: 500 });
+  });
   const data = await response.text();
   const convert = JSON.parse(data.substring(47).slice(0, -2));
 
   if (!response.ok) {
-    throw json({ message: "Could not find Google Sheet." }, { status: 500 });
+    throw json({ message: NOT_FOUND_SHEET }, { status: 500 });
   }
   if (convert.table.rows.length <= 0) {
-    throw json({ message: "No Google Sheet values found." }, { status: 500 });
+    throw json({ message: NOT_FOUND_SHEET_VALUE }, { status: 500 });
   }
 
   const items = convert.table.rows.map(({ c }: { c: Items }) =>
