@@ -17,7 +17,7 @@ export type User = {
   crated: number;
   email: string;
   name: string;
-  scoreList: ScoreList;
+  scoreList?: ScoreList;
   sheetNameList: string[] | undefined;
   totalStage: number;
   sheetUrl: string;

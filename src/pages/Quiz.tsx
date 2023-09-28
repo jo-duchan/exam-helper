@@ -49,7 +49,7 @@ function QuizPage() {
   const [vibration, setVibration] = useState(false);
 
   const setTotalStage = () => {
-    const setData = parseInt(serchParams.get("mode")!) || 0;
+    const setData = parseInt(serchParams.get("stage")!) || 0;
     if (0 < setData && setData < data.length) {
       return setData;
     }
@@ -181,7 +181,12 @@ export async function loader({
   request: Request;
   params: any;
 }) {
-  const sheetId = localStorage.getItem("sheetId");
+  let sheetId = localStorage.getItem("sheetId");
+  const tutorialKey = new URL(request.url).searchParams.get("mode");
+
+  if (tutorialKey) {
+    sheetId = tutorialKey;
+  }
 
   if (!sheetId) {
     window.alert("Google SpreadSheet Url을 다시 확인해 주세요.");

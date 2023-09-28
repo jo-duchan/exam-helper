@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useLoaderData, redirect, json } from "react-router-dom";
 import { ref, child, get } from "firebase/database";
 import { db } from "firebase-config";
@@ -10,9 +10,10 @@ import Utils from "utils/utils";
 import MainNavigation from "components/main/MainNavigation";
 import Banner from "components/main/Banner";
 import Actions from "components/main/Actions";
-import Tip from "components/main/Tip";
+import Information from "components/main/Information";
 import Fire from "assets/img/fire.png";
 import useOverlay from "hook/useOverlay";
+import { InfoData } from "assets/data/main-info";
 
 interface LoaderData {
   data: User;
@@ -21,10 +22,11 @@ interface LoaderData {
 
 function MainPage() {
   const { data, admin } = useLoaderData() as LoaderData;
+  const [infoType, setInfoType] = useState<string>("stats");
 
   useEffect(() => {
-    if (Object.keys(data.scoreList).length <= 0) {
-      console.log("Tutorial!");
+    if (!data.scoreList) {
+      setInfoType("tutorial");
     }
   }, []);
 
@@ -40,7 +42,7 @@ function MainPage() {
           </span>
         </Title>
         <Actions data={data} />
-        <Tip />
+        <Information data={InfoData[infoType]} />
       </ContentSection>
     </Container>
   );
