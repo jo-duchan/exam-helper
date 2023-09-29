@@ -5,6 +5,7 @@ import { Heading } from "styles/typography-system";
 import { Admin } from "types/admin-data";
 import { User } from "types/user-data";
 import { LoaderProps } from "types/loader-props";
+import { InfoData } from "assets/data/main-info";
 import Utils from "utils/utils";
 import service from "hook/useService";
 import MainNavigation from "components/main/MainNavigation";
@@ -12,7 +13,7 @@ import Banner from "components/main/Banner";
 import Actions from "components/main/Actions";
 import Information from "components/main/Information";
 import Fire from "assets/img/fire.png";
-import { InfoData } from "assets/data/main-info";
+import useOverlay from "hook/useOverlay";
 
 interface LoaderData {
   data: User;
@@ -22,9 +23,9 @@ interface LoaderData {
 function MainPage() {
   const { data, admin } = useLoaderData() as LoaderData;
   const [infoType, setInfoType] = useState<string>("stats");
+  const { showToast } = useOverlay();
 
   useEffect(() => {
-    console.log(data, admin);
     if (!data.scoreList) {
       setInfoType("tutorial");
     }

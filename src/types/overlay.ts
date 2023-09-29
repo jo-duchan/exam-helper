@@ -1,4 +1,5 @@
 import React from "react";
+import { IconType } from "types/icon-set";
 
 export type OverlayElement = React.ReactElement<
   any,
@@ -10,7 +11,7 @@ export type OverlayContextType = {
   handleHide: (id: string, type?: OverlayType) => void;
   showProgress: () => void;
   hideProgress: () => void;
-  showToast: (message: string) => void;
+  showToast: (type: IconType, message: string) => void;
 };
 
 export type OverlayItem = {

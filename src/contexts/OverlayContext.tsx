@@ -6,8 +6,10 @@ import {
   OverlayElement,
   OverlayType,
 } from "types/overlay";
+import { IconType } from "types/icon-set";
 import RenderOverlay from "components/overlays/RenderOverlay";
 import Progress from "components/overlays/Progress";
+import Toast from "components/overlays/Toast";
 
 interface Props {
   children: React.ReactNode;
@@ -79,8 +81,8 @@ function OverlayContext({ children }: Props) {
         handleRemoveItem(id, type),
       showProgress: () => handleAddItem(<Progress />, "PROGRESS"),
       hideProgress: () => handleRemoveProgress(),
-      showToast: (message: string) =>
-        handleAddItem(<div>{message}</div>, "TOAST"),
+      showToast: (type: IconType, message: string) =>
+        handleAddItem(<Toast type={type} message={message} />, "TOAST"),
     };
   }, [handleAddItem, handleRemoveItem]);
 
