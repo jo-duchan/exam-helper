@@ -13,7 +13,6 @@ import Banner from "components/main/Banner";
 import Actions from "components/main/Actions";
 import Information from "components/main/Information";
 import Fire from "assets/img/fire.png";
-import useOverlay from "hook/useOverlay";
 
 interface LoaderData {
   data: User;
@@ -23,7 +22,6 @@ interface LoaderData {
 function MainPage() {
   const { data, admin } = useLoaderData() as LoaderData;
   const [infoType, setInfoType] = useState<string>("stats");
-  const { showToast } = useOverlay();
 
   useEffect(() => {
     if (!data.scoreList) {

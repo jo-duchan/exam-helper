@@ -12,15 +12,15 @@ interface Props {
   id?: string;
   display?: string;
   speed?: number;
-  type: IconType;
   message: string;
+  type?: IconType;
 }
 
 interface StyledProps {
   duration: number;
 }
 
-function Toast({ id, display, speed, type = "none", message }: Props) {
+function Toast({ id, display, speed, message, type = "none" }: Props) {
   const { handleHide } = useOverlay();
   const [show, setShow] = useState(false);
 
