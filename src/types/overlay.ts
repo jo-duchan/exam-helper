@@ -11,7 +11,7 @@ export type OverlayContextType = {
   handleHide: (id: string, type?: OverlayType) => void;
   showProgress: () => void;
   hideProgress: () => void;
-  showToast: (message: string, type?: IconType) => void;
+  showToast: (message: string, sort?: IconType) => void;
 };
 
 export type OverlayItem = {

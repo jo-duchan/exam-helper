@@ -81,8 +81,8 @@ function OverlayContext({ children }: Props) {
         handleRemoveItem(id, type),
       showProgress: () => handleAddItem(<Progress />, "PROGRESS"),
       hideProgress: () => handleRemoveProgress(),
-      showToast: (message: string, type?: IconType) =>
-        handleAddItem(<Toast message={message} type={type} />, "TOAST"),
+      showToast: (message: string, sort?: IconType) =>
+        handleAddItem(<Toast message={message} sort={sort} />, "TOAST"),
     };
   }, [handleAddItem, handleRemoveItem]);
 

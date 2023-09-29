@@ -13,14 +13,14 @@ interface Props {
   display?: string;
   speed?: number;
   message: string;
-  type?: IconType;
+  sort?: IconType;
 }
 
 interface StyledProps {
   duration: number;
 }
 
-function Toast({ id, display, speed, message, type = "none" }: Props) {
+function Toast({ id, display, speed, message, sort = "none" }: Props) {
   const { handleHide } = useOverlay();
   const [show, setShow] = useState(false);
 
@@ -45,7 +45,7 @@ function Toast({ id, display, speed, message, type = "none" }: Props) {
   return (
     <CSSTransition in={show} timeout={speed!}>
       <Container duration={speed!}>
-        <IconSet type={type} />
+        <IconSet type={sort} />
         <Message>{message}</Message>
       </Container>
     </CSSTransition>
@@ -94,7 +94,7 @@ const Container = styled.div<StyledProps>`
 
 const Message = styled.span`
   width: 100%;
-  white-space: normal;
+  white-space: pre;
   word-wrap: break-word;
   display: -webkit-box;
   -webkit-line-clamp: 2;

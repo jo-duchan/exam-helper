@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useLoaderData, redirect } from "react-router-dom";
 import styled from "styled-components";
+import Color from "styles/color-system";
 import { Heading } from "styles/typography-system";
 import { Admin } from "types/admin-data";
 import { User } from "types/user-data";
@@ -27,7 +28,6 @@ function MainPage() {
     if (!data.scoreList) {
       setInfoType("tutorial");
     }
-
     const root = document.getElementById("root") as HTMLElement;
 
     root.style.height = "100%";
@@ -64,7 +64,8 @@ export async function loader({ showProgress, hideProgress }: LoaderProps) {
   if (!userKey) {
     return redirect("/signin");
   }
-  showProgress();
+
+  setTimeout(() => showProgress(), 0);
   const data: User = await service().GET(`users/${userKey}/`);
   const admin: Admin = await service().GET(`admin`);
 
