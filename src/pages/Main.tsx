@@ -27,6 +27,16 @@ function MainPage() {
     if (!data.scoreList) {
       setInfoType("tutorial");
     }
+
+    const root = document.getElementById("root") as HTMLElement;
+
+    root.style.height = "100%";
+    root.style.overflow = "hidden";
+
+    return () => {
+      root.style.height = "initial";
+      root.style.overflow = "initial";
+    };
   }, []);
 
   return (
@@ -67,6 +77,7 @@ export async function loader({ showProgress, hideProgress }: LoaderProps) {
 const Container = styled.div`
   width: 100%;
   min-height: 100%;
+  overflow: hidden auto;
 `;
 
 const ContentSection = styled.div`
