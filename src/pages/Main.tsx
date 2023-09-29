@@ -1,18 +1,17 @@
 import { useEffect, useState } from "react";
-import { useLoaderData, redirect, json } from "react-router-dom";
-import { ref, child, get } from "firebase/database";
-import { db } from "firebase-config";
+import { useLoaderData, redirect } from "react-router-dom";
+import service from "hook/useService";
 import styled from "styled-components";
-import { Heading, Body } from "styles/typography-system";
+import { Heading } from "styles/typography-system";
 import { Admin } from "types/admin-data";
 import { User } from "types/user-data";
 import Utils from "utils/utils";
+import LoaderProgress from "components/common/LoaderProgress";
 import MainNavigation from "components/main/MainNavigation";
 import Banner from "components/main/Banner";
 import Actions from "components/main/Actions";
 import Information from "components/main/Information";
 import Fire from "assets/img/fire.png";
-import useOverlay from "hook/useOverlay";
 import { InfoData } from "assets/data/main-info";
 
 interface LoaderData {
@@ -25,26 +24,29 @@ function MainPage() {
   const [infoType, setInfoType] = useState<string>("stats");
 
   useEffect(() => {
+    console.log(data, admin);
     if (!data.scoreList) {
       setInfoType("tutorial");
     }
   }, []);
 
   return (
-    <Container>
-      <MainNavigation />
-      <Banner data={admin.banner} />
-      <ContentSection>
-        <Title>
-          <span>{data.name}님! 오늘 퀴즈에</span>
-          <span>
-            도전해 보세요! <img src={Fire} alt="불 이미지" />
-          </span>
-        </Title>
-        <Actions data={data} />
-        <Information data={InfoData[infoType]} />
-      </ContentSection>
-    </Container>
+    <LoaderProgress resolve={data}>
+      <Container>
+        <MainNavigation />
+        <Banner data={admin.banner} />
+        <ContentSection>
+          <Title>
+            <span>{data.name}님! 오늘 퀴즈에</span>
+            <span>
+              도전해 보세요! <img src={Fire} alt="불 이미지" />
+            </span>
+          </Title>
+          <Actions data={data} />
+          <Information data={InfoData[infoType]} />
+        </ContentSection>
+      </Container>
+    </LoaderProgress>
   );
 }
 
@@ -56,33 +58,11 @@ export async function loader() {
     return redirect("/signin");
   }
 
-  const dbRef = ref(db);
-  const data = await get(child(dbRef, `users/${userKey}/`))
-    .then((snapshot) => {
-      if (snapshot.exists()) {
-        return snapshot.val();
-      } else {
-        throw json({ message: "No data available" }, { status: 500 });
-      }
-    })
-    .catch((error) => {
-      throw json({ message: error }, { status: 500 });
-    });
+  const data: User = await service().GET(`users/${userKey}/`);
+  const admin: Admin = await service().GET(`admin`);
 
   localStorage.setItem("sheetId", Utils.convertSheetUrl(data.sheetUrl));
   localStorage.setItem("userName", data.name);
-
-  const admin = await get(child(dbRef, `admin`))
-    .then((snapshot) => {
-      if (snapshot.exists()) {
-        return snapshot.val();
-      } else {
-        throw json({ message: "No data available" }, { status: 500 });
-      }
-    })
-    .catch((error) => {
-      throw json({ message: error }, { status: 500 });
-    });
 
   return { data, admin };
 }

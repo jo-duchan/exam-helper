@@ -1,7 +1,7 @@
 import { useContext } from "react";
 import { OverlayAction } from "contexts/OverlayContext";
 
-export function useOverlay() {
+function useOverlay() {
   const value = useContext(OverlayAction);
 
   if (value === undefined) {
