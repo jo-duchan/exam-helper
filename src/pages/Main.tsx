@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
 import { useLoaderData, redirect } from "react-router-dom";
-import service from "hook/useService";
 import styled from "styled-components";
 import { Heading } from "styles/typography-system";
 import { Admin } from "types/admin-data";
 import { User } from "types/user-data";
+import { LoaderProps } from "types/loader-props";
 import Utils from "utils/utils";
-import LoaderProgress from "components/common/LoaderProgress";
+import service from "hook/useService";
 import MainNavigation from "components/main/MainNavigation";
 import Banner from "components/main/Banner";
 import Actions from "components/main/Actions";
@@ -31,39 +31,37 @@ function MainPage() {
   }, []);
 
   return (
-    <LoaderProgress resolve={data}>
-      <Container>
-        <MainNavigation />
-        <Banner data={admin.banner} />
-        <ContentSection>
-          <Title>
-            <span>{data.name}님! 오늘 퀴즈에</span>
-            <span>
-              도전해 보세요! <img src={Fire} alt="불 이미지" />
-            </span>
-          </Title>
-          <Actions data={data} />
-          <Information data={InfoData[infoType]} />
-        </ContentSection>
-      </Container>
-    </LoaderProgress>
+    <Container>
+      <MainNavigation />
+      <Banner data={admin.banner} />
+      <ContentSection>
+        <Title>
+          <span>{data.name}님! 오늘 퀴즈에</span>
+          <span>
+            도전해 보세요! <img src={Fire} alt="불 이미지" />
+          </span>
+        </Title>
+        <Actions data={data} />
+        <Information data={InfoData[infoType]} />
+      </ContentSection>
+    </Container>
   );
 }
 
 export default MainPage;
 
-export async function loader() {
+export async function loader({ showProgress, hideProgress }: LoaderProps) {
   const userKey = localStorage.getItem("userKey");
   if (!userKey) {
     return redirect("/signin");
   }
-
+  showProgress();
   const data: User = await service().GET(`users/${userKey}/`);
   const admin: Admin = await service().GET(`admin`);
 
   localStorage.setItem("sheetId", Utils.convertSheetUrl(data.sheetUrl));
   localStorage.setItem("userName", data.name);
-
+  hideProgress();
   return { data, admin };
 }
 

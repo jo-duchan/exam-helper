@@ -5,15 +5,16 @@ import {
   redirect,
   useNavigate,
   useSearchParams,
+  Params,
 } from "react-router-dom";
 import styled, { keyframes, css } from "styled-components";
 import Color from "styles/color-system";
 import { Body } from "styles/typography-system";
-import { ref, set, push } from "firebase/database";
-import { db } from "firebase-config";
+import service from "hook/useService";
 import { NOT_FOUND_SHEET, NOT_FOUND_SHEET_VALUE } from "assets/data/error-case";
 import Utils from "utils/utils";
 import { Items } from "types/google-sheet";
+import { LoaderProps } from "types/loader-props";
 import useOverlay from "hook/useOverlay";
 import Navigation from "components/common/Navigation";
 import Scoreboard from "components/quiz/Scoreboard";
@@ -31,13 +32,18 @@ interface LoaderData {
   sheetName: string;
 }
 
+interface QuizLoaderProps extends LoaderProps {
+  request: Request;
+  params: Params<string>;
+}
+
 type WrongList = string[][];
 const TIMEING = 1000;
 
 function QuizPage() {
   const { items: data, sheetName } = useLoaderData() as LoaderData;
   const navigate = useNavigate();
-  const { showProgress } = useOverlay();
+  const { showProgress, hideProgress } = useOverlay();
   const [qNum, SetQNum] = useState(0);
   const [value, setValue] = useState("");
   const [score, setScore] = useState(0);
@@ -60,27 +66,21 @@ function QuizPage() {
   useEffect(() => {
     // init
     SetQNum(Utils.random(setTotalStage()));
-    // showProgress();
   }, []);
 
   useEffect(() => {
-    const updateScoreList = async (score: number, date: number) => {
+    const finishStage = async () => {
+      showProgress();
       const userKey = localStorage.getItem("userKey");
-      const listRef = ref(db, `users/${userKey}/scoreList`);
-      const newListRef = push(listRef);
-      await set(newListRef, {
+      const date = Date.now();
+      const finalScore = Math.floor((score / setTotalStage()) * 100);
+      const scoreListId = await service().PUSH(`users/${userKey}/scoreList`, {
         sheetName,
-        score,
+        score: finalScore,
         date,
         wrongList,
       });
-      return newListRef.key;
-    };
-
-    const finishStage = async () => {
-      const date = Date.now();
-      const finalScore = Math.floor((score / setTotalStage()) * 100);
-      const scoreListId = await updateScoreList(finalScore, date);
+      hideProgress();
       navigate(`/complete/${scoreListId}`);
     };
 
@@ -178,10 +178,9 @@ export default QuizPage;
 export async function loader({
   request,
   params,
-}: {
-  request: Request;
-  params: any;
-}) {
+  showProgress,
+  hideProgress,
+}: QuizLoaderProps) {
   let sheetId = localStorage.getItem("sheetId");
   const tutorialKey = new URL(request.url).searchParams.get("mode");
 
@@ -198,6 +197,7 @@ export async function loader({
   const sheetName = params.sheetName;
   const query = encodeURIComponent("Select *");
   const url = `${base}&sheet=${sheetName}&tq=${query}`;
+  showProgress();
   const response = await fetch(url).catch(() => {
     throw json({ message: NOT_FOUND_SHEET }, { status: 500 });
   });
@@ -214,7 +214,7 @@ export async function loader({
   const items = convert.table.rows.map(({ c }: { c: Items }) =>
     Utils.cleanRow(c)
   );
-
+  hideProgress();
   return { items, sheetName };
 }
 

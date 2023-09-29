@@ -1,11 +1,12 @@
 import { useState, useEffect } from "react";
-import { useNavigate, json, useLoaderData } from "react-router-dom";
-import { ref, child, update, get } from "firebase/database";
-import { db } from "firebase-config";
+import { useNavigate, useLoaderData } from "react-router-dom";
 import styled from "styled-components";
 import Color from "styles/color-system";
 import { Heading } from "styles/typography-system";
 import { nanoid } from "nanoid";
+import useOverlay from "hook/useOverlay";
+import service from "hook/useService";
+import { LoaderProps } from "types/loader-props";
 import Navigation from "components/common/Navigation";
 import Input from "components/common/Input";
 import Button from "components/common/Button";
@@ -31,6 +32,7 @@ function SettingPage() {
     totalStage: initTotalStage,
     userKey,
   } = useLoaderData() as LoaderData;
+  const { showProgress, hideProgress } = useOverlay();
 
   const [sheetUrl, setSheetUrl] = useState<string>("");
   const [sheetName, setSheetName] = useState<string>("");
@@ -86,19 +88,16 @@ function SettingPage() {
       setTotalStageValid(true);
     }
 
-    await update(ref(db, `users/${userKey}`), {
+    showProgress();
+    await service().UPDATE(`users/${userKey}`, {
       sheetUrl,
       sheetNameList,
       totalStage,
-    })
-      .then(() => {
-        window.alert("업데이트가 완료되었습니다.");
-        navigate("/");
-      })
-      .catch((e) => {
-        window.alert("업데이트에 실패했습니다.");
-        console.log(e);
-      });
+    });
+    hideProgress();
+
+    window.alert("업데이트가 완료되었어요.");
+    navigate("/");
   };
 
   return (
@@ -164,20 +163,12 @@ function SettingPage() {
 
 export default SettingPage;
 
-export async function loader() {
+export async function loader({ showProgress, hideProgress }: LoaderProps) {
   const userKey = localStorage.getItem("userKey");
-  const dbRef = ref(db);
-  const data = await get(child(dbRef, `users/${userKey}`))
-    .then((snapshot) => {
-      if (snapshot.exists()) {
-        return snapshot.val();
-      } else {
-        throw json({ message: "No data available" }, { status: 500 });
-      }
-    })
-    .catch((error) => {
-      throw json({ message: error }, { status: 500 });
-    });
+  showProgress();
+  const data = await service().GET(`users/${userKey}`);
+  hideProgress();
+
   return data;
 }
 

@@ -1,12 +1,13 @@
-import React, { useEffect, useRef } from "react";
-import { useNavigate, useLoaderData, json } from "react-router-dom";
-import { ref, child, get } from "firebase/database";
-import { db } from "firebase-config";
+import { useRef } from "react";
+import { useNavigate, useLoaderData, Params } from "react-router-dom";
 import styled from "styled-components";
 import html2canvas from "html2canvas";
 import Color from "styles/color-system";
 import { Heading, Body } from "styles/typography-system";
 import Utils from "utils/utils";
+import useOverlay from "hook/useOverlay";
+import service from "hook/useService";
+import { LoaderProps } from "types/loader-props";
 import Navigation from "components/common/Navigation";
 import Button from "components/common/Button";
 import High from "assets/img/high-score.png";
@@ -33,9 +34,14 @@ interface LoaderData {
   score: number;
 }
 
+interface CompleteLoaderProps extends LoaderProps {
+  params: Params<string>;
+}
+
 function CompletePage() {
   const data = useLoaderData() as LoaderData;
   const userName = localStorage.getItem("userName");
+  const { showProgress, hideProgress } = useOverlay();
   const navigate = useNavigate();
   const captureRef = useRef<HTMLDivElement>(null);
 
@@ -64,6 +70,7 @@ function CompletePage() {
 
       return { file, url };
     } catch {
+      // 토스트
       window.alert("캔버스 변환에 실패했습니다.");
     }
   };
@@ -72,12 +79,13 @@ function CompletePage() {
     const fileName = `exam-helper-${Utils.dateFormat(data.date)}-${
       data.score
     }.jpeg`;
+    showProgress();
     const shareData = (await getCanvas(fileName)) as any;
 
     try {
       if (navigator.share ?? false) {
         await navigator.share({
-          title: "함께 성장해요 이그잼 헬퍼!",
+          title: "이그잼 헬퍼와 함께 성장해요!",
           files: [shareData.file],
         });
       } else {
@@ -88,8 +96,11 @@ function CompletePage() {
         link.click();
         document.body.removeChild(link);
       }
+      hideProgress();
     } catch {
-      window.alert("취소 했습니다.");
+      // 토스트
+      window.alert("취소 했어요.");
+      hideProgress();
     }
   };
 
@@ -134,23 +145,17 @@ function CompletePage() {
 
 export default CompletePage;
 
-export async function loader({ params }: { params: any }) {
+export async function loader({
+  params,
+  showProgress,
+  hideProgress,
+}: CompleteLoaderProps) {
   const userKey = localStorage.getItem("userKey");
   const scoreListId = params.scoreListId;
-  const dbRef = ref(db);
-  const data = await get(
-    child(dbRef, `users/${userKey}/scoreList/${scoreListId}`)
-  )
-    .then((snapshot) => {
-      if (snapshot.exists()) {
-        return snapshot.val();
-      } else {
-        throw json({ message: "No data available" }, { status: 500 });
-      }
-    })
-    .catch((error) => {
-      throw json({ message: error }, { status: 500 });
-    });
+
+  showProgress();
+  const data = await service().GET(`users/${userKey}/scoreList/${scoreListId}`);
+  hideProgress();
 
   return data;
 }
