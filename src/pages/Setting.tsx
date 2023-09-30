@@ -32,7 +32,7 @@ function SettingPage() {
     totalStage: initTotalStage,
     userKey,
   } = useLoaderData() as LoaderData;
-  const { showProgress, hideProgress } = useOverlay();
+  const { showProgress, hideProgress, showToast } = useOverlay();
 
   const [sheetUrl, setSheetUrl] = useState<string>("");
   const [sheetName, setSheetName] = useState<string>("");
@@ -67,7 +67,7 @@ function SettingPage() {
   };
 
   const handleSubmit = async () => {
-    if (sheetUrl === "") {
+    if (sheetUrl.trim() === "") {
       setSheetUrlValid(false);
       return;
     } else {
@@ -96,7 +96,7 @@ function SettingPage() {
     });
     hideProgress();
 
-    window.alert("업데이트가 완료되었어요.");
+    showToast("업데이트가 완료되었어요.", "sucess");
     navigate("/");
   };
 
@@ -125,12 +125,14 @@ function SettingPage() {
                 value={sheetName}
                 onChange={(e) => setSheetName(e.currentTarget.value)}
               />
-              <Button
-                label="완료"
-                size="M"
-                width="128px"
-                onClick={handleAddSheetNameList}
-              />
+              <div className="button-wrapper">
+                <Button
+                  label="완료"
+                  size="M"
+                  width="128px"
+                  onClick={handleAddSheetNameList}
+                />
+              </div>
             </div>
             <div className="chip-wrapper">
               {sheetNameList.map((name, index) => (
@@ -154,7 +156,7 @@ function SettingPage() {
             value={totalStage}
             onChange={(e) => setTotalStage(parseInt(e.currentTarget.value))}
           />
-          <Button label="저장하기" onClick={handleSubmit} />
+          <Button label="저장하기" size="L" onClick={handleSubmit} />
         </SettingSection>
       </ContentSection>
     </Container>
@@ -207,7 +209,10 @@ const SheetNameSectioin = styled.div`
   & .input-wrapper {
     display: flex;
     gap: 8px;
-    align-items: end;
+  }
+
+  & .button-wrapper {
+    margin-top: 26px;
   }
 
   & .chip-wrapper {
