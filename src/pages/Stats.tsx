@@ -1,105 +1,136 @@
-import React, { useEffect } from "react";
-import { useLoaderData, redirect, json } from "react-router-dom";
+import { useCallback } from "react";
+import { useLoaderData } from "react-router-dom";
 import styled from "styled-components";
-import { ref, child, get } from "firebase/database";
-import { db } from "firebase-config";
-import { format } from "date-fns";
-
-type ScoreList = {
-  [key: string]: {
-    date: number;
-    score: number;
-  };
-};
+import Color from "styles/color-system";
+import { Heading } from "styles/typography-system";
+import service from "hook/useService";
+import Utils from "utils/utils";
+import { ScoreList, Score } from "types/user-data";
+import { LoaderProps } from "types/loader-props";
+import Navigation from "components/common/Navigation";
+import Calendar from "components/stats/Calendar";
+import WrongAnswerList from "components/stats/WrongAnswerList";
+import { ReactComponent as Flag } from "assets/icon/flag.svg";
 
 interface StyledProps {
-  active: boolean;
+  paddingTop: number;
+  paddingBtm: number;
+}
+
+interface ConvertScoreList {
+  [key: string]: Score[];
 }
 
 function StatsPage() {
   const { scoreList } = useLoaderData() as { scoreList: ScoreList };
-  const list = new Date().getDate();
 
-  useEffect(() => {
-    console.log(format(new Date(), "MM"), new Date().getMonth());
-  }, []);
-
-  const ActiveDate = (date: string) => {
-    const validDate = Object.keys(scoreList).filter(
-      (key: string) =>
-        format(scoreList[key].date, "MM") === format(new Date(), "MM")
+  const convertList = useCallback(() => {
+    const convertArray = Object.keys(scoreList).map((key) => {
+      return {
+        key: key,
+        date: scoreList[key].date,
+        score: scoreList[key].score,
+        sheetName: scoreList[key].sheetName,
+        wrongList: scoreList[key].wrongList,
+      };
+    });
+    const convertScoreList = convertArray.reduce(
+      (list: ConvertScoreList, current) => {
+        list[Utils.dateFormat(current.date, "E")] =
+          list[Utils.dateFormat(current.date, "E")] || [];
+        list[Utils.dateFormat(current.date, "E")].push({
+          key: current.key,
+          date: current.date,
+          score: current.score,
+          sheetName: current.sheetName,
+          wrongList: current.wrongList,
+        });
+        return list;
+      },
+      {}
     );
-    const active = validDate.filter(
-      (key: string) => format(scoreList[key].date, "dd") === date
-    );
 
-    return active.length > 0;
-  };
+    return convertScoreList;
+  }, [scoreList]);
+
   return (
     <Container>
-      <DateList>
-        {[...Array(list)].map((item, index) => (
-          <DateItem key={index} active={ActiveDate((index + 1).toString())} />
-        ))}
-      </DateList>
+      <Navigation label="통계" />
+      <ContentSection>
+        <InnerSection paddingTop={40} paddingBtm={30}>
+          <Title>
+            {"이번달 얼마나 자주\n문제를 풀었을까요?"}
+            <Flag />
+          </Title>
+          <Calendar scoreList={scoreList} />
+        </InnerSection>
+        <InnerSection paddingTop={30} paddingBtm={40}>
+          <Title>오답 리스트</Title>
+          <DateList>
+            {Object.keys(convertList()).map((key) => (
+              <WrongAnswerList
+                key={key}
+                title={key}
+                data={convertList()[key]}
+              />
+            ))}
+          </DateList>
+        </InnerSection>
+      </ContentSection>
     </Container>
   );
 }
 
 export default StatsPage;
 
-export async function loader() {
+export async function loader({ showProgress, hideProgress }: LoaderProps) {
   const userKey = localStorage.getItem("userKey");
-  if (!userKey) {
-    return redirect("/signin");
-  }
-  const dbRef = ref(db);
-  const data = await get(child(dbRef, `users/${userKey}/`))
-    .then((snapshot) => {
-      if (snapshot.exists()) {
-        return snapshot.val();
-      } else {
-        throw json({ message: "No data available" }, { status: 500 });
-      }
-    })
-    .catch((error) => {
-      throw json({ message: error }, { status: 500 });
-    });
+
+  showProgress();
+  const data = service().GET(`users/${userKey}/`);
+  hideProgress();
 
   return data;
 }
 
 const Container = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
   width: 100%;
-  height: 100%;
+  min-height: 100%;
+`;
+
+const ContentSection = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  background: ${Color.Gray[200]};
+`;
+
+const InnerSection = styled.div<StyledProps>`
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding-inline: 25px;
+  padding-top: ${({ paddingTop }) => `${paddingTop}px`};
+  padding-bottom: ${({ paddingBtm }) => `${paddingBtm}px`};
+  box-sizing: border-box;
+  background: ${Color.Gray[100]};
+`;
+
+const Title = styled.h2`
+  display: flex;
+  align-items: end;
+  white-space: pre;
+  color: ${Color.Gray[800]};
+  ${Heading.H2};
+
+  & svg {
+    width: 32px;
+    height: 32px;
+  }
 `;
 
 const DateList = styled.div`
-  width: 140px;
   display: flex;
-  flex-wrap: wrap;
-  gap: 0.5em;
-  font-size: 5px;
-`;
-
-const DateItem = styled.div<StyledProps>`
-  position: relative;
-  width: calc((100% - 0.5em * 6) / 7);
-  height: 0;
-  padding-bottom: calc((100% - 0.5em * 6) / 7);
-  border-radius: 4px;
-  overflow: hidden;
-
-  &::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: ${({ active }) => (active ? "skyblue" : "lightgray")};
-  }
+  flex-direction: column;
+  gap: 16px;
 `;

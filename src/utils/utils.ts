@@ -1,5 +1,6 @@
 import { Items } from "types/google-sheet";
 import { format } from "date-fns";
+import { ko } from "date-fns/locale";
 
 const cleanRow = (row: Items) => {
   const replaceItems = row.filter((item, index) => item !== null && index < 2);
@@ -26,7 +27,10 @@ const random = (length: number) => {
   return Math.floor(Math.random() * length);
 };
 
-const dateFormat = (date: number) => {
+const dateFormat = (date: number, day?: string) => {
+  if (day === "E") {
+    return format(date, "M월 dd일 (E)", { locale: ko });
+  }
   return format(date, "yy.MM.dd");
 };
 

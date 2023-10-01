@@ -35,7 +35,16 @@ const router = ({ showProgress, hideProgress }: LoaderProps) => {
             loader: async ({ params }) =>
               CompleteLoader({ params, showProgress, hideProgress }),
           },
-          { path: "stats", element: <StatsPage />, loader: StatsLoader },
+          {
+            path: "stats",
+            element: <StatsPage />,
+            loader: async () => StatsLoader({ showProgress, hideProgress }),
+          },
+          {
+            path: "wrongAnswerList/:wrongAnswerId",
+            element: <>임시</>,
+            loader: async () => StatsLoader({ showProgress, hideProgress }),
+          },
           {
             path: "setting",
             element: <SettingPage />,

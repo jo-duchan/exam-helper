@@ -4,13 +4,16 @@ export type WrongList = {
   };
 };
 
+export type Score = {
+  key?: string;
+  date: number;
+  score: number;
+  sheetName: string;
+  wrongList: WrongList;
+};
+
 export type ScoreList = {
-  [key: string]: {
-    date: number;
-    score: number;
-    sheetName: string;
-    wrongList: WrongList;
-  };
+  [key: string]: Score;
 };
 
 export type User = {
