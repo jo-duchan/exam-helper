@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+import { useNavigate, To } from "react-router-dom";
 import styled from "styled-components";
 import Color from "styles/color-system";
 import { Body } from "styles/typography-system";
@@ -6,13 +6,14 @@ import { ReactComponent as Arrow } from "assets/icon/arrow.svg";
 
 interface Props {
   label: string;
+  mode?: -1 | "..";
 }
 
-function Navigation({ label }: Props) {
+function Navigation({ label, mode = ".." }: Props) {
   const navigate = useNavigate();
 
   const handleBack = () => {
-    navigate("..");
+    navigate(mode as To);
   };
   return (
     <Container>

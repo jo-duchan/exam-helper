@@ -10,6 +10,9 @@ import SettingPage, { loader as SettingLoader } from "pages/Setting";
 import SignInPage from "pages/SignIn";
 import SignUpPage, { loader as SignUpLoader } from "pages/SignUp";
 import StatsPage, { loader as StatsLoader } from "pages/Stats";
+import WrongAnswerPage, {
+  loader as WrongAnswerLoader,
+} from "pages/WrongAnswer";
 
 const router = ({ showProgress, hideProgress }: LoaderProps) => {
   return createBrowserRouter(
@@ -41,9 +44,10 @@ const router = ({ showProgress, hideProgress }: LoaderProps) => {
             loader: async () => StatsLoader({ showProgress, hideProgress }),
           },
           {
-            path: "wrongAnswerList/:wrongAnswerId",
-            element: <>임시</>,
-            loader: async () => StatsLoader({ showProgress, hideProgress }),
+            path: "wrongAnswerList/:scoreListId",
+            element: <WrongAnswerPage />,
+            loader: async ({ params }) =>
+              WrongAnswerLoader({ params, showProgress, hideProgress }),
           },
           {
             path: "setting",

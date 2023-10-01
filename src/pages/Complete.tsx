@@ -6,13 +6,14 @@ import Utils from "utils/utils";
 import useOverlay from "hook/useOverlay";
 import service from "hook/useService";
 import { LoaderProps } from "types/loader-props";
+import { Score } from "types/user-data";
 import Navigation from "components/common/Navigation";
 import CaptureArea from "components/complete/CaptureArea";
 import Button from "components/common/Button";
 
 interface LoaderData {
-  date: number;
-  score: number;
+  data: Score;
+  scoreListId: string;
 }
 
 interface CompleteLoaderProps extends LoaderProps {
@@ -20,7 +21,7 @@ interface CompleteLoaderProps extends LoaderProps {
 }
 
 function CompletePage() {
-  const data = useLoaderData() as LoaderData;
+  const { data, scoreListId } = useLoaderData() as LoaderData;
   const userName = localStorage.getItem("userName");
   const { showProgress, hideProgress, showToast } = useOverlay();
   const navigate = useNavigate();
@@ -71,11 +72,6 @@ function CompletePage() {
     }
   };
 
-  const handleWrongAnswerList = () => {
-    console.log("Go to WrongAnswerList");
-    // navigate()
-  };
-
   return (
     <Container>
       <Navigation label="완료" />
@@ -91,7 +87,7 @@ function CompletePage() {
           <Button
             label="오답 확인하기"
             size="L"
-            onClick={handleWrongAnswerList}
+            onClick={() => navigate(`/wrongAnswerList/${scoreListId}`)}
           />
         </ButtonWrapper>
       </ContentSection>
@@ -113,7 +109,7 @@ export async function loader({
   const data = await service().GET(`users/${userKey}/scoreList/${scoreListId}`);
   hideProgress();
 
-  return data;
+  return { data, scoreListId };
 }
 
 const Container = styled.div`
