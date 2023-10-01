@@ -16,7 +16,6 @@ const router = ({ showProgress, hideProgress }: LoaderProps) => {
     [
       {
         path: "/",
-        id: "root-loader",
         errorElement: <ErrorPage />,
         children: [
           {
