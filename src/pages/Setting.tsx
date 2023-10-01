@@ -3,14 +3,13 @@ import { useNavigate, useLoaderData } from "react-router-dom";
 import styled from "styled-components";
 import Color from "styles/color-system";
 import { Heading } from "styles/typography-system";
-import { nanoid } from "nanoid";
 import useOverlay from "hook/useOverlay";
 import service from "hook/useService";
 import { LoaderProps } from "types/loader-props";
 import Navigation from "components/common/Navigation";
 import Input from "components/common/Input";
+import SheetName from "components/common/SheetName";
 import Button from "components/common/Button";
-import Chip from "components/common/Chip";
 
 interface LoaderData {
   sheetUrl: string;
@@ -35,7 +34,6 @@ function SettingPage() {
   const { showProgress, hideProgress, showToast } = useOverlay();
 
   const [sheetUrl, setSheetUrl] = useState<string>("");
-  const [sheetName, setSheetName] = useState<string>("");
   const [sheetNameList, setSheetNameList] = useState<string[]>([]);
   const [totalStage, setTotalStage] = useState<number>(0);
 
@@ -49,22 +47,6 @@ function SettingPage() {
     setSheetNameList(initSheetNameList);
     setTotalStage(parseInt(initTotalStage));
   }, []);
-
-  const handleAddSheetNameList = () => {
-    if (sheetName) {
-      setSheetNameList((prev) => {
-        return [...prev, sheetName];
-      });
-      setSheetName("");
-    }
-  };
-
-  const HandleRemoveSheetNameList = (index: number) => {
-    setSheetNameList((prev) => {
-      const newList = prev.filter((item, idx) => idx !== index);
-      return newList;
-    });
-  };
 
   const handleSubmit = async () => {
     if (sheetUrl.trim() === "") {
@@ -114,36 +96,11 @@ function SettingPage() {
             value={sheetUrl}
             onChange={(e) => setSheetUrl(e.currentTarget.value)}
           />
-          <SheetNameSectioin>
-            <div className="input-wrapper">
-              <Input
-                label="구글 시트 이름"
-                width="calc(100% - 136px)"
-                placeholder="시트 이름을 입력해 주세요."
-                status={!sheetNameListValid ? "error" : "default"}
-                errorMsg="구글 시트 이름을 하나 이상 추가해 주세요."
-                value={sheetName}
-                onChange={(e) => setSheetName(e.currentTarget.value)}
-              />
-              <div className="button-wrapper">
-                <Button
-                  label="완료"
-                  size="M"
-                  width="128px"
-                  onClick={handleAddSheetNameList}
-                />
-              </div>
-            </div>
-            <div className="chip-wrapper">
-              {sheetNameList.map((name, index) => (
-                <Chip
-                  key={nanoid(6)}
-                  label={name}
-                  onRemove={() => HandleRemoveSheetNameList(index)}
-                />
-              ))}
-            </div>
-          </SheetNameSectioin>
+          <SheetName
+            list={sheetNameList}
+            setList={setSheetNameList}
+            valid={sheetNameListValid}
+          />
         </SettingSection>
         <SettingSection paddingTop={30} paddingBtm={40}>
           <Title>퀴즈 시스템 설정</Title>
@@ -200,25 +157,4 @@ const SettingSection = styled.div<StyledProps>`
 const Title = styled.h2`
   color: ${Color.Gray[800]};
   ${Heading.H2};
-`;
-
-const SheetNameSectioin = styled.div`
-  display: flex;
-  flex-direction: column;
-
-  & .input-wrapper {
-    display: flex;
-    gap: 8px;
-  }
-
-  & .button-wrapper {
-    margin-top: 26px;
-  }
-
-  & .chip-wrapper {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    margin-top: 10px;
-  }
 `;

@@ -1,14 +1,15 @@
 import { useState } from "react";
-import { useNavigate, redirect } from "react-router-dom";
+import { useNavigate, redirect, json } from "react-router-dom";
 import styled from "styled-components";
 import Color from "styles/color-system";
 import { Body } from "styles/typography-system";
 import { nanoid } from "nanoid";
+import emailjs from "@emailjs/browser";
 import useOverlay from "hook/useOverlay";
 import service from "hook/useService";
 import Navigation from "components/common/Navigation";
 import Input from "components/common/Input";
-import Chip from "components/common/Chip";
+import SheetName from "components/common/SheetName";
 import CheckBox from "components/common/CheckBox";
 import Button from "components/common/Button";
 
@@ -24,7 +25,6 @@ function SignUpPage() {
   const [name, setName] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [sheetUrl, setSheetUrl] = useState<string>("");
-  const [sheetName, setSheetName] = useState<string>("");
   const [sheetNameList, setSheetNameList] = useState<string[]>([]);
   const [privacy, setPrivacy] = useState<boolean>(false);
 
@@ -32,22 +32,6 @@ function SignUpPage() {
   const [emailValid, setEmailValid] = useState<boolean>(true);
   const [sheetUrlValid, setSheetUrlValid] = useState<boolean>(true);
   const [sheetNameListValid, setSheetNameListValid] = useState<boolean>(true);
-
-  const handleAddSheetNameList = () => {
-    if (sheetName) {
-      setSheetNameList((prev) => {
-        return [...prev, sheetName];
-      });
-      setSheetName("");
-    }
-  };
-
-  const HandleRemoveSheetNameList = (index: number) => {
-    setSheetNameList((prev) => {
-      const newList = prev.filter((item, idx) => idx !== index);
-      return newList;
-    });
-  };
 
   const handleSubmit = async () => {
     const userKey = nanoid();
@@ -88,6 +72,13 @@ function SignUpPage() {
       return;
     }
 
+    const emailParams = {
+      to_name: name,
+      to_email: email,
+      from_name: "Exam Helper",
+      to_userKey: userKey,
+    };
+
     showProgress();
     await service().SET(`users/${userKey}`, {
       userKey,
@@ -98,7 +89,16 @@ function SignUpPage() {
       sheetNameList,
     });
     localStorage.setItem("userKey", userKey);
-    // 이메일로 유저키 발송
+    await emailjs
+      .send(
+        process.env.REACT_APP_SERVICE_ID as string,
+        process.env.REACT_APP_TEMPLATE_ID as string,
+        emailParams,
+        process.env.REACT_APP_PUBLIC_KEY as string
+      )
+      .catch(() => {
+        json({ message: "사용자 키를 발송하지 못했어요." }, { status: 500 });
+      });
     hideProgress();
 
     showToast("등록이 완료되었어요.", "sucess");
@@ -133,36 +133,11 @@ function SignUpPage() {
             value={sheetUrl}
             onChange={(e) => setSheetUrl(e.currentTarget.value)}
           />
-          <SheetNameSectioin>
-            <div className="input-wrapper">
-              <Input
-                label="구글 시트 이름"
-                width="calc(100% - 136px)"
-                placeholder="시트 이름을 입력해 주세요."
-                status={!sheetNameListValid ? "error" : "default"}
-                errorMsg="하나 이상 추가해 주세요."
-                value={sheetName}
-                onChange={(e) => setSheetName(e.currentTarget.value)}
-              />
-              <div className="button-wrapper">
-                <Button
-                  label="완료"
-                  size="M"
-                  width="128px"
-                  onClick={handleAddSheetNameList}
-                />
-              </div>
-            </div>
-            <div className="chip-wrapper">
-              {sheetNameList.map((sheetName, index) => (
-                <Chip
-                  key={nanoid(6)}
-                  label={sheetName}
-                  onRemove={() => HandleRemoveSheetNameList(index)}
-                />
-              ))}
-            </div>
-          </SheetNameSectioin>
+          <SheetName
+            list={sheetNameList}
+            setList={setSheetNameList}
+            valid={sheetNameListValid}
+          />
         </InnerSection>
         <InnerSection paddingTop={30} paddingBtm={40} gap={20}>
           <CheckBox
@@ -212,27 +187,6 @@ const InnerSection = styled.div<StyledProps>`
   padding-bottom: ${({ paddingBtm }) => `${paddingBtm}px`};
   box-sizing: border-box;
   background: ${Color.Gray[100]};
-`;
-
-const SheetNameSectioin = styled.div`
-  display: flex;
-  flex-direction: column;
-
-  & .input-wrapper {
-    display: flex;
-    gap: 8px;
-  }
-
-  & .button-wrapper {
-    margin-top: 26px;
-  }
-
-  & .chip-wrapper {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    margin-top: 10px;
-  }
 `;
 
 const PrivacyLabel = styled.span`
