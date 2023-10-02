@@ -11,6 +11,7 @@ ${reset};
 
 :root {
     --gobal-width: clamp(320px, 100vw, 500px);
+    -webkit-tap-highlight-color: transparent;
 }
 
 html, body {

@@ -12,6 +12,8 @@ import Input from "components/common/Input";
 import SheetName from "components/common/SheetName";
 import CheckBox from "components/common/CheckBox";
 import Button from "components/common/Button";
+import Modal from "components/overlays/Modal";
+import Privacy from "components/auth/Privacy";
 
 interface StyledProps {
   gap: number;
@@ -21,7 +23,8 @@ interface StyledProps {
 
 function SignUpPage() {
   const navigate = useNavigate();
-  const { showProgress, hideProgress, showToast } = useOverlay();
+  const { showProgress, hideProgress, showToast, handleShow, handleHide } =
+    useOverlay();
   const [name, setName] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [sheetUrl, setSheetUrl] = useState<string>("");
@@ -32,6 +35,20 @@ function SignUpPage() {
   const [emailValid, setEmailValid] = useState<boolean>(true);
   const [sheetUrlValid, setSheetUrlValid] = useState<boolean>(true);
   const [sheetNameListValid, setSheetNameListValid] = useState<boolean>(true);
+
+  const privacyAgree = () => {
+    const id = handleShow(
+      <Modal
+        title="개인정보 처리방침"
+        content={<Privacy />}
+        onClick={() => {
+          setPrivacy(true);
+          handleHide(id);
+        }}
+      />,
+      "POPUP"
+    );
+  };
 
   const handleSubmit = async () => {
     const userKey = nanoid();
@@ -101,7 +118,7 @@ function SignUpPage() {
       });
     hideProgress();
 
-    showToast("등록이 완료되었어요.", "sucess");
+    showToast("가입이 완료되었어요.", "sucess");
     navigate("/");
   };
   return (
@@ -145,11 +162,11 @@ function SignUpPage() {
             value={privacy}
             onChange={(e) => setPrivacy(e.target.checked)}
           >
-            <PrivacyLabel className="label">
+            <PrivacyLabel className="label" onClick={privacyAgree}>
               개인정보 처리방침 동의(필수)
             </PrivacyLabel>
           </CheckBox>
-          <Button label="등록하기" size="L" onClick={handleSubmit} />
+          <Button label="가입하기" size="L" onClick={handleSubmit} />
         </InnerSection>
       </ContentSection>
     </Container>
