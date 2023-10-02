@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useLoaderData, redirect } from "react-router-dom";
 import styled from "styled-components";
-import Color from "styles/color-system";
+import ZIndex from "styles/z-index";
 import { Heading } from "styles/typography-system";
 import { Admin } from "types/admin-data";
 import { User } from "types/user-data";
@@ -76,9 +76,11 @@ export async function loader({ showProgress, hideProgress }: LoaderProps) {
 }
 
 const Container = styled.div`
+  position: relative;
   width: 100%;
   min-height: 100%;
   overflow: hidden auto;
+  ${ZIndex[100]};
 `;
 
 const ContentSection = styled.div`
