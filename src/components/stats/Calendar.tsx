@@ -1,4 +1,3 @@
-import React from "react";
 import styled, { css } from "styled-components";
 import Color from "styles/color-system";
 import { Body } from "styles/typography-system";
@@ -22,8 +21,9 @@ function Calendar({ scoreList }: Props) {
       (key: string) =>
         format(scoreList[key].date, "MM") === format(currentDate, "MM")
     );
+
     const active = validDate.filter(
-      (key: string) => format(scoreList[key].date, "dd") === date
+      (key: string) => format(scoreList[key].date, "d") === date
     );
 
     return active.length > 0;
