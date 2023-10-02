@@ -15,54 +15,49 @@ import WrongAnswerPage, {
 } from "pages/WrongAnswer";
 
 const router = ({ showProgress, hideProgress }: LoaderProps) => {
-  return createBrowserRouter(
-    [
-      {
-        path: "/",
-        errorElement: <ErrorPage />,
-        children: [
-          {
-            index: true,
-            element: <MainPage />,
-            loader: async () => MainLoader({ showProgress, hideProgress }),
-          },
-          {
-            path: "quiz/:sheetName",
-            element: <QuizPage />,
-            loader: async ({ request, params }) =>
-              QuizLoader({ request, params, showProgress, hideProgress }),
-          },
-          {
-            path: "complete/:scoreListId",
-            element: <CompletePage />,
-            loader: async ({ params }) =>
-              CompleteLoader({ params, showProgress, hideProgress }),
-          },
-          {
-            path: "stats",
-            element: <StatsPage />,
-            loader: async () => StatsLoader({ showProgress, hideProgress }),
-          },
-          {
-            path: "wrongAnswerList/:scoreListId",
-            element: <WrongAnswerPage />,
-            loader: async ({ params }) =>
-              WrongAnswerLoader({ params, showProgress, hideProgress }),
-          },
-          {
-            path: "setting",
-            element: <SettingPage />,
-            loader: async () => SettingLoader({ showProgress, hideProgress }),
-          },
-          { path: "signin", element: <SignInPage /> },
-          { path: "signup", element: <SignUpPage />, loader: SignUpLoader },
-        ],
-      },
-    ],
+  return createBrowserRouter([
     {
-      basename: process.env.PUBLIC_URL,
-    }
-  );
+      path: "/",
+      errorElement: <ErrorPage />,
+      children: [
+        {
+          index: true,
+          element: <MainPage />,
+          loader: async () => MainLoader({ showProgress, hideProgress }),
+        },
+        {
+          path: "quiz/:sheetName",
+          element: <QuizPage />,
+          loader: async ({ request, params }) =>
+            QuizLoader({ request, params, showProgress, hideProgress }),
+        },
+        {
+          path: "complete/:scoreListId",
+          element: <CompletePage />,
+          loader: async ({ params }) =>
+            CompleteLoader({ params, showProgress, hideProgress }),
+        },
+        {
+          path: "stats",
+          element: <StatsPage />,
+          loader: async () => StatsLoader({ showProgress, hideProgress }),
+        },
+        {
+          path: "wrongAnswerList/:scoreListId",
+          element: <WrongAnswerPage />,
+          loader: async ({ params }) =>
+            WrongAnswerLoader({ params, showProgress, hideProgress }),
+        },
+        {
+          path: "setting",
+          element: <SettingPage />,
+          loader: async () => SettingLoader({ showProgress, hideProgress }),
+        },
+        { path: "signin", element: <SignInPage /> },
+        { path: "signup", element: <SignUpPage />, loader: SignUpLoader },
+      ],
+    },
+  ]);
 };
 
 function App() {
