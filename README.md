@@ -1,6 +1,6 @@
 # Exam Helper
 
-![default]([https://github.com/jo-duchan/exam-helper/assets/79234094/dd4b2fc6-f7e4-4398-ae1b-eec7f5ba3ba3](https://file.notion.so/f/f/ec300e08-a2e5-4e71-a24e-8bc856c8b4aa/e1d3bf0a-05e4-489b-8f4c-58fdc5a6dd9e/share-img-notion.jpg?id=cf733423-4107-441d-8572-e0f9ee718936&table=block&spaceId=ec300e08-a2e5-4e71-a24e-8bc856c8b4aa&expirationTimestamp=1696327200000&signature=bPO-hIf7RKOXZwcaz4jXb_LKOKZFPqbEiHAJBHdvg6s&downloadName=share-img-notion.jpg))
+![default](https://github.com/jo-duchan/exam-helper/assets/79234094/a58a2580-5ea5-4b66-96ac-141241edc14a)
 
 마침 시험 공부를 하던중에 그냥 공부만 하는 것이 아쉬워서 시작한 토이 프로젝트가 주변에서 많은 공유 요청을 받아 팀 프로젝트로 발전하게 되었습니다.
 
