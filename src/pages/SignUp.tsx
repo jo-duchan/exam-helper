@@ -1,5 +1,11 @@
-import { useState } from "react";
-import { useNavigate, redirect, json } from "react-router-dom";
+import { useEffect, useState } from "react";
+import {
+  useNavigate,
+  redirect,
+  json,
+  useSearchParams,
+  To,
+} from "react-router-dom";
 import styled from "styled-components";
 import Color from "styles/color-system";
 import { Body } from "styles/typography-system";
@@ -25,6 +31,9 @@ function SignUpPage() {
   const navigate = useNavigate();
   const { showProgress, hideProgress, showToast, handleShow, handleHide } =
     useOverlay();
+  const [hideId, setHideId] = useState<string>("");
+  const [serchParams] = useSearchParams();
+  const showPrivacyModal = serchParams.get("modal") || "";
   const [name, setName] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [sheetUrl, setSheetUrl] = useState<string>("");
@@ -36,6 +45,16 @@ function SignUpPage() {
   const [sheetUrlValid, setSheetUrlValid] = useState<boolean>(true);
   const [sheetNameListValid, setSheetNameListValid] = useState<boolean>(true);
 
+  useEffect(() => {
+    if (showPrivacyModal) {
+      privacyAgree();
+    }
+
+    if (!showPrivacyModal) {
+      handleHide(hideId);
+    }
+  }, [showPrivacyModal]);
+
   const privacyAgree = () => {
     const id = handleShow(
       <Modal
@@ -43,11 +62,12 @@ function SignUpPage() {
         content={<Privacy />}
         onClick={() => {
           setPrivacy(true);
-          handleHide(id);
+          navigate(-1 as To, { replace: true });
         }}
       />,
       "POPUP"
     );
+    setHideId(id);
   };
 
   const handleSubmit = async () => {
@@ -162,7 +182,10 @@ function SignUpPage() {
             value={privacy}
             onChange={(e) => setPrivacy(e.target.checked)}
           >
-            <PrivacyLabel className="label" onClick={privacyAgree}>
+            <PrivacyLabel
+              className="label"
+              onClick={() => navigate("?modal=privacy")}
+            >
               개인정보 처리방침 동의(필수)
             </PrivacyLabel>
           </CheckBox>

@@ -25,6 +25,16 @@ function RenderOverlay({ items }: Props) {
     }
   }, [items]);
 
+  useEffect(() => {
+    if (dimIsShown) {
+      document.body.style.overflow = "hidden";
+    }
+
+    return () => {
+      document.body.style.overflow = "initial";
+    };
+  }, [dimIsShown]);
+
   return (
     <>
       {ReactDOM.createPortal(

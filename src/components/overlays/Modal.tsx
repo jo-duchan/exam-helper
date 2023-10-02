@@ -85,14 +85,13 @@ const Content = styled.div`
   position: relative;
   width: 100%;
   overflow: hidden scroll;
-  /* padding-block: 20px; */
   box-sizing: border-box;
 `;
 
 const TextDim = styled.div<StyledProps>`
   position: relative;
   width: 100%;
-  height: 20px;
+  height: 10px;
 
   &::before {
     content: "";
