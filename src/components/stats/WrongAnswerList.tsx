@@ -25,6 +25,7 @@ function WrongAnswerList({ title, data }: Props) {
               label="오답 리스트"
               size="S"
               width="98px"
+              status={item.score === 100 ? "disabled" : "default"}
               onClick={() => navigate(`/wrongAnswerList/${item.key}`)}
             />
           </ItemSection>

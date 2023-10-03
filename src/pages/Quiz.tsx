@@ -105,9 +105,11 @@ function QuizPage() {
   };
 
   const handleConfirm = () => {
+    const question = data[qNum][0] as string;
+    const answer = data[qNum][1] as string;
     const grading = () => {
-      setCorrectAnswer(data[qNum][1]);
-      return data[qNum][1] === value.toLocaleUpperCase().trim();
+      setCorrectAnswer(answer);
+      return answer.toLocaleUpperCase() === value.toLocaleUpperCase().trim();
     };
 
     if (grading()) {
@@ -126,7 +128,7 @@ function QuizPage() {
       setState("MISS");
       setMiss((prev) => (prev += 1));
       setWrongList((prev) => {
-        return [...prev, [data[qNum][0], data[qNum][1]]];
+        return [...prev, [question, answer]];
       });
       setVibration(true);
       Utils.vibration(450);

@@ -43,4 +43,6 @@ const Content = styled.div`
   color: ${Color.Gray[800]};
   ${Body.Bold.XL};
   margin-bottom: 20px;
+  white-space: pre-line;
+  word-break: keep-all;
 `;

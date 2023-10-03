@@ -95,7 +95,7 @@ const Item = styled.div`
   background: ${Color.Gray[200]};
   ${Body.SemiBold.L};
   white-space: pre-line;
-  word-break: break-word;
+  word-break: keep-all;
 
   & .q {
     color: ${Color.Gray[700]};

@@ -87,6 +87,7 @@ function CompletePage() {
           <Button
             label="오답 확인하기"
             size="L"
+            status={data.score === 100 ? "disabled" : "default"}
             onClick={() => navigate(`/wrongAnswerList/${scoreListId}`)}
           />
         </ButtonWrapper>
