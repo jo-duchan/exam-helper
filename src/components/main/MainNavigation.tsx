@@ -1,15 +1,10 @@
-import React from "react";
 import { NavLink } from "react-router-dom";
 import styled from "styled-components";
-import { ReactComponent as Home } from "assets/icon/home.svg";
 import { ReactComponent as Setting } from "assets/icon/setting.svg";
 
 function MainNavigation() {
   return (
     <Container>
-      <NavSection to={"/"}>
-        <Home />
-      </NavSection>
       <NavSection to={"/setting"}>
         <Setting />
       </NavSection>

@@ -87,6 +87,7 @@ const Title = styled.h1`
 `;
 
 const Description = styled.span`
+  text-align: center;
   color: ${Color.Gray[600]};
   ${Body.SemiBold.L};
   margin-bottom: 50px;

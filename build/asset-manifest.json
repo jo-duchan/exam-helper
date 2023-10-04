@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/static/css/main.76bc7f7f.css",
-    "main.js": "/static/js/main.8d2ce687.js",
+    "main.js": "/static/js/main.47e0e087.js",
     "static/media/sign-in.png": "/static/media/sign-in.e19f868000e7ec693195.png",
     "static/media/high-score.png": "/static/media/high-score.d2459af60b801d4fc3ac.png",
     "static/media/loading.png": "/static/media/loading.011558c863af882a5bb2.png",
@@ -11,17 +11,16 @@
     "static/media/notify.svg": "/static/media/notify.6fd8362515e27ffdb7b912da77afea81.svg",
     "static/media/q-talk.svg": "/static/media/q-talk.d2a6909d0d6fce29530fce1774bce3e4.svg",
     "static/media/error.svg": "/static/media/error.cd2c645f6aa8d6eac14a93ad9335ad4c.svg",
-    "static/media/home.svg": "/static/media/home.10104b4fd3e94e1e3a7462be47226453.svg",
     "static/media/flag.svg": "/static/media/flag.50d977f27578cc2813c5fe47bf9ebffb.svg",
     "static/media/arrow.svg": "/static/media/arrow.4da7470f1fa318985ab293a9887f68f0.svg",
     "static/media/cancle.svg": "/static/media/cancle.40735531f41e76fc85c1cc631d5cf5f3.svg",
     "static/media/sucess.svg": "/static/media/sucess.2f0bb262b0efd2dcf2a80c401bb6e881.svg",
     "static/media/check.svg": "/static/media/check.b61159eaf665734a6be47ee7ab1df693.svg",
     "main.76bc7f7f.css.map": "/static/css/main.76bc7f7f.css.map",
-    "main.8d2ce687.js.map": "/static/js/main.8d2ce687.js.map"
+    "main.47e0e087.js.map": "/static/js/main.47e0e087.js.map"
   },
   "entrypoints": [
     "static/css/main.76bc7f7f.css",
-    "static/js/main.8d2ce687.js"
+    "static/js/main.47e0e087.js"
   ]
 }
