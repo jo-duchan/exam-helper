@@ -1,6 +1,7 @@
 .env
 /cert
 .DS_STORE
+.DS_Store
 node_modules
 scripts/flow/*/.flowconfig
 .flowconfig
@@ -9,7 +10,7 @@ scripts/flow/*/.flowconfig
 .grunt
 _SpecRunner.html
 __benchmarks__
-build/
+/build
 remote-repo/
 coverage/
 .module-cache

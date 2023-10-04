@@ -197,15 +197,16 @@ export async function loader({
 
   const base = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?`;
   const sheetName = params.sheetName;
-  const query = encodeURIComponent("Select *");
-  const url = `${base}&sheet=${sheetName}&tq=${query}`;
+  const query = encodeURIComponent("SELECT A, B");
+  const url = `${base}&sheet=${sheetName}&headers=0&tq=${query}`;
+
   showProgress();
   const response = await fetch(url).catch(() => {
     throw json({ message: NOT_FOUND_SHEET }, { status: 500 });
   });
   const data = await response.text();
   const convert = JSON.parse(data.substring(47).slice(0, -2));
-
+  console.log(convert, response);
   if (!response.ok) {
     throw json({ message: NOT_FOUND_SHEET }, { status: 500 });
   }
