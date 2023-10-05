@@ -1,7 +1,7 @@
-import React from "react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { LoaderProps } from "types/loader-props";
 import useOverlay from "hook/useOverlay";
+import useInAppBypassing from "hook/useInAppBypassing";
 import ErrorPage from "pages/Error";
 import MainPage, { loader as MainLoader } from "pages/Main";
 import QuizPage, { loader as QuizLoader } from "pages/Quiz";
@@ -62,6 +62,9 @@ const router = ({ showProgress, hideProgress }: LoaderProps) => {
 
 function App() {
   const { showProgress, hideProgress } = useOverlay();
+  // 라우팅 개선할때 추가 개선.
+  useInAppBypassing();
+
   return <RouterProvider router={router({ showProgress, hideProgress })} />;
 }
 
