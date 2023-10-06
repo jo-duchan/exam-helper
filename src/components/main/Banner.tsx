@@ -2,7 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
-import { Admin, Banner as BannerType } from "types/admin-data";
+import { Banner as BannerType } from "types/admin-data";
 import { nanoid } from "nanoid";
 
 interface Props {
@@ -62,5 +62,7 @@ const Item = styled(SwiperSlide)`
     width: 100%;
     height: 100%;
     object-fit: cover;
+    cursor: pointer;
+    user-select: none;
   }
 `;

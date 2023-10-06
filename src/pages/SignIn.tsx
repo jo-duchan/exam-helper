@@ -46,7 +46,11 @@ function SignInPage() {
     <Container>
       <VisualSection>
         <img src={Assets} />
-        <h3>{"내일의 결과를\n만드는 시작."}</h3>
+        <h3>{"내일의 결과를\n만드는 시작"}</h3>
+        <span className="dot-01" />
+        <span className="dot-02" />
+        <span className="dot-03" />
+        <span className="dot-04" />
       </VisualSection>
       <ContentSection>
         <Input
@@ -71,27 +75,73 @@ const Container = styled.div`
   flex-direction: column;
   width: 100%;
   min-height: 100%;
+  height: 100dvh;
   background: ${Color.Primary[700]};
 `;
 
 const VisualSection = styled.div`
   position: relative;
-  flex: 1;
+  width: 100%;
+  height: calc(100% - 242px);
+  padding-block: 25px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 20px;
+  overflow: hidden;
 
   & img {
-    width: 100%;
+    padding-inline: 48px;
+    box-sizing: border-box;
+    height: calc(100% - (80px + 20px));
     object-fit: contain;
   }
 
   & h3 {
-    position: absolute;
-    left: 50%;
-    bottom: 30px;
-    transform: translate3d(-50%, 0, 0);
+    height: 80px;
     text-align: center;
     color: ${Color.Gray[100]};
     ${Heading.H1};
     white-space: pre;
+  }
+
+  & :is(.dot-01, .dot-02, .dot-03, .dot-04) {
+    content: "";
+    position: absolute;
+    border-radius: 50%;
+  }
+
+  & .dot-01 {
+    top: 12.5641%;
+    left: 14.61538%;
+    width: 4.102564%;
+    padding-bottom: 4.102564%;
+    background: #568cf8;
+  }
+
+  & .dot-02 {
+    top: 40%;
+    right: 15.1282%;
+    width: 6.410256%;
+    padding-bottom: 6.410256%;
+    background: #417df7;
+  }
+
+  & .dot-03 {
+    top: 74.10256%;
+    left: 14.3589%;
+    width: 7.43589%;
+    padding-bottom: 7.43589%;
+    background: #417df7;
+  }
+
+  & .dot-04 {
+    top: 81.53846%;
+    right: 15.1282%;
+    width: 5.3846%;
+    padding-bottom: 5.3846%;
+    background: #80a9fa;
   }
 `;
 
