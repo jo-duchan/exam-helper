@@ -14,7 +14,7 @@ const InfoData: InfoDataType = {
   stats: {
     img: Record,
     title: "성장기록",
-    description: "나의 성장을 한눈에 확인해 보세요!",
+    description: "나의 성장을 확인해 보세요!",
     link: "/stats",
   },
   tutorial: {
