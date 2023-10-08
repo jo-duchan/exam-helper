@@ -46,11 +46,6 @@ function SignUpPage() {
   const [sheetNameListValid, setSheetNameListValid] = useState<boolean>(true);
 
   useEffect(() => {
-    const theme = document.getElementById("theme") as HTMLMetaElement;
-    theme.setAttribute("content", Color.Gray[100]);
-  }, []);
-
-  useEffect(() => {
     if (showPrivacyModal) {
       privacyAgree();
     }

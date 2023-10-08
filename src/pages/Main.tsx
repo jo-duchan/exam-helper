@@ -26,9 +26,6 @@ function MainPage() {
   const [infoType, setInfoType] = useState<string>("stats");
 
   useEffect(() => {
-    const theme = document.getElementById("theme") as HTMLMetaElement;
-    theme.setAttribute("content", Color.Gray[100]);
-
     if (!data.scoreList) {
       setInfoType("tutorial");
     }

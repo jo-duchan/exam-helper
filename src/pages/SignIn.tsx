@@ -1,8 +1,7 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import service from "hook/useService";
 import useOverlay from "hook/useOverlay";
-import Utils from "utils/utils";
 import styled from "styled-components";
 import Color from "styles/color-system";
 import { Heading, Body } from "styles/typography-system";
@@ -21,7 +20,7 @@ function SignInPage() {
     theme.setAttribute("content", Color.Primary[700]);
 
     return () => {
-      // theme.setAttribute("content", Color.Gray[100]);
+      theme.setAttribute("content", Color.Gray[100]);
     };
   }, []);
 
@@ -72,12 +71,13 @@ function SignInPage() {
 export default SignInPage;
 
 const Container = styled.div`
+  position: relative;
   display: flex;
   flex-direction: column;
   width: 100%;
   min-height: 100%;
   height: 100dvh;
-  background: ${Color.Primary[700]};
+  background-image: ${`linear-gradient(${Color.Primary[700]}, ${Color.Primary[700]})`};
 `;
 
 const VisualSection = styled.div`

@@ -35,7 +35,7 @@ function SheetName({ list, setList, valid }: Props) {
       <div className="input-wrapper">
         <Input
           label="구글 시트 이름"
-          width="calc(100% - 136px)"
+          width="calc(100% - 108px)"
           placeholder="시트 이름을 입력해 주세요."
           status={!valid ? "error" : "default"}
           errorMsg="하나 이상 추가해 주세요."
@@ -46,7 +46,7 @@ function SheetName({ list, setList, valid }: Props) {
           <Button
             label="완료"
             size="M"
-            width="128px"
+            width="100px"
             onClick={handleAddSheetNameList}
           />
         </div>
