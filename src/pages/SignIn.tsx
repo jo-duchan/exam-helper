@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import service from "hook/useService";
 import useOverlay from "hook/useOverlay";
+import Utils from "utils/utils";
 import styled from "styled-components";
 import Color from "styles/color-system";
 import { Heading, Body } from "styles/typography-system";
@@ -20,7 +21,7 @@ function SignInPage() {
     theme.setAttribute("content", Color.Primary[700]);
 
     return () => {
-      theme.setAttribute("content", Color.Gray[100]);
+      // theme.setAttribute("content", Color.Gray[100]);
     };
   }, []);
 

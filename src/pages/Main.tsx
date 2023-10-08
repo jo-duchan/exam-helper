@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useLoaderData, redirect } from "react-router-dom";
 import styled from "styled-components";
+import Color from "styles/color-system";
 import ZIndex from "styles/z-index";
 import { Heading } from "styles/typography-system";
 import { Admin } from "types/admin-data";
@@ -25,6 +26,9 @@ function MainPage() {
   const [infoType, setInfoType] = useState<string>("stats");
 
   useEffect(() => {
+    const theme = document.getElementById("theme") as HTMLMetaElement;
+    theme.setAttribute("content", Color.Gray[100]);
+
     if (!data.scoreList) {
       setInfoType("tutorial");
     }

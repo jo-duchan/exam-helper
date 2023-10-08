@@ -40,6 +40,14 @@ const vibration = (time: number) => {
   }
 };
 
+const isMobile = () => {
+  if (/Android|iPhone/i.test(navigator.userAgent)) {
+    return true;
+  }
+
+  return false;
+};
+
 const Utils = {
   cleanRow,
   longPress,
@@ -47,6 +55,7 @@ const Utils = {
   random,
   dateFormat,
   vibration,
+  isMobile,
 };
 
 export default Utils;
