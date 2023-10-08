@@ -106,7 +106,7 @@ function SettingPage() {
           <Title>퀴즈 시스템 설정</Title>
           <Input
             label="총 문항 수"
-            placeholder="스테이지를 입력해 주세요."
+            placeholder="총 문항 수를 입력해 주세요. "
             status={!totalStageValid ? "error" : "default"}
             errorMsg="총 문항 수는 1개 이상 설정해 주세요."
             type="number"
