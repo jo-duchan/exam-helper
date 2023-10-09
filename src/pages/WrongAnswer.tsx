@@ -14,7 +14,7 @@ interface WrongAnswerLoaderProps extends LoaderProps {
 
 function WrongAnswerPage() {
   const data = useLoaderData() as Score;
-  console.log(data);
+
   return (
     <Container>
       <Navigation label="오답 리스트" mode={-1} />
@@ -23,7 +23,7 @@ function WrongAnswerPage() {
         <span className="sheetname">{data.sheetName}</span>
         <ListSection>
           {Object.keys(data.wrongList).map((key) => (
-            <Item>
+            <Item key={key}>
               <span className="q">Q.{data.wrongList[key][0]}</span>
               <span className="a">A.{data.wrongList[key][1]}</span>
             </Item>

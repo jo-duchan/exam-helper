@@ -109,7 +109,11 @@ function QuizPage() {
     const answer = data[qNum][1] as string;
     const grading = () => {
       setCorrectAnswer(answer);
-      return answer.toLocaleUpperCase() === value.toLocaleUpperCase().trim();
+      const convertAnswer = answer.split(",");
+      return convertAnswer.find(
+        (a) => a.trim().toLocaleUpperCase() === value.toLocaleUpperCase().trim()
+      );
+      // return answer.toLocaleUpperCase() === value.toLocaleUpperCase().trim();
     };
 
     if (grading()) {
