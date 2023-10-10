@@ -48,6 +48,10 @@ const isMobile = () => {
   return false;
 };
 
+const convertValue = (value: string) => {
+  return value.replace(/ /g, "").toLocaleUpperCase();
+};
+
 const Utils = {
   cleanRow,
   longPress,
@@ -56,6 +60,7 @@ const Utils = {
   dateFormat,
   vibration,
   isMobile,
+  convertValue,
 };
 
 export default Utils;

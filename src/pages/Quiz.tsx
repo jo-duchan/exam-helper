@@ -111,9 +111,8 @@ function QuizPage() {
       setCorrectAnswer(answer);
       const convertAnswer = answer.split(",");
       return convertAnswer.find(
-        (a) => a.trim().toLocaleUpperCase() === value.toLocaleUpperCase().trim()
+        (a) => Utils.convertValue(a) === Utils.convertValue(value)
       );
-      // return answer.toLocaleUpperCase() === value.toLocaleUpperCase().trim();
     };
 
     if (grading()) {

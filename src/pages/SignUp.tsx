@@ -186,7 +186,7 @@ function SignUpPage() {
               className="label"
               onClick={() => navigate("?modal=privacy")}
             >
-              개인정보 처리방침 동의(필수)
+              개인정보처리방침 동의(필수)
             </PrivacyLabel>
           </CheckBox>
           <Button label="가입하기" size="L" onClick={handleSubmit} />
