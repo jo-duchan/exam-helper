@@ -4,7 +4,7 @@ import styled from "styled-components";
 import Color from "styles/color-system";
 import ZIndex from "styles/z-index";
 import { Heading } from "styles/typography-system";
-import { Admin } from "types/admin-data";
+import { Banner as BannerType } from "types/admin-data";
 import { User } from "types/user-data";
 import { LoaderProps } from "types/loader-props";
 import { InfoData } from "assets/data/main-info";
@@ -18,11 +18,11 @@ import Fire from "assets/img/fire.png";
 
 interface LoaderData {
   data: User;
-  admin: Admin;
+  banner: BannerType;
 }
 
 function MainPage() {
-  const { data, admin } = useLoaderData() as LoaderData;
+  const { data, banner } = useLoaderData() as LoaderData;
   const [infoType, setInfoType] = useState<string>("stats");
 
   useEffect(() => {
@@ -43,7 +43,7 @@ function MainPage() {
   return (
     <Container>
       <MainNavigation />
-      <Banner data={admin.banner} />
+      <Banner data={banner} />
       <ContentSection>
         <Title>
           <span>{data.name}님! 오늘 퀴즈에</span>
@@ -63,17 +63,17 @@ export default MainPage;
 export async function loader({ showProgress, hideProgress }: LoaderProps) {
   const userKey = localStorage.getItem("userKey");
   if (!userKey) {
-    return redirect("/signin");
+    return redirect("/onboarding");
   }
 
   setTimeout(() => showProgress(), 0);
   const data: User = await service().GET(`users/${userKey}/`);
-  const admin: Admin = await service().GET(`admin`);
+  const banner: BannerType = await service().GET(`admin/banner`);
 
   localStorage.setItem("sheetId", Utils.convertSheetUrl(data.sheetUrl));
   localStorage.setItem("userName", data.name);
   hideProgress();
-  return { data, admin };
+  return { data, banner };
 }
 
 const Container = styled.div`

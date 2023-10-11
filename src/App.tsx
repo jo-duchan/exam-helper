@@ -7,6 +7,7 @@ import MainPage, { loader as MainLoader } from "pages/Main";
 import QuizPage, { loader as QuizLoader } from "pages/Quiz";
 import CompletePage, { loader as CompleteLoader } from "pages/Complete";
 import SettingPage, { loader as SettingLoader } from "pages/Setting";
+import OnboardingPage, { loader as OnboardingLoader } from "pages/Onboarding";
 import SignInPage from "pages/SignIn";
 import SignUpPage, { loader as SignUpLoader } from "pages/SignUp";
 import StatsPage, { loader as StatsLoader } from "pages/Stats";
@@ -52,6 +53,11 @@ const router = ({ showProgress, hideProgress }: LoaderProps) => {
           path: "setting",
           element: <SettingPage />,
           loader: async () => SettingLoader({ showProgress, hideProgress }),
+        },
+        {
+          path: "onboarding",
+          element: <OnboardingPage />,
+          loader: async () => OnboardingLoader({ showProgress, hideProgress }),
         },
         { path: "signin", element: <SignInPage /> },
         { path: "signup", element: <SignUpPage />, loader: SignUpLoader },

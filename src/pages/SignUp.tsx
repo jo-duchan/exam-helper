@@ -138,7 +138,10 @@ function SignUpPage() {
       });
     hideProgress();
 
-    showToast("가입이 완료되었어요.", "sucess");
+    showToast(
+      "가입이 축하드려요. \n사용자 키는 이메일로 보내드렸어요.",
+      "sucess"
+    );
     navigate("/");
   };
   return (

@@ -5,6 +5,13 @@ export type Banner = {
   };
 };
 
+export type Onboarding = {
+  [key: string]: {
+    img: string;
+    title: string;
+  };
+};
+
 export type SheetUrl = string;
 
 export type Admin = { banner: Banner; sheetUrl: SheetUrl };
