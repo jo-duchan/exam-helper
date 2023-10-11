@@ -74,7 +74,9 @@ const SwiperSection = styled(Swiper)`
     position: absolute;
     width: 58px;
     left: 50%;
-    bottom: -29px;
+    bottom: -32px;
+    padding-block: 4px;
+    box-sizing: border-box;
     transform: translate3d(-50%, 0, 0);
     display: flex;
     gap: 10px;
