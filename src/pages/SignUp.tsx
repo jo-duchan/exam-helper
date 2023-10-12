@@ -146,7 +146,7 @@ function SignUpPage() {
   };
   return (
     <Container>
-      <Navigation label="회원가입" />
+      <Navigation label="회원가입" mode={-1} />
       <ContentSection>
         <InnerSection paddingTop={40} paddingBtm={30} gap={16}>
           <Input

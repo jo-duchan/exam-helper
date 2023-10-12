@@ -16,8 +16,9 @@ function OnboardingPage() {
   const navigate = useNavigate();
   useInAppBypassing();
 
-  const handleGoToSignIn = () => {
-    navigate("/signin");
+  const handleGoToMain = () => {
+    localStorage.setItem("onboarding", "hide");
+    navigate("/");
   };
 
   const handleGoToDocument = () => {
@@ -39,7 +40,7 @@ function OnboardingPage() {
         ))}
       </SwiperSection>
       <ButtonSection>
-        <Button label="시작하기" size="L" onClick={handleGoToSignIn} />
+        <Button label="시작하기" size="L" onClick={handleGoToMain} />
         <MoreView onClick={handleGoToDocument}>
           자세한 설명 확인해 볼까요?
         </MoreView>

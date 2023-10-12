@@ -2,12 +2,18 @@ import { NavLink } from "react-router-dom";
 import styled from "styled-components";
 import { ReactComponent as Setting } from "assets/icon/setting.svg";
 
-function MainNavigation() {
+interface Props {
+  unsigned: boolean;
+}
+
+function MainNavigation({ unsigned }: Props) {
   return (
     <Container>
-      <NavSection to={"/setting"}>
-        <Setting />
-      </NavSection>
+      {unsigned || (
+        <NavSection to={"/setting"}>
+          <Setting />
+        </NavSection>
+      )}
     </Container>
   );
 }
@@ -15,6 +21,8 @@ function MainNavigation() {
 export default MainNavigation;
 
 const Container = styled.div`
+  width: 100%;
+  height: 28px;
   display: flex;
   justify-content: flex-end;
   gap: 20px;

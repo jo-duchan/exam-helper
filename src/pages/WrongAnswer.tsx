@@ -1,4 +1,4 @@
-import { useLoaderData, Params } from "react-router-dom";
+import { useLoaderData, Params, redirect } from "react-router-dom";
 import styled from "styled-components";
 import Color from "styles/color-system";
 import { Body } from "styles/typography-system";
@@ -22,10 +22,10 @@ function WrongAnswerPage() {
         <span className="date">{Utils.dateFormat(data.date, "E")}</span>
         <span className="sheetname">{data.sheetName}</span>
         <ListSection>
-          {Object.keys(data.wrongList).map((key) => (
+          {Object.keys(data.wrongList!).map((key) => (
             <Item key={key}>
-              <span className="q">Q.{data.wrongList[key][0]}</span>
-              <span className="a">A.{data.wrongList[key][1]}</span>
+              <span className="q">Q.{data.wrongList![key][0]}</span>
+              <span className="a">A.{data.wrongList![key][1]}</span>
             </Item>
           ))}
         </ListSection>
@@ -43,6 +43,10 @@ export async function loader({
 }: WrongAnswerLoaderProps) {
   const userKey = localStorage.getItem("userKey");
   const scoreListId = params.scoreListId;
+
+  if (!userKey) {
+    return redirect("/");
+  }
 
   showProgress();
   const data = await service().GET(`users/${userKey}/scoreList/${scoreListId}`);

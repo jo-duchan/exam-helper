@@ -35,8 +35,8 @@ const router = ({ showProgress, hideProgress }: LoaderProps) => {
         {
           path: "complete/:scoreListId",
           element: <CompletePage />,
-          loader: async ({ params }) =>
-            CompleteLoader({ params, showProgress, hideProgress }),
+          loader: async ({ request, params }) =>
+            CompleteLoader({ request, params, showProgress, hideProgress }),
         },
         {
           path: "stats",

@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { useLoaderData, redirect } from "react-router-dom";
 import styled from "styled-components";
-import Color from "styles/color-system";
 import ZIndex from "styles/z-index";
 import { Heading } from "styles/typography-system";
 import { Banner as BannerType } from "types/admin-data";
@@ -24,12 +23,16 @@ interface LoaderData {
 function MainPage() {
   const { data, banner } = useLoaderData() as LoaderData;
   const [infoType, setInfoType] = useState<string>("stats");
+  const [unsigned, setUnsigned] = useState<boolean>(false);
 
   useEffect(() => {
-    if (!data.scoreList) {
-      setInfoType("tutorial");
-    }
+    const userKey = localStorage.getItem("userKey");
     const root = document.getElementById("root") as HTMLElement;
+
+    if (!userKey) {
+      setInfoType("signin");
+      setUnsigned(true);
+    }
 
     root.style.height = "100%";
     root.style.overflow = "hidden";
@@ -42,7 +45,7 @@ function MainPage() {
 
   return (
     <Container>
-      <MainNavigation />
+      <MainNavigation unsigned={unsigned} />
       <Banner data={banner} />
       <ContentSection>
         <Title>
@@ -51,7 +54,7 @@ function MainPage() {
             도전해 보세요! <img src={Fire} alt="불 이미지" />
           </span>
         </Title>
-        <Actions data={data} />
+        <Actions data={data} unsigned={unsigned} />
         <Information data={InfoData[infoType]} />
       </ContentSection>
     </Container>
@@ -61,18 +64,30 @@ function MainPage() {
 export default MainPage;
 
 export async function loader({ showProgress, hideProgress }: LoaderProps) {
+  const onboarding = localStorage.getItem("onboarding");
   const userKey = localStorage.getItem("userKey");
-  if (!userKey) {
+  let data: User;
+  if (onboarding !== "hide") {
     return redirect("/onboarding");
   }
 
   setTimeout(() => showProgress(), 0);
-  const data: User = await service().GET(`users/${userKey}/`);
+
+  if (userKey) {
+    data = await service().GET(`users/${userKey}/`);
+  } else {
+    const name = "사용자";
+    const sheetNameList = await service().GET(`admin/sheetNameList`);
+    const sheetUrl = await service().GET(`admin/sheetUrl`);
+    data = { name, sheetNameList, sheetUrl } as User;
+  }
+
   const banner: BannerType = await service().GET(`admin/banner`);
 
   localStorage.setItem("sheetId", Utils.convertSheetUrl(data.sheetUrl));
   localStorage.setItem("userName", data.name);
   hideProgress();
+
   return { data, banner };
 }
 

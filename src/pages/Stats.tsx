@@ -1,5 +1,5 @@
 import { useCallback } from "react";
-import { useLoaderData } from "react-router-dom";
+import { useLoaderData, redirect } from "react-router-dom";
 import styled from "styled-components";
 import Color from "styles/color-system";
 import { Heading } from "styles/typography-system";
@@ -85,6 +85,9 @@ export default StatsPage;
 
 export async function loader({ showProgress, hideProgress }: LoaderProps) {
   const userKey = localStorage.getItem("userKey");
+  if (!userKey) {
+    return redirect("/");
+  }
 
   showProgress();
   const data = service().GET(`users/${userKey}/`);

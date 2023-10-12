@@ -8,8 +8,8 @@ export type Score = {
   key?: string;
   date: number;
   score: number;
-  sheetName: string;
-  wrongList: WrongList;
+  sheetName?: string;
+  wrongList?: WrongList;
 };
 
 export type ScoreList = {

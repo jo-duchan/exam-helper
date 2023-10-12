@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useRef, useEffect } from "react";
 import { useNavigate, useLoaderData, Params } from "react-router-dom";
 import styled from "styled-components";
 import html2canvas from "html2canvas";
@@ -13,19 +13,27 @@ import Button from "components/common/Button";
 
 interface LoaderData {
   data: Score;
-  scoreListId: string;
+  scoreListId?: string;
+  userKey?: string;
 }
 
 interface CompleteLoaderProps extends LoaderProps {
+  request: Request;
   params: Params<string>;
 }
 
 function CompletePage() {
-  const { data, scoreListId } = useLoaderData() as LoaderData;
+  const { data, scoreListId, userKey } = useLoaderData() as LoaderData;
   const userName = localStorage.getItem("userName");
   const { showProgress, hideProgress, showToast } = useOverlay();
   const navigate = useNavigate();
   const captureRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!userKey) {
+      console.log("팝업!!");
+    }
+  }, []);
 
   const getCanvas = async (fileName: string) => {
     if (!captureRef.current) return;
@@ -84,12 +92,14 @@ function CompletePage() {
         />
         <ButtonWrapper>
           <Button label="공유하기" size="L" sort="gray" onClick={handleShare} />
-          <Button
-            label="오답 확인하기"
-            size="L"
-            status={data.score === 100 ? "disabled" : "default"}
-            onClick={() => navigate(`/wrongAnswerList/${scoreListId}`)}
-          />
+          {userKey && (
+            <Button
+              label="오답 확인하기"
+              size="L"
+              status={data.score === 100 ? "disabled" : "default"}
+              onClick={() => navigate(`/wrongAnswerList/${scoreListId}`)}
+            />
+          )}
         </ButtonWrapper>
       </ContentSection>
     </Container>
@@ -99,6 +109,7 @@ function CompletePage() {
 export default CompletePage;
 
 export async function loader({
+  request,
   params,
   showProgress,
   hideProgress,
@@ -106,11 +117,21 @@ export async function loader({
   const userKey = localStorage.getItem("userKey");
   const scoreListId = params.scoreListId;
 
+  if (!userKey) {
+    const score = parseInt(
+      new URL(request.url).searchParams.get("score") || ""
+    );
+    const date = parseInt(new URL(request.url).searchParams.get("date") || "");
+    const data = { score, date };
+
+    return { data, userKey };
+  }
+
   showProgress();
   const data = await service().GET(`users/${userKey}/scoreList/${scoreListId}`);
   hideProgress();
 
-  return { data, scoreListId };
+  return { data, scoreListId, userKey };
 }
 
 const Container = styled.div`

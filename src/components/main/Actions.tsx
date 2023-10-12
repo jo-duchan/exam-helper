@@ -9,12 +9,13 @@ import AddSheetImg from "assets/img/empty.png";
 
 interface Props {
   data: User;
+  unsigned: boolean;
 }
 
 const nullData = {} as ScoreList;
 
-function Actions({ data }: Props) {
-  const { sheetNameList, scoreList = nullData, totalStage } = data;
+function Actions({ data, unsigned }: Props) {
+  const { sheetNameList, scoreList = nullData, totalStage = 0 } = data;
   const hasSheetName = (sheetName: string) => {
     const data = Object.keys(scoreList)
       .reverse()
@@ -61,12 +62,14 @@ function Actions({ data }: Props) {
           </PlayBtn>
         </Item>
       ))}
-      <Item to={"/setting"}>
-        <AddSheetBtn>
-          <img src={AddSheetImg} alt="시트 추가" />
-          <span className="label">시트 추가</span>
-        </AddSheetBtn>
-      </Item>
+      {unsigned || (
+        <Item to={"/setting"}>
+          <AddSheetBtn>
+            <img src={AddSheetImg} alt="시트 추가" />
+            <span className="label">시트 추가</span>
+          </AddSheetBtn>
+        </Item>
+      )}
     </Container>
   );
 }
@@ -88,6 +91,12 @@ const Item = styled(Link)`
   padding-bottom: calc((100% - 16px) / 2);
   cursor: pointer;
   user-select: none;
+
+  & .info {
+    white-space: pre-line;
+    color: ${Color.Primary[400]};
+    ${Body.Medium.M}
+  }
 `;
 
 const PlayBtn = styled.div`

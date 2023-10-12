@@ -12,6 +12,7 @@ interface Props {
     title: string;
     description: string;
     link: string;
+    label: string;
   };
 }
 
@@ -35,7 +36,12 @@ function Information({ data }: Props) {
           <span className="title">{data.title}</span>
           <span className="description">{data.description}</span>
         </div>
-        <Button label="확인하기" size="S" width="83px" onClick={handleClick} />
+        <Button
+          label={data.label}
+          size="S"
+          width="83px"
+          onClick={handleClick}
+        />
       </Container>
     );
   };

@@ -70,10 +70,14 @@ function QuizPage() {
 
   useEffect(() => {
     const finishStage = async () => {
-      showProgress();
       const userKey = localStorage.getItem("userKey");
       const date = Date.now();
       const finalScore = Math.floor((score / setTotalStage()) * 100);
+      if (!userKey) {
+        navigate(`/complete/guest?score=${finalScore}&date=${date}`);
+        return;
+      }
+      showProgress();
       const scoreListId = await service().PUSH(`users/${userKey}/scoreList`, {
         sheetName,
         score: finalScore,
@@ -186,12 +190,7 @@ export async function loader({
   showProgress,
   hideProgress,
 }: QuizLoaderProps) {
-  let sheetId = localStorage.getItem("sheetId");
-  const tutorialKey = new URL(request.url).searchParams.get("mode");
-
-  if (tutorialKey) {
-    sheetId = tutorialKey;
-  }
+  const sheetId = localStorage.getItem("sheetId");
 
   if (!sheetId) {
     window.alert("Google SpreadSheet Url을 다시 확인해 주세요.");
@@ -209,7 +208,7 @@ export async function loader({
   });
   const data = await response.text();
   const convert = JSON.parse(data.substring(47).slice(0, -2));
-  console.log(convert, response);
+
   if (!response.ok) {
     throw json({ message: NOT_FOUND_SHEET }, { status: 500 });
   }

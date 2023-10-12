@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useNavigate, useLoaderData } from "react-router-dom";
+import { useNavigate, useLoaderData, redirect } from "react-router-dom";
 import styled from "styled-components";
 import Color from "styles/color-system";
 import { Heading } from "styles/typography-system";
@@ -124,6 +124,10 @@ export default SettingPage;
 
 export async function loader({ showProgress, hideProgress }: LoaderProps) {
   const userKey = localStorage.getItem("userKey");
+  if (!userKey) {
+    return redirect("/");
+  }
+
   showProgress();
   const data = await service().GET(`users/${userKey}`);
   hideProgress();
