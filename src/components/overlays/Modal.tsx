@@ -66,7 +66,7 @@ const Container = styled.div`
 
 const Title = styled.h3`
   width: 100%;
-  color: ${Color.Gray[700]};
+  color: ${Color.Gray[800]};
   font-size: 20px;
   font-weight: 700;
   line-height: 1.25em;
