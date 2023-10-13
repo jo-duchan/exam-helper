@@ -10,6 +10,7 @@ import { Score } from "types/user-data";
 import Navigation from "components/common/Navigation";
 import CaptureArea from "components/complete/CaptureArea";
 import Button from "components/common/Button";
+import Modal from "components/overlays/Modal";
 
 interface LoaderData {
   data: Score;
@@ -25,13 +26,27 @@ interface CompleteLoaderProps extends LoaderProps {
 function CompletePage() {
   const { data, scoreListId, userKey } = useLoaderData() as LoaderData;
   const userName = localStorage.getItem("userName");
-  const { showProgress, hideProgress, showToast } = useOverlay();
+  const { showProgress, hideProgress, showToast, handleShow, handleHide } =
+    useOverlay();
   const navigate = useNavigate();
   const captureRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!userKey) {
-      console.log("팝업!!");
+      const id = handleShow(
+        <Modal
+          title={"문제 풀이가 끝났습니다!"}
+          content={"회원가입하고 나만의 문제를 \n등록해 풀어보세요!"}
+          actionL={{ label: "닫기", onClick: () => handleHide(id) }}
+          actionR={{ label: "확인", onClick: () => handleGotoSignUp() }}
+        />,
+        "POPUP"
+      );
+
+      const handleGotoSignUp = () => {
+        handleHide(id);
+        setTimeout(() => navigate("/signup"), 300);
+      };
     }
   }, []);
 

@@ -18,7 +18,7 @@ import Input from "components/common/Input";
 import SheetName from "components/common/SheetName";
 import CheckBox from "components/common/CheckBox";
 import Button from "components/common/Button";
-import Modal from "components/overlays/Modal";
+import PrivacyModal from "components/overlays/PrivacyModal";
 import Privacy from "components/auth/Privacy";
 
 interface StyledProps {
@@ -57,7 +57,7 @@ function SignUpPage() {
 
   const privacyAgree = () => {
     const id = handleShow(
-      <Modal
+      <PrivacyModal
         title="개인정보 처리방침"
         content={<Privacy />}
         onClick={() => {

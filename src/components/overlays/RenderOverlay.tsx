@@ -71,6 +71,7 @@ const Dim = styled.div`
   width: 100%;
   height: 100%;
   background: rgba(0, 0, 0, 0.5);
+  pointer-events: auto;
 
   &.enter {
     opacity: 0;
