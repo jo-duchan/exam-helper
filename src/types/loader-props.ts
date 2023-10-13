@@ -1,11 +1,11 @@
 import { Params } from "react-router-dom";
 
-export interface LoaderProps extends CustomLoaderProps {
+export interface LoaderArgs extends ProgressLoaderArgs {
   request: Request;
   params: Params<string>;
 }
 
-export interface CustomLoaderProps {
+export interface ProgressLoaderArgs {
   showProgress: () => void;
   hideProgress: () => void;
 }

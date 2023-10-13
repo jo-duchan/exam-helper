@@ -1,16 +1,12 @@
-import { useLoaderData, Params, redirect } from "react-router-dom";
+import { useLoaderData, redirect } from "react-router-dom";
 import styled from "styled-components";
 import Color from "styles/color-system";
 import { Body } from "styles/typography-system";
 import Utils from "utils/utils";
 import service from "hook/useService";
 import { Score } from "types/user-data";
-import { LoaderProps } from "types/loader-props";
+import { LoaderArgs } from "types/loader-props";
 import Navigation from "components/common/Navigation";
-
-interface WrongAnswerLoaderProps extends LoaderProps {
-  params: Params<string>;
-}
 
 function WrongAnswerPage() {
   const data = useLoaderData() as Score;
@@ -40,7 +36,7 @@ export async function loader({
   params,
   showProgress,
   hideProgress,
-}: WrongAnswerLoaderProps) {
+}: LoaderArgs) {
   const userKey = localStorage.getItem("userKey");
   const scoreListId = params.scoreListId;
 

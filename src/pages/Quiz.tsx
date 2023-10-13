@@ -5,7 +5,6 @@ import {
   redirect,
   useNavigate,
   useSearchParams,
-  Params,
 } from "react-router-dom";
 import styled, { keyframes, css } from "styled-components";
 import Color from "styles/color-system";
@@ -14,7 +13,7 @@ import service from "hook/useService";
 import { NOT_FOUND_SHEET, NOT_FOUND_SHEET_VALUE } from "assets/data/error-case";
 import Utils from "utils/utils";
 import { Items } from "types/google-sheet";
-import { LoaderProps } from "types/loader-props";
+import { LoaderArgs } from "types/loader-props";
 import useOverlay from "hook/useOverlay";
 import Navigation from "components/common/Navigation";
 import Scoreboard from "components/quiz/Scoreboard";
@@ -30,11 +29,6 @@ interface StyledProps {
 interface LoaderData {
   items: [];
   sheetName: string;
-}
-
-interface QuizLoaderProps extends LoaderProps {
-  request: Request;
-  params: Params<string>;
 }
 
 type WrongList = string[][];
@@ -189,7 +183,7 @@ export async function loader({
   params,
   showProgress,
   hideProgress,
-}: QuizLoaderProps) {
+}: LoaderArgs) {
   const sheetId = localStorage.getItem("sheetId");
 
   if (!sheetId) {

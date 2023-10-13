@@ -5,7 +5,7 @@ import "swiper/css";
 import styled from "styled-components";
 import Color from "styles/color-system";
 import { Heading, Body } from "styles/typography-system";
-import { CustomLoaderProps } from "types/loader-props";
+import { ProgressLoaderArgs } from "types/loader-props";
 import { Onboarding } from "types/admin-data";
 import service from "hook/useService";
 import useInAppBypassing from "hook/useInAppBypassing";
@@ -54,7 +54,7 @@ export default OnboardingPage;
 export async function loader({
   showProgress,
   hideProgress,
-}: CustomLoaderProps) {
+}: ProgressLoaderArgs) {
   setTimeout(() => showProgress(), 0);
   const onboarding = await service().GET("admin/onboarding");
   hideProgress();
@@ -90,7 +90,7 @@ const SwiperSection = styled(Swiper)`
     height: 8px;
     background: ${Color.Gray[400]};
     border-radius: 4px;
-    transition: width, background, 600ms ease-in-out;
+    transition: width 600ms ease-in-out, background 400ms ease-in-out;
   }
 
   & .swiper-pagination-bullet-active {

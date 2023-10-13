@@ -5,7 +5,7 @@ import html2canvas from "html2canvas";
 import Utils from "utils/utils";
 import useOverlay from "hook/useOverlay";
 import service from "hook/useService";
-import { LoaderProps } from "types/loader-props";
+import { LoaderArgs } from "types/loader-props";
 import { Score } from "types/user-data";
 import Navigation from "components/common/Navigation";
 import CaptureArea from "components/complete/CaptureArea";
@@ -16,11 +16,6 @@ interface LoaderData {
   data: Score;
   scoreListId?: string;
   userKey?: string;
-}
-
-interface CompleteLoaderProps extends LoaderProps {
-  request: Request;
-  params: Params<string>;
 }
 
 function CompletePage() {
@@ -128,7 +123,7 @@ export async function loader({
   params,
   showProgress,
   hideProgress,
-}: CompleteLoaderProps) {
+}: LoaderArgs) {
   const userKey = localStorage.getItem("userKey");
   const scoreListId = params.scoreListId;
 

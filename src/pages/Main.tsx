@@ -5,7 +5,7 @@ import ZIndex from "styles/z-index";
 import { Heading } from "styles/typography-system";
 import { Banner as BannerType } from "types/admin-data";
 import { User } from "types/user-data";
-import { CustomLoaderProps } from "types/loader-props";
+import { ProgressLoaderArgs } from "types/loader-props";
 import { InfoData } from "assets/data/main-info";
 import Utils from "utils/utils";
 import service from "hook/useService";
@@ -66,7 +66,7 @@ export default MainPage;
 export async function loader({
   showProgress,
   hideProgress,
-}: CustomLoaderProps) {
+}: ProgressLoaderArgs) {
   const onboarding = localStorage.getItem("onboarding");
   const userKey = localStorage.getItem("userKey");
   let data: User;
