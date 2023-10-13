@@ -5,7 +5,7 @@ import "swiper/css";
 import styled from "styled-components";
 import Color from "styles/color-system";
 import { Heading, Body } from "styles/typography-system";
-import { LoaderProps } from "types/loader-props";
+import { CustomLoaderProps } from "types/loader-props";
 import { Onboarding } from "types/admin-data";
 import service from "hook/useService";
 import useInAppBypassing from "hook/useInAppBypassing";
@@ -51,7 +51,10 @@ function OnboardingPage() {
 
 export default OnboardingPage;
 
-export async function loader({ showProgress, hideProgress }: LoaderProps) {
+export async function loader({
+  showProgress,
+  hideProgress,
+}: CustomLoaderProps) {
   setTimeout(() => showProgress(), 0);
   const onboarding = await service().GET("admin/onboarding");
   hideProgress();

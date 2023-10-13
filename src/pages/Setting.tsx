@@ -5,7 +5,7 @@ import Color from "styles/color-system";
 import { Heading } from "styles/typography-system";
 import useOverlay from "hook/useOverlay";
 import service from "hook/useService";
-import { LoaderProps } from "types/loader-props";
+import { CustomLoaderProps } from "types/loader-props";
 import Navigation from "components/common/Navigation";
 import Input from "components/common/Input";
 import SheetName from "components/common/SheetName";
@@ -122,7 +122,10 @@ function SettingPage() {
 
 export default SettingPage;
 
-export async function loader({ showProgress, hideProgress }: LoaderProps) {
+export async function loader({
+  showProgress,
+  hideProgress,
+}: CustomLoaderProps) {
   const userKey = localStorage.getItem("userKey");
   if (!userKey) {
     return redirect("/");
