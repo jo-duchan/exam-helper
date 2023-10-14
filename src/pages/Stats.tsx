@@ -34,8 +34,9 @@ function StatsPage() {
         wrongList: scoreList[key].wrongList,
       };
     });
-    const convertScoreList = convertArray.reduce(
-      (list: ConvertScoreList, current) => {
+    const convertScoreList = convertArray
+      .reverse()
+      .reduce((list: ConvertScoreList, current) => {
         list[Utils.dateFormat(current.date, "E")] =
           list[Utils.dateFormat(current.date, "E")] || [];
         list[Utils.dateFormat(current.date, "E")].push({
@@ -46,9 +47,7 @@ function StatsPage() {
           wrongList: current.wrongList,
         });
         return list;
-      },
-      {}
-    );
+      }, {});
 
     return convertScoreList;
   }, [scoreList]);
