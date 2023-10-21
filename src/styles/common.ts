@@ -10,7 +10,7 @@ const GlobalStyle = createGlobalStyle`
 ${reset};
 
 :root {
-    --gobal-width: clamp(320px, 100vw, 500px);
+    --global-width: clamp(320px, 100vw, 500px);
     -webkit-tap-highlight-color: transparent;
 }
 
@@ -24,7 +24,7 @@ html, body {
 #root {
     font-family: ${fontFamily};
     display: flex;
-    width: var(--gobal-width);
+    width: var(--global-width);
     min-height: 100%;
     background: ${Color.Gray[100]};
     margin-inline: auto;
@@ -38,7 +38,7 @@ textarea {
     position: fixed;
     left: 50%;
     transform: translate3d(-50%, 0, 0);
-    width: var(--gobal-width);
+    width: var(--global-width);
     height: 100%;
     pointer-events: none;
     ${ZIndex["MAX"]};

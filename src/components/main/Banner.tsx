@@ -45,7 +45,7 @@ const Container = styled(Swiper)`
 `;
 
 const Item = styled(SwiperSlide)`
-  width: calc(var(--gobal-width) - 50px);
+  width: calc(var(--global-width) - 50px);
   height: 120px;
   @media screen and (min-width: 500px) {
     height: 154px;
