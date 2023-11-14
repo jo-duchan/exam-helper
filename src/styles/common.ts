@@ -1,7 +1,6 @@
-import styled, { createGlobalStyle } from "styled-components";
+import { createGlobalStyle } from "styled-components";
 import reset from "styled-reset";
 import Color from "styles/color-system";
-import ZIndex from "styles/z-index";
 
 const fontFamily =
   '"Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif';
@@ -18,7 +17,6 @@ html, body {
     width: 100%;
     height: 100%;
     background: ${Color.Gray[300]};
-    scroll-behavior: smooth;
 }
 
 #root {
@@ -35,13 +33,7 @@ textarea {
 }
 
 #overlays {
-    position: fixed;
-    left: 50%;
-    transform: translate3d(-50%, 0, 0);
-    width: var(--global-width);
-    height: 100%;
     pointer-events: none;
-    ${ZIndex["MAX"]};
 }
 
 button {

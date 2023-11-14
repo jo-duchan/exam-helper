@@ -1,4 +1,5 @@
 import React from "react";
+import { ScrollRestoration } from "react-router-dom";
 import useInAppBypassing from "hook/useInAppBypassing";
 
 interface Props {
@@ -8,7 +9,12 @@ interface Props {
 function Layout({ children }: Props) {
   useInAppBypassing();
 
-  return <>{children}</>;
+  return (
+    <>
+      {children}
+      <ScrollRestoration />
+    </>
+  );
 }
 
 export default Layout;

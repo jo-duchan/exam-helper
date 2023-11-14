@@ -27,20 +27,11 @@ function MainPage() {
 
   useEffect(() => {
     const userKey = localStorage.getItem("userKey");
-    const root = document.getElementById("root") as HTMLElement;
 
     if (!userKey) {
       setInfoType("signin");
       setUnsigned(true);
     }
-
-    root.style.height = "100%";
-    root.style.overflow = "hidden";
-
-    return () => {
-      root.style.height = "initial";
-      root.style.overflow = "initial";
-    };
   }, []);
 
   return (
@@ -74,7 +65,7 @@ export async function loader({
     return redirect("/onboarding");
   }
 
-  setTimeout(() => showProgress(), 0);
+  // setTimeout(() => showProgress(), 0);
 
   if (userKey) {
     data = await service().GET(`users/${userKey}/`);
@@ -89,7 +80,7 @@ export async function loader({
 
   localStorage.setItem("sheetId", Utils.convertSheetUrl(data.sheetUrl));
   localStorage.setItem("userName", data.name);
-  hideProgress();
+  // hideProgress();
 
   return { data, banner };
 }

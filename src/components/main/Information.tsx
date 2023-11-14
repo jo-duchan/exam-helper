@@ -1,8 +1,8 @@
 import styled from "styled-components";
 import ReactDOM from "react-dom";
 import { useNavigate } from "react-router-dom";
-import Utils from "utils/utils";
 import Color from "styles/color-system";
+import ZIndex from "styles/z-index";
 import { Body } from "styles/typography-system";
 import Button from "components/common/Button";
 
@@ -20,15 +20,11 @@ function Information({ data }: Props) {
   const portalElement = document.getElementById("overlays");
   const navigate = useNavigate();
 
+  const handleClick = () => {
+    navigate(data.link);
+  };
+
   const renderContent = () => {
-    const handleClick = () => {
-      if (data.title === "튜토리얼") {
-        const key = Utils.convertSheetUrl(data.link);
-        navigate(`/quiz/${data.title}?mode=${key}`);
-        return;
-      }
-      navigate(data.link);
-    };
     return (
       <Container>
         <img src={data.img} alt={`${data.title} 아이콘`} />
@@ -53,8 +49,10 @@ export default Information;
 
 const Container = styled.div`
   position: fixed;
+  left: 50%;
   bottom: 0;
-  width: 100%;
+  transform: translate3d(-50%, 0, 0);
+  width: var(--global-width);
   height: 85px;
   display: flex;
   align-items: center;
@@ -64,6 +62,7 @@ const Container = styled.div`
   box-sizing: border-box;
   box-shadow: 0px -8px 16px 0px rgba(0, 0, 0, 0.06);
   pointer-events: auto;
+  ${ZIndex[500]}
 
   & img {
     width: 40px;
