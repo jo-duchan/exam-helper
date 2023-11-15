@@ -32,11 +32,7 @@ function WrongAnswerPage() {
 
 export default WrongAnswerPage;
 
-export async function loader({
-  params,
-  showProgress,
-  hideProgress,
-}: LoaderArgs) {
+export async function loader({ params }: LoaderArgs) {
   const userKey = localStorage.getItem("userKey");
   const scoreListId = params.scoreListId;
 
@@ -44,9 +40,9 @@ export async function loader({
     return redirect("/");
   }
 
-  showProgress();
+  // showProgress();
   const data = await service().GET(`users/${userKey}/scoreList/${scoreListId}`);
-  hideProgress();
+  // hideProgress();
 
   return data;
 }

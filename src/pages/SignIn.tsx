@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import service from "hook/useService";
-import useOverlay from "hook/useOverlay";
+// import useOverlay from "hook/useOverlay";
 import styled from "styled-components";
 import Color from "styles/color-system";
 import { Heading, Body } from "styles/typography-system";
@@ -11,7 +11,7 @@ import Assets from "assets/img/sign-in.png";
 
 function SignInPage() {
   const navigate = useNavigate();
-  const { showToast, showProgress, hideProgress } = useOverlay();
+  // const { showToast, showProgress, hideProgress } = useOverlay();
   const [userKey, setUserKey] = useState<string>("");
   const [userKeyValid, setUserKeyValid] = useState<boolean>(true);
 
@@ -29,12 +29,12 @@ function SignInPage() {
       setUserKeyValid(false);
       return;
     }
-    showProgress();
+    // showProgress();
     const data = await service().GET(`users/${userKey}/name`);
-    hideProgress();
+    // hideProgress();
 
     if (data) {
-      showToast(`${data}님 반가워요.\n이그잼 헬퍼와 함께 성장해요!`, "sucess");
+      // showToast(`${data}님 반가워요.\n이그잼 헬퍼와 함께 성장해요!`, "sucess");
       localStorage.setItem("userKey", userKey!);
       navigate("/");
     } else {

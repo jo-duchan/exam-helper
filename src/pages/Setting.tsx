@@ -3,9 +3,8 @@ import { useNavigate, useLoaderData, redirect } from "react-router-dom";
 import styled from "styled-components";
 import Color from "styles/color-system";
 import { Heading } from "styles/typography-system";
-import useOverlay from "hook/useOverlay";
+// import useOverlay from "hook/useOverlay";
 import service from "hook/useService";
-import { ProgressLoaderArgs } from "types/loader-props";
 import Navigation from "components/common/Navigation";
 import Input from "components/common/Input";
 import SheetName from "components/common/SheetName";
@@ -31,7 +30,7 @@ function SettingPage() {
     totalStage: initTotalStage,
     userKey,
   } = useLoaderData() as LoaderData;
-  const { showProgress, hideProgress, showToast } = useOverlay();
+  // const { showProgress, hideProgress, showToast } = useOverlay();
 
   const [sheetUrl, setSheetUrl] = useState<string>("");
   const [sheetNameList, setSheetNameList] = useState<string[]>([]);
@@ -70,15 +69,15 @@ function SettingPage() {
       setTotalStageValid(true);
     }
 
-    showProgress();
+    // showProgress();
     await service().UPDATE(`users/${userKey}`, {
       sheetUrl,
       sheetNameList,
       totalStage,
     });
-    hideProgress();
+    // hideProgress();
 
-    showToast("업데이트가 완료되었어요.", "sucess");
+    // showToast("업데이트가 완료되었어요.", "sucess");
     navigate("/");
   };
 
@@ -122,18 +121,15 @@ function SettingPage() {
 
 export default SettingPage;
 
-export async function loader({
-  showProgress,
-  hideProgress,
-}: ProgressLoaderArgs) {
+export async function loader() {
   const userKey = localStorage.getItem("userKey");
   if (!userKey) {
     return redirect("/");
   }
 
-  showProgress();
+  // showProgress();
   const data = await service().GET(`users/${userKey}`);
-  hideProgress();
+  // hideProgress();
 
   return data;
 }

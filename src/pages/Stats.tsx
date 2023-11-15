@@ -6,7 +6,6 @@ import { Heading } from "styles/typography-system";
 import service from "hook/useService";
 import Utils from "utils/utils";
 import { ScoreList, Score } from "types/user-data";
-import { ProgressLoaderArgs } from "types/loader-props";
 import Navigation from "components/common/Navigation";
 import Calendar from "components/stats/Calendar";
 import WrongAnswerList from "components/stats/WrongAnswerList";
@@ -82,18 +81,15 @@ function StatsPage() {
 
 export default StatsPage;
 
-export async function loader({
-  showProgress,
-  hideProgress,
-}: ProgressLoaderArgs) {
+export async function loader() {
   const userKey = localStorage.getItem("userKey");
   if (!userKey) {
     return redirect("/");
   }
 
-  showProgress();
+  // showProgress();
   const data = service().GET(`users/${userKey}/`);
-  hideProgress();
+  // hideProgress();
 
   return data;
 }

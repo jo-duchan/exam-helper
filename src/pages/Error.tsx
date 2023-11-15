@@ -6,15 +6,13 @@ import { Heading, Body } from "styles/typography-system";
 import Navigation from "components/common/Navigation";
 import Button from "components/common/Button";
 import Assets from "assets/img/error.png";
-import useOverlay from "hook/useOverlay";
 
 function ErrorPage() {
-  const { hideProgress } = useOverlay();
   const error = useRouteError() as any;
   const navigate = useNavigate();
 
   useEffect(() => {
-    hideProgress();
+    // hideProgress();
   }, []);
 
   let title = "오류 페이지";

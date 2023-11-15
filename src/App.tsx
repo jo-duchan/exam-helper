@@ -1,15 +1,8 @@
 import { RouterProvider } from "react-router-dom";
-import useOverlay from "hook/useOverlay";
-import ReactRouterObject from "ReactRouter";
+import RouterObject from "Routers";
 
 function App() {
-  const { showProgress, hideProgress } = useOverlay();
-
-  return (
-    <RouterProvider
-      router={ReactRouterObject({ showProgress, hideProgress })}
-    />
-  );
+  return <RouterProvider router={RouterObject} />;
 }
 
 export default App;

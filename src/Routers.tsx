@@ -1,5 +1,4 @@
 import { createBrowserRouter } from "react-router-dom";
-import { LoaderArgs, ProgressLoaderArgs } from "types/loader-props";
 import Layout from "Layout";
 import ErrorPage from "pages/Error";
 import OnboardingPage, { loader as OnboardingLoader } from "pages/Onboarding";
@@ -12,52 +11,47 @@ import SettingPage, { loader as SettingLoader } from "pages/Setting";
 import SignInPage from "pages/SignIn";
 import SignUpPage, { loader as SignUpLoader } from "pages/SignUp";
 
-interface RouterObject {
-  showProgress: () => void;
-  hideProgress: () => void;
-}
-
 const routerInfo = [
   {
     path: "onboarding",
     element: <OnboardingPage />,
-    loader: ({ ...args }: ProgressLoaderArgs) => OnboardingLoader({ ...args }),
+    loader: OnboardingLoader,
     withAuth: false,
   },
   {
     index: true,
     element: <MainPage />,
-    loader: ({ ...args }: ProgressLoaderArgs) => MainLoader({ ...args }),
+    loader: MainLoader,
     withAuth: false,
   },
   {
     path: "quiz/:sheetName",
     element: <QuizPage />,
-    loader: ({ ...args }: LoaderArgs) => QuizLoader({ ...args }),
+    loader: QuizLoader,
     withAuth: false,
   },
   {
     path: "complete/:scoreListId",
     element: <CompletePage />,
-    loader: ({ ...args }: LoaderArgs) => CompleteLoader({ ...args }),
+    loader: CompleteLoader,
     withAuth: false,
   },
   {
     path: "stats",
     element: <StatsPage />,
-    loader: ({ ...args }: ProgressLoaderArgs) => StatsLoader({ ...args }),
+    loader: StatsLoader,
     withAuth: true,
   },
   {
     path: "wrongAnswerList/:scoreListId",
     element: <WrongAnswerPage />,
-    loader: ({ ...args }: LoaderArgs) => WALoader({ ...args }),
+    loader: WALoader,
     withAuth: true,
   },
   {
     path: "setting",
     element: <SettingPage />,
-    loader: ({ ...args }: ProgressLoaderArgs) => SettingLoader({ ...args }),
+    loader: SettingLoader,
     withAuth: true,
   },
   {
@@ -68,37 +62,24 @@ const routerInfo = [
   {
     path: "signup",
     element: <SignUpPage />,
-    loader: () => SignUpLoader(),
+    loader: SignUpLoader,
     withAuth: false,
   },
 ];
 
-const ReactRouterObject = ({ showProgress, hideProgress }: RouterObject) => {
-  return createBrowserRouter([
-    {
-      path: "/",
-      errorElement: <ErrorPage />,
-      children: routerInfo.map((router) => {
-        return {
-          index: router.index,
-          path: router.path,
-          element: <Layout>{router.element}</Layout>,
-          loader: ({ request, params }) => {
-            if (router.loader) {
-              return router.loader({
-                request,
-                params,
-                showProgress,
-                hideProgress,
-              });
-            }
-
-            return null;
-          },
-        };
-      }),
-    },
-  ]);
-};
+const ReactRouterObject = createBrowserRouter([
+  {
+    path: "/",
+    errorElement: <ErrorPage />,
+    children: routerInfo.map((router) => {
+      return {
+        index: router.index,
+        path: router.path,
+        element: <Layout>{router.element}</Layout>,
+        loader: router.loader && router.loader,
+      };
+    }),
+  },
+]);
 
 export default ReactRouterObject;

@@ -3,7 +3,6 @@ import { useNavigate, useLoaderData, Params } from "react-router-dom";
 import styled from "styled-components";
 import html2canvas from "html2canvas";
 import Utils from "utils/utils";
-import useOverlay from "hook/useOverlay";
 import service from "hook/useService";
 import { LoaderArgs } from "types/loader-props";
 import { Score } from "types/user-data";
@@ -21,27 +20,24 @@ interface LoaderData {
 function CompletePage() {
   const { data, scoreListId, userKey } = useLoaderData() as LoaderData;
   const userName = localStorage.getItem("userName");
-  const { showProgress, hideProgress, showToast, handleShow, handleHide } =
-    useOverlay();
   const navigate = useNavigate();
   const captureRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!userKey) {
-      const id = handleShow(
-        <Modal
-          title={"문제 풀이가 끝났습니다!"}
-          content={"회원가입하고 나만의 문제를 \n등록해 풀어보세요!"}
-          actionL={{ label: "닫기", onClick: () => handleHide(id) }}
-          actionR={{ label: "확인", onClick: () => handleGotoSignUp() }}
-        />,
-        "POPUP"
-      );
-
-      const handleGotoSignUp = () => {
-        handleHide(id);
-        setTimeout(() => navigate("/signup"), 300);
-      };
+      // const id = handleShow(
+      //   <Modal
+      //     title={"문제 풀이가 끝났습니다!"}
+      //     content={"회원가입하고 나만의 문제를 \n등록해 풀어보세요!"}
+      //     actionL={{ label: "닫기", onClick: () => handleHide(id) }}
+      //     actionR={{ label: "확인", onClick: () => handleGotoSignUp() }}
+      //   />,
+      //   "POPUP"
+      // );
+      // const handleGotoSignUp = () => {
+      //   handleHide(id);
+      //   setTimeout(() => navigate("/signup"), 300);
+      // };
     }
   }, []);
 
@@ -58,7 +54,7 @@ function CompletePage() {
 
       return { file, url };
     } catch {
-      showToast("실패 했어요.", "error");
+      // showToast("실패 했어요.", "error");
     }
   };
 
@@ -66,7 +62,7 @@ function CompletePage() {
     const fileName = `exam-helper-${Utils.dateFormat(data.date)}-${
       data.score
     }.jpeg`;
-    showProgress();
+    // showProgress();
     const shareData = (await getCanvas(fileName)) as any;
 
     try {
@@ -83,10 +79,10 @@ function CompletePage() {
         link.click();
         document.body.removeChild(link);
       }
-      hideProgress();
+      // hideProgress();
     } catch {
-      hideProgress();
-      showToast("취소 했어요.");
+      // hideProgress();
+      // showToast("취소 했어요.");
     }
   };
 
@@ -118,12 +114,7 @@ function CompletePage() {
 
 export default CompletePage;
 
-export async function loader({
-  request,
-  params,
-  showProgress,
-  hideProgress,
-}: LoaderArgs) {
+export async function loader({ request, params }: LoaderArgs) {
   const userKey = localStorage.getItem("userKey");
   const scoreListId = params.scoreListId;
 
@@ -137,9 +128,9 @@ export async function loader({
     return { data, userKey };
   }
 
-  showProgress();
+  // showProgress
   const data = await service().GET(`users/${userKey}/scoreList/${scoreListId}`);
-  hideProgress();
+  // hideProgress
 
   return { data, scoreListId, userKey };
 }

@@ -5,7 +5,6 @@ import Color from "styles/color-system";
 import { Body } from "styles/typography-system";
 import ZIndex from "styles/z-index";
 import { IconType } from "types/icon-set";
-import useOverlay from "hook/useOverlay";
 import IconSet from "components/common/IconSet";
 
 interface Props {
@@ -21,12 +20,12 @@ interface StyledProps {
 }
 
 function Toast({ id, display, speed, message, sort = "none" }: Props) {
-  const { handleHide } = useOverlay();
+  // const { handleHide } = useOverlay();
   const [show, setShow] = useState(false);
 
   useEffect(() => {
     const selfClose = setTimeout(() => {
-      handleHide(id!);
+      // handleHide(id!);
     }, 3000);
 
     return () => {

@@ -14,7 +14,6 @@ import { NOT_FOUND_SHEET, NOT_FOUND_SHEET_VALUE } from "assets/data/error-case";
 import Utils from "utils/utils";
 import { Items } from "types/google-sheet";
 import { LoaderArgs } from "types/loader-props";
-import useOverlay from "hook/useOverlay";
 import Navigation from "components/common/Navigation";
 import Scoreboard from "components/quiz/Scoreboard";
 import Question from "components/quiz/Question";
@@ -37,7 +36,6 @@ const TIMEING = 1000;
 function QuizPage() {
   const { items: data, sheetName } = useLoaderData() as LoaderData;
   const navigate = useNavigate();
-  const { showProgress, hideProgress } = useOverlay();
   const [qNum, SetQNum] = useState(0);
   const [value, setValue] = useState("");
   const [score, setScore] = useState(0);
@@ -71,14 +69,14 @@ function QuizPage() {
         navigate(`/complete/guest?score=${finalScore}&date=${date}`);
         return;
       }
-      showProgress();
+      // showProgress();
       const scoreListId = await service().PUSH(`users/${userKey}/scoreList`, {
         sheetName,
         score: finalScore,
         date,
         wrongList,
       });
-      hideProgress();
+      // hideProgress();
       navigate(`/complete/${scoreListId}`);
     };
 
@@ -178,12 +176,7 @@ function QuizPage() {
 
 export default QuizPage;
 
-export async function loader({
-  request,
-  params,
-  showProgress,
-  hideProgress,
-}: LoaderArgs) {
+export async function loader({ params }: LoaderArgs) {
   const sheetId = localStorage.getItem("sheetId");
 
   if (!sheetId) {
@@ -196,7 +189,7 @@ export async function loader({
   const query = encodeURIComponent("SELECT A, B");
   const url = `${base}&sheet=${sheetName}&headers=0&tq=${query}`;
 
-  showProgress();
+  // showProgress();
   const response = await fetch(url).catch(() => {
     throw json({ message: NOT_FOUND_SHEET }, { status: 500 });
   });
@@ -213,7 +206,7 @@ export async function loader({
   const items = convert.table.rows.map(({ c }: { c: Items }) =>
     Utils.cleanRow(c)
   );
-  hideProgress();
+  // hideProgress();
   return { items, sheetName };
 }
 

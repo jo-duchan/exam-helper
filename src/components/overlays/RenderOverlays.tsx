@@ -12,7 +12,7 @@ interface Props {
 const dimSpeed = 300;
 
 function RenderOverlay({ items }: Props) {
-  const portalElement = document.getElementById("overlays");
+  const portalElement = document.getElementById("overlays") as HTMLElement;
   const [dimIsShown, setDimIsShown] = useState<boolean>(false);
 
   useEffect(() => {
@@ -43,13 +43,13 @@ function RenderOverlay({ items }: Props) {
             {React.cloneElement(item.element, item)}
           </Wrapper>
         )),
-        portalElement as HTMLElement
+        portalElement
       )}
       {ReactDOM.createPortal(
         <CSSTransition in={dimIsShown} timeout={dimSpeed} unmountOnExit>
           <Dim />
         </CSSTransition>,
-        portalElement as HTMLElement
+        portalElement
       )}
     </>
   );

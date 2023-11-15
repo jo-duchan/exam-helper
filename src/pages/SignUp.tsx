@@ -11,7 +11,7 @@ import Color from "styles/color-system";
 import { Body } from "styles/typography-system";
 import { nanoid } from "nanoid";
 import emailjs from "@emailjs/browser";
-import useOverlay from "hook/useOverlay";
+// import useOverlay from "hook/useOverlay";
 import service from "hook/useService";
 import Navigation from "components/common/Navigation";
 import Input from "components/common/Input";
@@ -29,8 +29,6 @@ interface StyledProps {
 
 function SignUpPage() {
   const navigate = useNavigate();
-  const { showProgress, hideProgress, showToast, handleShow, handleHide } =
-    useOverlay();
   const [hideId, setHideId] = useState<string>("");
   const [serchParams] = useSearchParams();
   const showPrivacyModal = serchParams.get("modal") || "";
@@ -51,23 +49,23 @@ function SignUpPage() {
     }
 
     if (!showPrivacyModal) {
-      handleHide(hideId);
+      // handleHide(hideId);
     }
   }, [showPrivacyModal]);
 
   const privacyAgree = () => {
-    const id = handleShow(
-      <PrivacyModal
-        title="개인정보 처리방침"
-        content={<Privacy />}
-        onClick={() => {
-          setPrivacy(true);
-          navigate(-1 as To, { replace: true });
-        }}
-      />,
-      "POPUP"
-    );
-    setHideId(id);
+    // const id = handleShow(
+    //   <PrivacyModal
+    //     title="개인정보 처리방침"
+    //     content={<Privacy />}
+    //     onClick={() => {
+    //       setPrivacy(true);
+    //       navigate(-1 as To, { replace: true });
+    //     }}
+    //   />,
+    //   "POPUP"
+    // );
+    // setHideId(id);
   };
 
   const handleSubmit = async () => {
@@ -105,7 +103,7 @@ function SignUpPage() {
     }
 
     if (!privacy) {
-      showToast("개인정보 처리방침에 동의해 주세요.", "error");
+      // showToast("개인정보 처리방침에 동의해 주세요.", "error");
       return;
     }
 
@@ -116,7 +114,7 @@ function SignUpPage() {
       to_userKey: userKey,
     };
 
-    showProgress();
+    // showProgress();
     await service().SET(`users/${userKey}`, {
       userKey,
       name,
@@ -136,12 +134,12 @@ function SignUpPage() {
       .catch(() => {
         json({ message: "사용자 키를 발송하지 못했어요." }, { status: 500 });
       });
-    hideProgress();
+    // hideProgress();
 
-    showToast(
-      "가입이 축하드려요. \n사용자 키는 이메일로 보내드렸어요.",
-      "sucess"
-    );
+    // showToast(
+    //   "가입이 축하드려요. \n사용자 키는 이메일로 보내드렸어요.",
+    //   "sucess"
+    // );
     navigate("/");
   };
   return (
