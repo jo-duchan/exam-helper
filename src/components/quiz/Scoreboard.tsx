@@ -112,8 +112,8 @@ const ScoreSection = styled.div`
   }
 
   & :is(.score, .miss) .icon svg {
-    width: 90%;
-    height: 90%;
+    width: 13px;
+    height: 13px;
   }
 
   & .miss .icon svg rect {
