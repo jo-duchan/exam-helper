@@ -14,6 +14,8 @@ import Actions from "components/main/Actions";
 import Information from "components/main/Information";
 import Fire from "assets/img/fire.png";
 
+// https://beta.reactrouter.com/en/main/components/await
+
 interface LoaderData {
   data: User;
   banner: BannerType;
@@ -67,9 +69,9 @@ export async function loader() {
     data = await service().GET(`users/${userKey}/`);
   } else {
     const name = "사용자";
-    const sheetNameList = await service().GET(`admin/sheetNameList`);
+    const playList = await service().GET(`admin/playList`);
     const sheetUrl = await service().GET(`admin/sheetUrl`);
-    data = { name, sheetNameList, sheetUrl } as User;
+    data = { name, playList, sheetUrl } as User;
   }
 
   const banner: BannerType = await service().GET(`admin/banner`);

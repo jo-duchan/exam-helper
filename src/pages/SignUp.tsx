@@ -13,6 +13,7 @@ import { nanoid } from "nanoid";
 import emailjs from "@emailjs/browser";
 // import useOverlay from "hook/useOverlay";
 import service from "hook/useService";
+import { Play } from "types/user-data";
 import Navigation from "components/common/Navigation";
 import Input from "components/common/Input";
 import SheetName from "components/common/SheetName";
@@ -35,13 +36,13 @@ function SignUpPage() {
   const [name, setName] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [sheetUrl, setSheetUrl] = useState<string>("");
-  const [sheetNameList, setSheetNameList] = useState<string[]>([]);
+  const [playList, setPlayList] = useState<Play[]>([]);
   const [privacy, setPrivacy] = useState<boolean>(false);
 
   const [nameValid, setNameValid] = useState<boolean>(true);
   const [emailValid, setEmailValid] = useState<boolean>(true);
   const [sheetUrlValid, setSheetUrlValid] = useState<boolean>(true);
-  const [sheetNameListValid, setSheetNameListValid] = useState<boolean>(true);
+  const [playListValid, setPlayListValid] = useState<boolean>(true);
 
   useEffect(() => {
     if (showPrivacyModal) {
@@ -95,11 +96,11 @@ function SignUpPage() {
       setSheetUrlValid(true);
     }
 
-    if (sheetNameList.length <= 0) {
-      setSheetNameListValid(false);
+    if (!playList.length) {
+      setPlayListValid(false);
       return;
     } else {
-      setSheetNameListValid(true);
+      setPlayListValid(true);
     }
 
     if (!privacy) {
@@ -121,7 +122,7 @@ function SignUpPage() {
       email,
       created,
       sheetUrl,
-      sheetNameList,
+      playList,
     });
     localStorage.setItem("userKey", userKey);
     await emailjs
@@ -172,9 +173,9 @@ function SignUpPage() {
             onChange={(e) => setSheetUrl(e.currentTarget.value)}
           />
           <SheetName
-            list={sheetNameList}
-            setList={setSheetNameList}
-            valid={sheetNameListValid}
+            list={playList}
+            setList={setPlayList}
+            valid={playListValid}
           />
         </InnerSection>
         <InnerSection paddingTop={30} paddingBtm={40} gap={20}>

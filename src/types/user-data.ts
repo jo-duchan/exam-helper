@@ -16,12 +16,17 @@ export type ScoreList = {
   [key: string]: Score;
 };
 
+export type Play = {
+  sheetName: string;
+  sheetId?: string;
+};
+
 export type User = {
   crated: number;
   email: string;
   name: string;
   scoreList?: ScoreList;
-  sheetNameList: string[] | undefined;
+  playList: Play[] | undefined;
   totalStage: number;
   sheetUrl: string;
   userKey: string;

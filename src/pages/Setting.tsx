@@ -5,6 +5,7 @@ import Color from "styles/color-system";
 import { Heading } from "styles/typography-system";
 // import useOverlay from "hook/useOverlay";
 import service from "hook/useService";
+import { Play } from "types/user-data";
 import Navigation from "components/common/Navigation";
 import Input from "components/common/Input";
 import SheetName from "components/common/SheetName";
@@ -12,7 +13,7 @@ import Button from "components/common/Button";
 
 interface LoaderData {
   sheetUrl: string;
-  sheetNameList: string[];
+  playList: Play[];
   totalStage: string;
   userKey: string;
 }
@@ -26,24 +27,24 @@ function SettingPage() {
   const navigate = useNavigate();
   const {
     sheetUrl: initSheetUrl,
-    sheetNameList: initSheetNameList,
+    playList: initPlayList,
     totalStage: initTotalStage,
     userKey,
   } = useLoaderData() as LoaderData;
   // const { showProgress, hideProgress, showToast } = useOverlay();
 
   const [sheetUrl, setSheetUrl] = useState<string>("");
-  const [sheetNameList, setSheetNameList] = useState<string[]>([]);
+  const [playList, setPlayList] = useState<Play[]>([]);
   const [totalStage, setTotalStage] = useState<number>(0);
 
   const [sheetUrlValid, setSheetUrlValid] = useState<boolean>(true);
-  const [sheetNameListValid, setSheetNameListValid] = useState<boolean>(true);
+  const [playListValid, setPlayListValid] = useState<boolean>(true);
   const [totalStageValid, setTotalStageValid] = useState<boolean>(true);
 
   useEffect(() => {
     // init
     setSheetUrl(initSheetUrl);
-    setSheetNameList(initSheetNameList);
+    setPlayList(initPlayList);
     setTotalStage(parseInt(initTotalStage));
   }, []);
 
@@ -55,11 +56,11 @@ function SettingPage() {
       setSheetUrlValid(true);
     }
 
-    if (sheetNameList.length <= 0) {
-      setSheetNameListValid(false);
+    if (!playList.length) {
+      setPlayListValid(false);
       return;
     } else {
-      setSheetNameListValid(true);
+      setPlayListValid(true);
     }
 
     if (totalStage <= 0 || !totalStage) {
@@ -72,7 +73,7 @@ function SettingPage() {
     // showProgress();
     await service().UPDATE(`users/${userKey}`, {
       sheetUrl,
-      sheetNameList,
+      playList,
       totalStage,
     });
     // hideProgress();
@@ -96,9 +97,9 @@ function SettingPage() {
             onChange={(e) => setSheetUrl(e.currentTarget.value)}
           />
           <SheetName
-            list={sheetNameList}
-            setList={setSheetNameList}
-            valid={sheetNameListValid}
+            list={playList}
+            setList={setPlayList}
+            valid={playListValid}
           />
         </SettingSection>
         <SettingSection paddingTop={30} paddingBtm={40}>

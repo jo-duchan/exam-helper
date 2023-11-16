@@ -1,13 +1,14 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import { nanoid } from "nanoid";
+import { Play } from "types/user-data";
 import Input from "components/common/Input";
 import Chip from "components/common/Chip";
 import Button from "components/common/Button";
 
 interface Props {
-  list: string[];
-  setList: React.Dispatch<React.SetStateAction<string[]>>;
+  list: Play[];
+  setList: React.Dispatch<React.SetStateAction<Play[]>>;
   valid: boolean;
 }
 
@@ -17,7 +18,7 @@ function SheetName({ list, setList, valid }: Props) {
   const handleAddSheetNameList = () => {
     if (sheetName) {
       setList((prev) => {
-        return [...prev, sheetName];
+        return [...prev, { sheetName: sheetName }];
       });
       setSheetName("");
     }
@@ -52,10 +53,10 @@ function SheetName({ list, setList, valid }: Props) {
         </div>
       </div>
       <div className="chip-wrapper">
-        {list.map((sheetName, index) => (
+        {list.map((item, index) => (
           <Chip
             key={nanoid(6)}
-            label={sheetName}
+            label={item.sheetName}
             onRemove={() => HandleRemoveSheetNameList(index)}
           />
         ))}

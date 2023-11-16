@@ -176,16 +176,12 @@ function QuizPage() {
 
 export default QuizPage;
 
-export async function loader({ params }: LoaderArgs) {
-  const sheetId = localStorage.getItem("sheetId");
-
-  if (!sheetId) {
-    window.alert("Google SpreadSheet Url을 다시 확인해 주세요.");
-    return redirect("/");
-  }
+export async function loader({ request }: LoaderArgs) {
+  const sheetId = new URL(request.url).searchParams.get("id");
+  const sheetName = new URL(request.url).searchParams.get("name");
+  console.log(sheetId, sheetName);
 
   const base = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?`;
-  const sheetName = params.sheetName;
   const query = encodeURIComponent("SELECT A, B");
   const url = `${base}&sheet=${sheetName}&headers=0&tq=${query}`;
 

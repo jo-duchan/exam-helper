@@ -12,11 +12,14 @@ interface Props {
   unsigned: boolean;
 }
 
-const nullData = {} as ScoreList;
-
 function Actions({ data, unsigned }: Props) {
-  const { sheetNameList, scoreList = nullData, totalStage = 0 } = data;
-  const hasSheetName = (sheetName: string) => {
+  const {
+    playList,
+    sheetUrl,
+    scoreList = {} as ScoreList,
+    totalStage = 0,
+  } = data;
+  const getSheetName = (sheetName: string) => {
     const data = Object.keys(scoreList)
       .reverse()
       .find((item) => scoreList[item].sheetName === sheetName);
@@ -24,19 +27,28 @@ function Actions({ data, unsigned }: Props) {
     return data!;
   };
 
+  const getSheetId = (sheetId: string | undefined) => {
+    if (!sheetId) {
+      return Utils.convertSheetUrl(sheetUrl);
+    }
+    return sheetId;
+  };
+
   const renderDate = (key: string) => {
-    if (hasSheetName(key)) {
-      return Utils.dateFormat(scoreList[hasSheetName(key)].date);
+    const getName = getSheetName(key);
+    if (getName) {
+      return Utils.dateFormat(scoreList[getName].date);
     }
 
     return "00.00.00";
   };
 
   const renderScore = (key: string) => {
-    if (hasSheetName(key)) {
+    const getName = getSheetName(key);
+    if (getName) {
       return (
         <>
-          <span className="score">{scoreList[hasSheetName(key)].score}</span>
+          <span className="score">{scoreList[getName].score}</span>
           <span className="unit">점</span>
         </>
       );
@@ -47,16 +59,21 @@ function Actions({ data, unsigned }: Props) {
 
   return (
     <Container>
-      {sheetNameList?.map((item) => (
-        <Item key={item} to={`/quiz/${item}?stage=${totalStage}`}>
+      {playList?.map((item) => (
+        <Item
+          key={item.sheetName}
+          to={`/quiz?id=${getSheetId(item.sheetId)}&name=${
+            item.sheetName
+          }&stage=${totalStage}`}
+        >
           <PlayBtn>
             <DateSection>
               <span className="tag">최근 점수</span>
-              <span className="date">{renderDate(item)}</span>
+              <span className="date">{renderDate(item.sheetName)}</span>
             </DateSection>
-            <ScoreSection>{renderScore(item)}</ScoreSection>
+            <ScoreSection>{renderScore(item.sheetName)}</ScoreSection>
             <LabelSection>
-              <span className="label">{item}</span>
+              <span className="label">{item.sheetName}</span>
               <Arrow fill={Color.Gray[100]} />
             </LabelSection>
           </PlayBtn>

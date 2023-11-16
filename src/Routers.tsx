@@ -25,7 +25,7 @@ const routerInfo = [
     withAuth: false,
   },
   {
-    path: "quiz/:sheetName",
+    path: "quiz",
     element: <QuizPage />,
     loader: QuizLoader,
     withAuth: false,
