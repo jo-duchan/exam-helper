@@ -1,61 +1,70 @@
 import React, { useState, useEffect } from "react";
 import ReactDOM from "react-dom";
+import { RootState } from "store/store";
+import { useSelector } from "react-redux";
 import { CSSTransition } from "react-transition-group";
 import styled from "styled-components";
-import { OverlayItem } from "types/overlay";
 import ZIndex from "styles/z-index";
+import Progress from "components/overlays/Progress";
+import Toast from "components/overlays/Toast";
 
-interface Props {
-  items: OverlayItem[];
-}
+// interface Props {
+//   items: OverlayItem[];
+// }
 
 const dimSpeed = 300;
 
-function RenderOverlay({ items }: Props) {
+function RenderOverlays() {
   const portalElement = document.getElementById("overlays") as HTMLElement;
-  const [dimIsShown, setDimIsShown] = useState<boolean>(false);
-
-  useEffect(() => {
-    const isDimElement = items.find(({ type }) => type !== "TOAST");
-
-    if (isDimElement) {
-      setDimIsShown(true);
-    } else {
-      setDimIsShown(false);
-    }
-  }, [items]);
-
-  useEffect(() => {
-    if (dimIsShown) {
-      document.body.style.overflow = "hidden";
-    }
-
-    return () => {
-      document.body.style.overflow = "initial";
-    };
-  }, [dimIsShown]);
 
   return (
     <>
-      {ReactDOM.createPortal(
-        items.map((item) => (
-          <Wrapper key={item.id}>
-            {React.cloneElement(item.element, item)}
-          </Wrapper>
-        )),
-        portalElement
-      )}
-      {ReactDOM.createPortal(
-        <CSSTransition in={dimIsShown} timeout={dimSpeed} unmountOnExit>
-          <Dim />
-        </CSSTransition>,
-        portalElement
-      )}
+      {ReactDOM.createPortal(<Progress />, portalElement)}
+      {ReactDOM.createPortal(<>toastArray</>, portalElement)}
     </>
   );
+
+  // useEffect(() => {
+  //   const isDimElement = items.find(({ type }) => type !== "TOAST");
+
+  //   if (isDimElement) {
+  //     setDimIsShown(true);
+  //   } else {
+  //     setDimIsShown(false);
+  //   }
+  // }, [items]);
+
+  // useEffect(() => {
+  //   if (dimIsShown) {
+  //     document.body.style.overflow = "hidden";
+  //   }
+
+  //   return () => {
+  //     document.body.style.overflow = "initial";
+  //   };
+  // }, [dimIsShown]);
+
+  // return (
+  //   <>
+  //     {ReactDOM.createPortal(
+  //       items.map((item) => (
+  //         <Wrapper key={item.id}>
+  //           {React.cloneElement(item.element, item)}
+  //         </Wrapper>
+  //       )),
+  //       portalElement
+  //     )}
+  //     {ReactDOM.createPortal(
+  //       <CSSTransition in={dimIsShown} timeout={dimSpeed} unmountOnExit>
+  //         <Dim />
+  //       </CSSTransition>,
+  //       portalElement
+  //     )}
+  //   </>
+  // );
 }
 
-export default RenderOverlay;
+export default RenderOverlays;
 
 const Wrapper = styled.div`
   position: fixed;
