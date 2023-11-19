@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import { useRouteError, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import Color from "styles/color-system";
@@ -10,10 +9,6 @@ import Assets from "assets/img/error.png";
 function ErrorPage() {
   const error = useRouteError() as any;
   const navigate = useNavigate();
-
-  useEffect(() => {
-    // hideProgress();
-  }, []);
 
   let title = "오류 페이지";
   let message = "페이지를 찾을 수 없어요.";
