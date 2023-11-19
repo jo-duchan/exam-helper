@@ -1,9 +1,9 @@
-import React from "react";
 import { IconType } from "types/icon-set";
 
 export interface Toast {
+  id: string;
   message: string;
-  sort: IconType;
+  sort?: IconType;
 }
 
 export interface ToastListState {
