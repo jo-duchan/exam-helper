@@ -10,7 +10,6 @@ function useObserver({ dom }: Props) {
   const handleIntersect = useCallback(
     ([entry]: IntersectionObserverEntry[], observer: IntersectionObserver) => {
       if (entry.isIntersecting && !intersect) {
-        // observer.unobserve(entry.target);
         setIntersect(true);
       } else {
         setIntersect(false);
