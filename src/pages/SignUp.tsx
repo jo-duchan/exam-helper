@@ -1,17 +1,12 @@
 import { useEffect, useState } from "react";
-import {
-  useNavigate,
-  redirect,
-  json,
-  useSearchParams,
-  To,
-} from "react-router-dom";
+import { useNavigate, redirect, json, useSearchParams } from "react-router-dom";
 import styled from "styled-components";
 import Color from "styles/color-system";
 import { Body } from "styles/typography-system";
 import { nanoid } from "nanoid";
 import emailjs from "@emailjs/browser";
 import service from "utils/service";
+import { showToast } from "utils/toast";
 import { Play } from "types/user-data";
 import Navigation from "components/common/Navigation";
 import Input from "components/common/Input";
@@ -103,7 +98,7 @@ function SignUpPage() {
     }
 
     if (!privacy) {
-      // showToast("개인정보 처리방침에 동의해 주세요.", "error");
+      showToast("개인정보 처리방침에 동의해 주세요.", "error");
       return;
     }
 
@@ -133,12 +128,11 @@ function SignUpPage() {
       .catch(() => {
         json({ message: "사용자 키를 발송하지 못했어요." }, { status: 500 });
       });
-    // hideProgress();
 
-    // showToast(
-    //   "가입이 축하드려요. \n사용자 키는 이메일로 보내드렸어요.",
-    //   "sucess"
-    // );
+    showToast(
+      "가입이 축하드려요. \n사용자 키는 이메일로 보내드렸어요.",
+      "sucess"
+    );
     navigate("/");
   };
   return (

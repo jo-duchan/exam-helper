@@ -4,6 +4,8 @@ import styled from "styled-components";
 import html2canvas from "html2canvas";
 import Utils from "utils/utils";
 import service from "utils/service";
+import { showToast } from "utils/toast";
+import { showProgress, hideProgress } from "utils/progress";
 import { LoaderArgs } from "types/loader-props";
 import { Score } from "types/user-data";
 import Navigation from "components/common/Navigation";
@@ -54,7 +56,7 @@ function CompletePage() {
 
       return { file, url };
     } catch {
-      // showToast("실패 했어요.", "error");
+      showToast("실패 했어요.", "error");
     }
   };
 
@@ -62,7 +64,7 @@ function CompletePage() {
     const fileName = `exam-helper-${Utils.dateFormat(data.date)}-${
       data.score
     }.jpeg`;
-    // showProgress();
+    showProgress();
     const shareData = (await getCanvas(fileName)) as any;
 
     try {
@@ -79,10 +81,10 @@ function CompletePage() {
         link.click();
         document.body.removeChild(link);
       }
-      // hideProgress();
+      hideProgress();
     } catch {
-      // hideProgress();
-      // showToast("취소 했어요.");
+      hideProgress();
+      showToast("취소 했어요.");
     }
   };
 

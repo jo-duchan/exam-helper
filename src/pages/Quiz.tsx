@@ -70,14 +70,13 @@ function QuizPage() {
         navigate(`/complete/guest?score=${finalScore}&date=${date}`);
         return;
       }
-      // showProgress();
+
       const scoreListId = await service.PUSH(`users/${userKey}/scoreList`, {
         sheetName,
         score: finalScore,
         date,
         wrongList,
       });
-      // hideProgress();
       navigate(`/complete/${scoreListId}`);
     };
 

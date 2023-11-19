@@ -4,6 +4,7 @@ import styled from "styled-components";
 import Color from "styles/color-system";
 import { Heading } from "styles/typography-system";
 import service from "utils/service";
+import { showToast } from "utils/toast";
 import { Play } from "types/user-data";
 import Navigation from "components/common/Navigation";
 import Input from "components/common/Input";
@@ -74,7 +75,7 @@ function SettingPage() {
       totalStage,
     });
 
-    // showToast("업데이트가 완료되었어요.", "sucess");
+    showToast("업데이트가 완료되었어요.", "sucess");
     navigate("/");
   };
 

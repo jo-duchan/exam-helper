@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import service from "utils/service";
+import { showToast } from "utils/toast";
 import styled from "styled-components";
 import Color from "styles/color-system";
 import { Heading, Body } from "styles/typography-system";
@@ -31,7 +32,7 @@ function SignInPage() {
     const data = await service.GET(`users/${userKey}/name`);
 
     if (data) {
-      // showToast(`${data}님 반가워요.\n이그잼 헬퍼와 함께 성장해요!`, "sucess");
+      showToast(`${data}님 반가워요.\n이그잼 헬퍼와 함께 성장해요!`, "sucess");
       localStorage.setItem("userKey", userKey!);
       navigate("/");
     } else {
