@@ -1,5 +1,12 @@
-import { useEffect, useState } from "react";
-import { useNavigate, redirect, json, useSearchParams } from "react-router-dom";
+import ReactDOM from "react-dom";
+import { useState } from "react";
+import {
+  useNavigate,
+  redirect,
+  json,
+  useSearchParams,
+  To,
+} from "react-router-dom";
 import styled from "styled-components";
 import Color from "styles/color-system";
 import { Body } from "styles/typography-system";
@@ -24,43 +31,32 @@ interface StyledProps {
 
 function SignUpPage() {
   const navigate = useNavigate();
-  const [hideId, setHideId] = useState<string>("");
   const [serchParams] = useSearchParams();
-  const showPrivacyModal = serchParams.get("modal") || "";
+  const showPrivacy = serchParams.get("modal") || "";
   const [name, setName] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [sheetUrl, setSheetUrl] = useState<string>("");
   const [playList, setPlayList] = useState<Play[]>([]);
   const [privacy, setPrivacy] = useState<boolean>(false);
-
   const [nameValid, setNameValid] = useState<boolean>(true);
   const [emailValid, setEmailValid] = useState<boolean>(true);
   const [sheetUrlValid, setSheetUrlValid] = useState<boolean>(true);
   const [playListValid, setPlayListValid] = useState<boolean>(true);
 
-  useEffect(() => {
-    if (showPrivacyModal) {
-      privacyAgree();
-    }
-
-    if (!showPrivacyModal) {
-      // handleHide(hideId);
-    }
-  }, [showPrivacyModal]);
-
   const privacyAgree = () => {
-    // const id = handleShow(
-    //   <PrivacyModal
-    //     title="개인정보 처리방침"
-    //     content={<Privacy />}
-    //     onClick={() => {
-    //       setPrivacy(true);
-    //       navigate(-1 as To, { replace: true });
-    //     }}
-    //   />,
-    //   "POPUP"
-    // );
-    // setHideId(id);
+    const portalElement = document.getElementById("overlays") as HTMLElement;
+
+    return ReactDOM.createPortal(
+      <PrivacyModal
+        title="개인정보 처리방침"
+        content={<Privacy />}
+        onClick={() => {
+          setPrivacy(true);
+          navigate(-1 as To, { replace: true });
+        }}
+      />,
+      portalElement
+    );
   };
 
   const handleSubmit = async () => {
@@ -137,6 +133,7 @@ function SignUpPage() {
   };
   return (
     <Container>
+      {showPrivacy && privacyAgree()}
       <Navigation label="회원가입" mode={-1} />
       <ContentSection>
         <InnerSection paddingTop={40} paddingBtm={30} gap={16}>

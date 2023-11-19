@@ -1,6 +1,7 @@
 import React, { useRef } from "react";
 import styled from "styled-components";
 import Color from "styles/color-system";
+import ZIndex from "styles/z-index";
 import useObserver from "hook/useObserver";
 import Button from "components/common/Button";
 
@@ -21,23 +22,25 @@ function PrivacyModal({ title, content, onClick }: Props) {
 
   return (
     <Container>
-      <Title>{title}</Title>
-      <ContentSection>
-        <Content>
-          <TextDim
-            position="top"
-            ref={topRef}
-            active={useObserver({ dom: topRef })}
-          />
-          {content}
-          <TextDim
-            position="btm"
-            ref={btmRef}
-            active={useObserver({ dom: btmRef })}
-          />
-        </Content>
-      </ContentSection>
-      <Button label="확인" size="L" onClick={onClick} />
+      <Modal>
+        <Title>{title}</Title>
+        <ContentSection>
+          <Content>
+            <TextDim
+              position="top"
+              ref={topRef}
+              active={useObserver({ dom: topRef })}
+            />
+            {content}
+            <TextDim
+              position="btm"
+              ref={btmRef}
+              active={useObserver({ dom: btmRef })}
+            />
+          </Content>
+        </ContentSection>
+        <Button label="확인" size="L" onClick={onClick} />
+      </Modal>
     </Container>
   );
 }
@@ -46,15 +49,32 @@ export default PrivacyModal;
 
 const Container = styled.div`
   position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate3d(-50%, -50%, 0);
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100dvh;
+  ${ZIndex.MAX};
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &::after {
+    content: "";
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    pointer-events: auto;
+  }
+`;
+
+const Modal = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: space-between;
   gap: 20px;
-  width: 82.05128%;
+  width: calc(var(--global-width) * 0.82051);
   height: 526px;
   padding: 50px 20px 20px;
   box-sizing: border-box;
@@ -62,6 +82,7 @@ const Container = styled.div`
   overflow: hidden;
   background: ${Color.Gray[100]};
   pointer-events: auto;
+  ${ZIndex[100]}
 `;
 
 const Title = styled.h3`
