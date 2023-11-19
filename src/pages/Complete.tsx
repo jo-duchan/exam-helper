@@ -3,7 +3,7 @@ import { useNavigate, useLoaderData, Params } from "react-router-dom";
 import styled from "styled-components";
 import html2canvas from "html2canvas";
 import Utils from "utils/utils";
-import service from "hook/useService";
+import service from "utils/service";
 import { LoaderArgs } from "types/loader-props";
 import { Score } from "types/user-data";
 import Navigation from "components/common/Navigation";
@@ -128,9 +128,7 @@ export async function loader({ request, params }: LoaderArgs) {
     return { data, userKey };
   }
 
-  // showProgress
-  const data = await service().GET(`users/${userKey}/scoreList/${scoreListId}`);
-  // hideProgress
+  const data = await service.GET(`users/${userKey}/scoreList/${scoreListId}`);
 
   return { data, scoreListId, userKey };
 }

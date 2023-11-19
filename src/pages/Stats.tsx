@@ -3,7 +3,7 @@ import { useLoaderData, redirect } from "react-router-dom";
 import styled from "styled-components";
 import Color from "styles/color-system";
 import { Heading } from "styles/typography-system";
-import service from "hook/useService";
+import service from "utils/service";
 import Utils from "utils/utils";
 import { ScoreList, Score } from "types/user-data";
 import Navigation from "components/common/Navigation";
@@ -87,9 +87,7 @@ export async function loader() {
     return redirect("/");
   }
 
-  // showProgress();
-  const data = service().GET(`users/${userKey}/`);
-  // hideProgress();
+  const data = service.GET(`users/${userKey}/`);
 
   return data;
 }

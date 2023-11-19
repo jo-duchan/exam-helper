@@ -2,14 +2,15 @@ import React, { useEffect, useState } from "react";
 import {
   useLoaderData,
   json,
-  redirect,
   useNavigate,
   useSearchParams,
 } from "react-router-dom";
 import styled, { keyframes, css } from "styled-components";
 import Color from "styles/color-system";
 import { Body } from "styles/typography-system";
-import service from "hook/useService";
+import store from "store/store";
+import { show, hide } from "store/progress-slice";
+import service from "utils/service";
 import { NOT_FOUND_SHEET, NOT_FOUND_SHEET_VALUE } from "assets/data/error-case";
 import Utils from "utils/utils";
 import { Items } from "types/google-sheet";
@@ -70,7 +71,7 @@ function QuizPage() {
         return;
       }
       // showProgress();
-      const scoreListId = await service().PUSH(`users/${userKey}/scoreList`, {
+      const scoreListId = await service.PUSH(`users/${userKey}/scoreList`, {
         sheetName,
         score: finalScore,
         date,
@@ -179,30 +180,34 @@ export default QuizPage;
 export async function loader({ request }: LoaderArgs) {
   const sheetId = new URL(request.url).searchParams.get("id");
   const sheetName = new URL(request.url).searchParams.get("name");
-  console.log(sheetId, sheetName);
 
   const base = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?`;
   const query = encodeURIComponent("SELECT A, B");
   const url = `${base}&sheet=${sheetName}&headers=0&tq=${query}`;
 
-  // showProgress();
+  store.dispatch(show());
   const response = await fetch(url).catch(() => {
+    store.dispatch(hide());
     throw json({ message: NOT_FOUND_SHEET }, { status: 500 });
   });
   const data = await response.text();
   const convert = JSON.parse(data.substring(47).slice(0, -2));
 
   if (!response.ok) {
+    store.dispatch(hide());
     throw json({ message: NOT_FOUND_SHEET }, { status: 500 });
   }
+
   if (convert.table.rows.length <= 0) {
+    store.dispatch(hide());
     throw json({ message: NOT_FOUND_SHEET_VALUE }, { status: 500 });
   }
 
   const items = convert.table.rows.map(({ c }: { c: Items }) =>
     Utils.cleanRow(c)
   );
-  // hideProgress();
+
+  store.dispatch(hide());
   return { items, sheetName };
 }
 

@@ -3,7 +3,7 @@ import styled from "styled-components";
 import Color from "styles/color-system";
 import { Body } from "styles/typography-system";
 import Utils from "utils/utils";
-import service from "hook/useService";
+import service from "utils/service";
 import { Score } from "types/user-data";
 import { LoaderArgs } from "types/loader-props";
 import Navigation from "components/common/Navigation";
@@ -40,9 +40,7 @@ export async function loader({ params }: LoaderArgs) {
     return redirect("/");
   }
 
-  // showProgress();
-  const data = await service().GET(`users/${userKey}/scoreList/${scoreListId}`);
-  // hideProgress();
+  const data = await service.GET(`users/${userKey}/scoreList/${scoreListId}`);
 
   return data;
 }

@@ -3,8 +3,7 @@ import { useNavigate, useLoaderData, redirect } from "react-router-dom";
 import styled from "styled-components";
 import Color from "styles/color-system";
 import { Heading } from "styles/typography-system";
-// import useOverlay from "hook/useOverlay";
-import service from "hook/useService";
+import service from "utils/service";
 import { Play } from "types/user-data";
 import Navigation from "components/common/Navigation";
 import Input from "components/common/Input";
@@ -31,7 +30,6 @@ function SettingPage() {
     totalStage: initTotalStage,
     userKey,
   } = useLoaderData() as LoaderData;
-  // const { showProgress, hideProgress, showToast } = useOverlay();
 
   const [sheetUrl, setSheetUrl] = useState<string>("");
   const [playList, setPlayList] = useState<Play[]>([]);
@@ -70,13 +68,11 @@ function SettingPage() {
       setTotalStageValid(true);
     }
 
-    // showProgress();
-    await service().UPDATE(`users/${userKey}`, {
+    await service.UPDATE(`users/${userKey}`, {
       sheetUrl,
       playList,
       totalStage,
     });
-    // hideProgress();
 
     // showToast("업데이트가 완료되었어요.", "sucess");
     navigate("/");
@@ -128,9 +124,7 @@ export async function loader() {
     return redirect("/");
   }
 
-  // showProgress();
-  const data = await service().GET(`users/${userKey}`);
-  // hideProgress();
+  const data = await service.GET(`users/${userKey}`);
 
   return data;
 }

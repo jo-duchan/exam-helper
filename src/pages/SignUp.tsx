@@ -11,8 +11,7 @@ import Color from "styles/color-system";
 import { Body } from "styles/typography-system";
 import { nanoid } from "nanoid";
 import emailjs from "@emailjs/browser";
-// import useOverlay from "hook/useOverlay";
-import service from "hook/useService";
+import service from "utils/service";
 import { Play } from "types/user-data";
 import Navigation from "components/common/Navigation";
 import Input from "components/common/Input";
@@ -115,8 +114,7 @@ function SignUpPage() {
       to_userKey: userKey,
     };
 
-    // showProgress();
-    await service().SET(`users/${userKey}`, {
+    await service.SET(`users/${userKey}`, {
       userKey,
       name,
       email,

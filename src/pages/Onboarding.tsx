@@ -6,7 +6,7 @@ import styled from "styled-components";
 import Color from "styles/color-system";
 import { Heading, Body } from "styles/typography-system";
 import { Onboarding } from "types/admin-data";
-import service from "hook/useService";
+import service from "utils/service";
 import useInAppBypassing from "hook/useInAppBypassing";
 import Button from "components/common/Button";
 
@@ -51,9 +51,7 @@ function OnboardingPage() {
 export default OnboardingPage;
 
 export async function loader() {
-  // setTimeout(() => showProgress(), 0);
-  const onboarding = await service().GET("admin/onboarding");
-  // hideProgress();
+  const onboarding = await service.GET("admin/onboarding");
 
   return onboarding;
 }

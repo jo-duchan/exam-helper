@@ -7,14 +7,12 @@ import { Banner as BannerType } from "types/admin-data";
 import { User } from "types/user-data";
 import { InfoData } from "assets/data/main-info";
 import Utils from "utils/utils";
-import service from "hook/useService";
+import service from "utils/service";
 import MainNavigation from "components/main/MainNavigation";
 import Banner from "components/main/Banner";
 import Actions from "components/main/Actions";
 import Information from "components/main/Information";
 import Fire from "assets/img/fire.png";
-
-// https://beta.reactrouter.com/en/main/components/await
 
 interface LoaderData {
   data: User;
@@ -63,22 +61,19 @@ export async function loader() {
     return redirect("/onboarding");
   }
 
-  // setTimeout(() => showProgress(), 0);
-
   if (userKey) {
-    data = await service().GET(`users/${userKey}/`);
+    data = await service.GET(`users/${userKey}/`);
   } else {
     const name = "사용자";
-    const playList = await service().GET(`admin/playList`);
-    const sheetUrl = await service().GET(`admin/sheetUrl`);
+    const playList = await service.GET(`admin/playList`);
+    const sheetUrl = await service.GET(`admin/sheetUrl`);
     data = { name, playList, sheetUrl } as User;
   }
 
-  const banner: BannerType = await service().GET(`admin/banner`);
+  const banner: BannerType = await service.GET(`admin/banner`);
 
   localStorage.setItem("sheetId", Utils.convertSheetUrl(data.sheetUrl));
   localStorage.setItem("userName", data.name);
-  // hideProgress();
 
   return { data, banner };
 }
