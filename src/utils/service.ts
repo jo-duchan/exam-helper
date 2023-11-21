@@ -1,7 +1,7 @@
 import { json } from "react-router-dom";
 import { ref, child, get, set, push, update } from "firebase/database";
 import { db } from "firebase-config";
-import { showProgress, hideProgress } from "utils/progress";
+import { showProgress, hideProgress } from "utils/overlays";
 
 const service = {
   GET: async <T>(path: string): Promise<T> => {
@@ -10,15 +10,14 @@ const service = {
       const dbRef = ref(db);
       const snapshot = await get(child(dbRef, path));
       if (snapshot.exists()) {
-        hideProgress();
         return snapshot.val();
       } else {
-        hideProgress();
         throw json({ message: "데이터를 불러오지 못했어요." }, { status: 500 });
       }
     } catch {
-      hideProgress();
       throw json({ message: "데이터를 불러오지 못했어요." }, { status: 500 });
+    } finally {
+      hideProgress();
     }
   },
 
@@ -27,8 +26,9 @@ const service = {
       showProgress();
       await set(ref(db, path), data);
     } catch {
-      hideProgress();
       throw json({ message: "데이터를 저장하지 못했어요." }, { status: 500 });
+    } finally {
+      hideProgress();
     }
   },
 
@@ -41,8 +41,9 @@ const service = {
       await set(newListRef, data);
       return newListRef.key;
     } catch {
-      hideProgress();
       throw json({ message: "데이터를 저장하지 못했어요." }, { status: 500 });
+    } finally {
+      hideProgress();
     }
   },
 
@@ -51,8 +52,9 @@ const service = {
       showProgress();
       await update(ref(db, path), data as Object);
     } catch {
-      hideProgress();
       throw json({ message: "데이터를 저장하지 못했어요." }, { status: 500 });
+    } finally {
+      hideProgress();
     }
   },
 };

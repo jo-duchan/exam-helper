@@ -13,7 +13,7 @@ import { Body } from "styles/typography-system";
 import { nanoid } from "nanoid";
 import emailjs from "@emailjs/browser";
 import service from "utils/service";
-import { showToast } from "utils/toast";
+import { showToast } from "utils/overlays";
 import { Play } from "types/user-data";
 import Navigation from "components/common/Navigation";
 import Input from "components/common/Input";

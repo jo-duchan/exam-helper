@@ -1,17 +1,16 @@
 import { useRef, useEffect } from "react";
-import { useNavigate, useLoaderData, Params } from "react-router-dom";
+import { useNavigate, useLoaderData } from "react-router-dom";
 import styled from "styled-components";
 import html2canvas from "html2canvas";
 import Utils from "utils/utils";
 import service from "utils/service";
-import { showToast } from "utils/toast";
-import { showProgress, hideProgress } from "utils/progress";
+import { showProgress, hideProgress, showToast } from "utils/overlays";
 import { LoaderArgs } from "types/loader-props";
 import { Score } from "types/user-data";
 import Navigation from "components/common/Navigation";
 import CaptureArea from "components/complete/CaptureArea";
 import Button from "components/common/Button";
-import Modal from "components/overlays/Modal";
+import useModal from "hook/useModal";
 
 interface LoaderData {
   data: Score;
@@ -24,24 +23,27 @@ function CompletePage() {
   const userName = localStorage.getItem("userName");
   const navigate = useNavigate();
   const captureRef = useRef<HTMLDivElement>(null);
+  const [modal, setModal] = useModal({
+    title: "문제 풀이가 끝났습니다!",
+    content: "회원가입하고 나만의 문제를 \n등록해 풀어보세요!",
+    left_button: { onClick: () => setModal(false) },
+    right_button: { onClick: () => goToSignUp() },
+  });
 
   useEffect(() => {
     if (!userKey) {
-      // const id = handleShow(
-      //   <Modal
-      //     title={"문제 풀이가 끝났습니다!"}
-      //     content={"회원가입하고 나만의 문제를 \n등록해 풀어보세요!"}
-      //     actionL={{ label: "닫기", onClick: () => handleHide(id) }}
-      //     actionR={{ label: "확인", onClick: () => handleGotoSignUp() }}
-      //   />,
-      //   "POPUP"
-      // );
-      // const handleGotoSignUp = () => {
-      //   handleHide(id);
-      //   setTimeout(() => navigate("/signup"), 300);
-      // };
+      setModal(true);
     }
+
+    return () => {
+      setModal(false);
+    };
   }, []);
+
+  const goToSignUp = () => {
+    setModal(false);
+    setTimeout(() => navigate("/signup"), 300);
+  };
 
   const getCanvas = async (fileName: string) => {
     if (!captureRef.current) return;
@@ -64,10 +66,10 @@ function CompletePage() {
     const fileName = `exam-helper-${Utils.dateFormat(data.date)}-${
       data.score
     }.jpeg`;
-    showProgress();
     const shareData = (await getCanvas(fileName)) as any;
 
     try {
+      showProgress();
       if (navigator.share ?? false) {
         await navigator.share({
           title: "이그잼 헬퍼와 함께 성장해요!",
@@ -81,15 +83,16 @@ function CompletePage() {
         link.click();
         document.body.removeChild(link);
       }
-      hideProgress();
     } catch {
-      hideProgress();
       showToast("취소 했어요.");
+    } finally {
+      hideProgress();
     }
   };
 
   return (
     <Container>
+      {modal}
       <Navigation label="완료" />
       <ContentSection>
         <CaptureArea
