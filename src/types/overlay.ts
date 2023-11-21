@@ -13,3 +13,15 @@ export interface ToastListState {
 export interface ProgressState {
   visible: boolean;
 }
+
+export interface Button {
+  label?: string;
+  onClick: () => void;
+}
+
+export interface ModalProps {
+  title: string;
+  content: string;
+  left_button?: Button;
+  right_button: Button;
+}
