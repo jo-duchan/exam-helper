@@ -1,18 +1,21 @@
 import { useState, useEffect } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { auth } from "firebase-config";
+import {
+  GoogleAuthProvider,
+  signInWithPopup,
+  getAdditionalUserInfo,
+} from "firebase/auth";
 import service from "utils/service";
 import { showToast } from "utils/overlays";
 import styled from "styled-components";
 import Color from "styles/color-system";
 import { Heading, Body } from "styles/typography-system";
-import Input from "components/common/Input";
-import Button from "components/common/Button";
 import Assets from "assets/img/sign-in.png";
+import { ReactComponent as Google } from "assets/icon/google.svg";
 
 function SignInPage() {
   const navigate = useNavigate();
-  const [userKey, setUserKey] = useState<string>("");
-  const [userKeyValid, setUserKeyValid] = useState<boolean>(true);
 
   useEffect(() => {
     const theme = document.getElementById("theme") as HTMLMetaElement;
@@ -24,19 +27,20 @@ function SignInPage() {
   }, []);
 
   const handleSubmit = async () => {
-    if (userKey.trim() === "") {
-      setUserKeyValid(false);
-      return;
-    }
+    try {
+      const provider = new GoogleAuthProvider();
+      const result = await signInWithPopup(auth, provider);
+      const isNewUser = getAdditionalUserInfo(result)!.isNewUser;
 
-    const data = await service.GET(`users/${userKey}/name`);
-
-    if (data) {
-      showToast(`${data}님 반가워요.\n이그잼 헬퍼와 함께 성장해요!`, "sucess");
-      localStorage.setItem("userKey", userKey!);
-      navigate("/");
-    } else {
-      setUserKeyValid(false);
+      // navigate Custom Hook으로 작업해서 Protected Route에서 넘어오는 유저 다시 리다이렉트 시켜주기 필요
+      if (isNewUser) {
+        navigate("/signup");
+      } else {
+        // showToast(`${data}님 반가워요.\n이그잼 헬퍼와 함께 성장해요!`, "sucess");
+        navigate("/");
+      }
+    } catch (error) {
+      console.error(error);
     }
   };
 
@@ -50,18 +54,15 @@ function SignInPage() {
         <span className="dot-03" />
         <span className="dot-04" />
       </VisualSection>
-      <ContentSection>
-        <Input
-          label="사용자 키"
-          placeholder="사용자 키를 입력해 주세요."
-          status={!userKeyValid ? "error" : "default"}
-          errorMsg="사용자 키를 다시 확인해주세요."
-          value={userKey}
-          onChange={(e) => setUserKey(e.currentTarget.value)}
-        />
-        <Button label="로그인" onClick={handleSubmit} />
-        <SignUpLink to="/signup">처음 방문하셨나요?</SignUpLink>
-      </ContentSection>
+      <ButtonSection>
+        <Description>
+          구글 계정으로 로그인하고 이그잼 헬퍼를 시작해 봐요.
+        </Description>
+        <SignInButton onClick={handleSubmit}>
+          <Google />
+          <span>구글 계정으로 로그인</span>
+        </SignInButton>
+      </ButtonSection>
     </Container>
   );
 }
@@ -81,19 +82,19 @@ const Container = styled.div`
 const VisualSection = styled.div`
   position: relative;
   width: 100%;
-  height: calc(100% - 242px);
-  padding-block: 25px;
+  height: calc(100% - 142px);
+  padding-block: 40px 65px;
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  gap: 20px;
+  gap: 55px;
   overflow: hidden;
 
   & img {
     padding-inline: 48px;
     box-sizing: border-box;
-    height: calc(100% - (80px + 20px));
+    height: calc(100% - (80px + 55px));
     object-fit: contain;
   }
 
@@ -120,7 +121,7 @@ const VisualSection = styled.div`
   }
 
   & .dot-02 {
-    top: 40%;
+    top: 34%;
     right: 15.1282%;
     width: 6.410256%;
     padding-bottom: 6.410256%;
@@ -128,7 +129,7 @@ const VisualSection = styled.div`
   }
 
   & .dot-03 {
-    top: 74.10256%;
+    top: 58.10256%;
     left: 14.3589%;
     width: 7.43589%;
     padding-bottom: 7.43589%;
@@ -136,7 +137,7 @@ const VisualSection = styled.div`
   }
 
   & .dot-04 {
-    top: 81.53846%;
+    top: 64.53846%;
     right: 15.1282%;
     width: 5.3846%;
     padding-bottom: 5.3846%;
@@ -144,23 +145,35 @@ const VisualSection = styled.div`
   }
 `;
 
-const ContentSection = styled.div`
+const ButtonSection = styled.div`
   display: flex;
-  justify-content: center;
   flex-direction: column;
-  gap: 10px;
+  gap: 8px;
   width: 100%;
-  height: 242px;
-  border-radius: 16px 16px 0 0;
+  height: 142px;
   padding-inline: 25px;
   box-sizing: border-box;
-  background: ${Color.Gray[100]};
-  box-shadow: 0px -8px 16px 0px rgba(0, 0, 0, 0.06);
+  text-align: center;
 `;
 
-const SignUpLink = styled(Link)`
-  margin-top: 6px;
-  color: ${Color.Gray[700]};
-  ${Body.Medium.L};
-  text-underline-offset: 0.2em;
+const Description = styled.p`
+  color: ${Color.Gray[100]};
+  ${Body.Medium.M};
+`;
+
+const SignInButton = styled.button`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  width: 100%;
+  height: 56px;
+  background: ${Color.Gray[100]};
+  border-radius: 16px;
+  cursor: pointer;
+  user-select: none;
+  & span {
+    color: ${Color.Gray[600]};
+    ${Body.Medium.L};
+  }
 `;
