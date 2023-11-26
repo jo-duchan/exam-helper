@@ -75,7 +75,7 @@ const ReactRouterObject = createBrowserRouter([
       return {
         index: router.index,
         path: router.path,
-        element: <Layout>{router.element}</Layout>,
+        element: <Layout withAuth={router.withAuth}>{router.element}</Layout>,
         loader: router.loader && router.loader,
       };
     }),
