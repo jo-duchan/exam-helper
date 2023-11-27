@@ -9,7 +9,7 @@ import StatsPage, { loader as StatsLoader } from "pages/Stats";
 import WrongAnswerPage, { loader as WALoader } from "pages/WrongAnswer";
 import SettingPage, { loader as SettingLoader } from "pages/Setting";
 import SignInPage from "pages/SignIn";
-import SignUpPage, { loader as SignUpLoader } from "pages/SignUp";
+import SignUpPage from "pages/SignUp";
 
 const routerInfo = [
   {
@@ -62,7 +62,6 @@ const routerInfo = [
   {
     path: "signup",
     element: <SignUpPage />,
-    loader: SignUpLoader,
     withAuth: false,
   },
 ];

@@ -1,16 +1,11 @@
 import ReactDOM from "react-dom";
 import { useState } from "react";
-import {
-  useNavigate,
-  redirect,
-  json,
-  useSearchParams,
-  To,
-} from "react-router-dom";
+import { useNavigate, useSearchParams, To } from "react-router-dom";
+import { auth } from "firebase-config";
+import { updateProfile } from "firebase/auth";
 import styled from "styled-components";
 import Color from "styles/color-system";
 import { Body } from "styles/typography-system";
-import { nanoid } from "nanoid";
 import emailjs from "@emailjs/browser";
 import service from "utils/service";
 import { showToast } from "utils/overlays";
@@ -34,12 +29,10 @@ function SignUpPage() {
   const [serchParams] = useSearchParams();
   const showPrivacy = serchParams.get("modal") || "";
   const [name, setName] = useState<string>("");
-  const [email, setEmail] = useState<string>("");
   const [sheetUrl, setSheetUrl] = useState<string>("");
   const [playList, setPlayList] = useState<Play[]>([]);
   const [privacy, setPrivacy] = useState<boolean>(false);
   const [nameValid, setNameValid] = useState<boolean>(true);
-  const [emailValid, setEmailValid] = useState<boolean>(true);
   const [sheetUrlValid, setSheetUrlValid] = useState<boolean>(true);
   const [playListValid, setPlayListValid] = useState<boolean>(true);
 
@@ -60,37 +53,26 @@ function SignUpPage() {
   };
 
   const handleSubmit = async () => {
-    const userKey = nanoid();
-    const created = Date.now();
-    const regex =
-      /^[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/i;
+    // 로그인 또는 회원가입 시 user 정보 전역상태로 저장하자.
+    const user = auth.currentUser;
+
+    setNameValid(true);
+    setSheetUrlValid(true);
+    setPlayListValid(true);
 
     if (name.trim() === "") {
       setNameValid(false);
       return;
-    } else {
-      setNameValid(true);
-    }
-
-    if (!regex.test(email)) {
-      setEmailValid(false);
-      return;
-    } else {
-      setEmailValid(true);
     }
 
     if (sheetUrl.trim() === "") {
       setSheetUrlValid(false);
       return;
-    } else {
-      setSheetUrlValid(true);
     }
 
     if (!playList.length) {
       setPlayListValid(false);
       return;
-    } else {
-      setPlayListValid(true);
     }
 
     if (!privacy) {
@@ -98,37 +80,38 @@ function SignUpPage() {
       return;
     }
 
-    const emailParams = {
-      to_name: name,
-      to_email: email,
-      from_name: "Exam Helper",
-      to_userKey: userKey,
-    };
+    if (!user) {
+      navigate("/signin");
+      showToast("다시 시도해 주세요.", "error");
+      return;
+    }
 
-    await service.SET(`users/${userKey}`, {
-      userKey,
-      name,
-      email,
-      created,
-      sheetUrl,
-      playList,
+    await updateProfile(user, {
+      displayName: name,
     });
-    localStorage.setItem("userKey", userKey);
-    await emailjs
-      .send(
-        process.env.REACT_APP_SERVICE_ID as string,
-        process.env.REACT_APP_TEMPLATE_ID as string,
-        emailParams,
-        process.env.REACT_APP_PUBLIC_KEY as string
-      )
-      .catch(() => {
-        json({ message: "사용자 키를 발송하지 못했어요." }, { status: 500 });
-      });
 
-    showToast(
-      "가입이 축하드려요. \n사용자 키는 이메일로 보내드렸어요.",
-      "sucess"
-    );
+    await service.SET(`users/${user.uid}`, {
+      playList,
+      sheetUrl,
+    });
+
+    // const emailParams = {
+    //   to_name: name,
+    //   to_email: email,
+    //   from_name: "Exam Helper",
+    //   to_userKey: userKey,
+    // };
+
+    // await emailjs
+    //   .send(
+    //     process.env.REACT_APP_SERVICE_ID as string,
+    //     process.env.REACT_APP_TEMPLATE_ID as string,
+    //     emailParams,
+    //     process.env.REACT_APP_PUBLIC_KEY as string
+    //   )
+
+    showToast("가입이 축하해요. \n이그잼 헬퍼와 함께 성장해요.", "sucess");
+    // Protected Route에서 온거면 리다이렉트로 보내주기.
     navigate("/");
   };
   return (
@@ -144,14 +127,6 @@ function SignUpPage() {
             errorMsg="이름을 입력해 주세요."
             value={name}
             onChange={(e) => setName(e.currentTarget.value)}
-          />
-          <Input
-            label="이메일"
-            placeholder="이메일을 입력해 주세요."
-            status={!emailValid ? "error" : "default"}
-            errorMsg="이메일을 확인해 주세요."
-            value={email}
-            onChange={(e) => setEmail(e.currentTarget.value)}
           />
           <Input
             label="구글 시트 URL"
@@ -188,14 +163,6 @@ function SignUpPage() {
 }
 
 export default SignUpPage;
-
-export async function loader() {
-  const data = localStorage.getItem("userKey");
-  if (data) {
-    return redirect("/");
-  }
-  return null;
-}
 
 const Container = styled.div`
   width: 100%;
