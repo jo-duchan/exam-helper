@@ -1,4 +1,4 @@
-export type Banner = {
+export type BannerData = {
   [key: string]: {
     img: string;
     link: string;
@@ -14,4 +14,4 @@ export type Onboarding = {
 
 export type SheetUrl = string;
 
-export type Admin = { banner: Banner; sheetUrl: SheetUrl };
+export type Admin = { banner: BannerData; sheetUrl: SheetUrl };

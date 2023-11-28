@@ -2,11 +2,11 @@ import React from "react";
 import styled from "styled-components";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
-import { Banner as BannerType } from "types/admin-data";
+import { BannerData } from "types/admin-data";
 import { nanoid } from "nanoid";
 
 interface Props {
-  data: BannerType;
+  data: BannerData;
 }
 
 function Banner({ data }: Props) {

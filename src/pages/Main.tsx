@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
-import { useLoaderData, redirect } from "react-router-dom";
+import { auth } from "firebase-config";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import ZIndex from "styles/z-index";
 import { Heading } from "styles/typography-system";
-import { Banner as BannerType } from "types/admin-data";
-import { User } from "types/user-data";
+import { BannerData } from "types/admin-data";
+import { UserData, Play } from "types/user-data";
 import { InfoData } from "assets/data/main-info";
-import Utils from "utils/utils";
 import service from "utils/service";
 import MainNavigation from "components/main/MainNavigation";
 import Banner from "components/main/Banner";
@@ -14,37 +14,57 @@ import Actions from "components/main/Actions";
 import Information from "components/main/Information";
 import Fire from "assets/img/fire.png";
 
-interface LoaderData {
-  data: User;
-  banner: BannerType;
-}
-
 function MainPage() {
-  const { data, banner } = useLoaderData() as LoaderData;
-  const [infoType, setInfoType] = useState<string>("stats");
-  const [unsigned, setUnsigned] = useState<boolean>(false);
+  const navigate = useNavigate();
+  const [userData, setUserData] = useState({} as UserData);
+  const [bannerData, setBannerData] = useState({} as BannerData);
+  const [userName, setUserName] = useState<string>("사용자");
+  const [infoType, setInfoType] = useState<string>("signin");
+  const [unsigned, setUnsigned] = useState<boolean>(true);
 
   useEffect(() => {
-    const userKey = localStorage.getItem("userKey");
+    const fetchData = async () => {
+      const onboarding = localStorage.getItem("onboarding");
 
-    if (!userKey) {
-      setInfoType("signin");
-      setUnsigned(true);
-    }
+      if (onboarding !== "hide") {
+        navigate("/onboarding");
+      }
+
+      const bannerData: BannerData = await service.GET(`admin/banner`);
+      setBannerData(bannerData);
+
+      auth.onAuthStateChanged(async (result) => {
+        if (result) {
+          const userData: UserData = await service.GET(`users/${result.uid}/`);
+          setUserData(userData);
+          setUserName(result.displayName as string);
+          setInfoType("stats");
+          setUnsigned(false);
+        } else {
+          const playList: Play[] = await service.GET(`admin/playList`);
+          const sheetUrl: string = await service.GET(`admin/sheetUrl`);
+          setUserData((prev) => {
+            return { ...prev, playList, sheetUrl };
+          });
+        }
+      });
+    };
+
+    fetchData();
   }, []);
 
   return (
     <Container>
       <MainNavigation unsigned={unsigned} />
-      <Banner data={banner} />
+      <Banner data={bannerData} />
       <ContentSection>
         <Title>
-          <span>{data.name}님! 오늘 퀴즈에</span>
+          <span>{userName}님! 오늘 퀴즈에</span>
           <span>
             도전해 보세요! <img src={Fire} alt="불 이미지" />
           </span>
         </Title>
-        <Actions data={data} unsigned={unsigned} />
+        <Actions data={userData} unsigned={unsigned} />
         <Information data={InfoData[infoType]} />
       </ContentSection>
     </Container>
@@ -52,31 +72,6 @@ function MainPage() {
 }
 
 export default MainPage;
-
-export async function loader() {
-  const onboarding = localStorage.getItem("onboarding");
-  const userKey = localStorage.getItem("userKey");
-  let data: User;
-  if (onboarding !== "hide") {
-    return redirect("/onboarding");
-  }
-
-  if (userKey) {
-    data = await service.GET(`users/${userKey}/`);
-  } else {
-    const name = "사용자";
-    const playList = await service.GET(`admin/playList`);
-    const sheetUrl = await service.GET(`admin/sheetUrl`);
-    data = { name, playList, sheetUrl } as User;
-  }
-
-  const banner: BannerType = await service.GET(`admin/banner`);
-
-  localStorage.setItem("sheetId", Utils.convertSheetUrl(data.sheetUrl));
-  localStorage.setItem("userName", data.name);
-
-  return { data, banner };
-}
 
 const Container = styled.div`
   position: relative;

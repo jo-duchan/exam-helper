@@ -3,12 +3,12 @@ import styled from "styled-components";
 import Utils from "utils/utils";
 import { Heading, Body } from "styles/typography-system";
 import Color from "styles/color-system";
-import { User, ScoreList } from "types/user-data";
+import { UserData, ScoreList } from "types/user-data";
 import { ReactComponent as Arrow } from "assets/icon/arrow.svg";
 import AddSheetImg from "assets/img/empty.png";
 
 interface Props {
-  data: User;
+  data: UserData;
   unsigned: boolean;
 }
 

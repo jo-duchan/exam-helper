@@ -21,13 +21,9 @@ export type Play = {
   sheetId?: string;
 };
 
-export type User = {
-  crated: number;
-  email: string;
-  name: string;
+export type UserData = {
   scoreList?: ScoreList;
   playList: Play[] | undefined;
   totalStage: number;
   sheetUrl: string;
-  userKey: string;
 };
