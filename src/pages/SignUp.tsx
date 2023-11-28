@@ -1,6 +1,11 @@
 import ReactDOM from "react-dom";
 import { useState } from "react";
-import { useNavigate, useSearchParams, To } from "react-router-dom";
+import {
+  useNavigate,
+  useSearchParams,
+  To,
+  useLocation,
+} from "react-router-dom";
 import { auth } from "firebase-config";
 import { updateProfile } from "firebase/auth";
 import styled from "styled-components";
@@ -26,6 +31,8 @@ interface StyledProps {
 
 function SignUpPage() {
   const navigate = useNavigate();
+  const location = useLocation();
+  const from = location.state?.from?.pathname || "/";
   const [serchParams] = useSearchParams();
   const showPrivacy = serchParams.get("modal") || "";
   const [name, setName] = useState<string>("");
@@ -112,12 +119,12 @@ function SignUpPage() {
 
     showToast("가입이 축하해요. \n이그잼 헬퍼와 함께 성장해요.", "sucess");
     // Protected Route에서 온거면 리다이렉트로 보내주기.
-    navigate("/");
+    navigate(from, { replace: true });
   };
   return (
     <Container>
       {showPrivacy && privacyAgree()}
-      <Navigation label="회원가입" mode={-1} />
+      <Navigation label="회원가입" left="disabled" />
       <ContentSection>
         <InnerSection paddingTop={40} paddingBtm={30} gap={16}>
           <Input

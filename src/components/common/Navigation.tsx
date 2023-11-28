@@ -7,9 +7,10 @@ import { ReactComponent as Arrow } from "assets/icon/arrow.svg";
 interface Props {
   label: string;
   mode?: -1 | "..";
+  left?: "back" | "disabled";
 }
 
-function Navigation({ label, mode = ".." }: Props) {
+function Navigation({ label, mode = "..", left = "back" }: Props) {
   const navigate = useNavigate();
 
   const handleBack = () => {
@@ -17,9 +18,11 @@ function Navigation({ label, mode = ".." }: Props) {
   };
   return (
     <Container>
-      <BackButton onClick={handleBack} type="button">
-        <Arrow fill={Color.Gray[800]} />
-      </BackButton>
+      {left === "back" && (
+        <BackButton onClick={handleBack} type="button">
+          <Arrow fill={Color.Gray[800]} />
+        </BackButton>
+      )}
       <Label>{label}</Label>
     </Container>
   );

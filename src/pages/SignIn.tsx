@@ -1,12 +1,11 @@
-import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import { auth } from "firebase-config";
 import {
   GoogleAuthProvider,
   signInWithPopup,
   getAdditionalUserInfo,
 } from "firebase/auth";
-import service from "utils/service";
 import { showToast } from "utils/overlays";
 import styled from "styled-components";
 import Color from "styles/color-system";
@@ -16,6 +15,8 @@ import { ReactComponent as Google } from "assets/icon/google.svg";
 
 function SignInPage() {
   const navigate = useNavigate();
+  const location = useLocation();
+  const from = location.state?.from?.pathname || "/";
 
   useEffect(() => {
     const theme = document.getElementById("theme") as HTMLMetaElement;
@@ -32,12 +33,15 @@ function SignInPage() {
       const result = await signInWithPopup(auth, provider);
       const isNewUser = getAdditionalUserInfo(result)!.isNewUser;
 
-      // navigate Custom Hook으로 작업해서 Protected Route에서 넘어오는 유저 다시 리다이렉트 시켜주기 필요
       if (isNewUser) {
         navigate("/signup");
       } else {
-        // showToast(`${data}님 반가워요.\n이그잼 헬퍼와 함께 성장해요!`, "sucess");
-        navigate("/");
+        // 유저 이름 전역 상태에서 가져오기
+        showToast(
+          `${auth.currentUser?.displayName}님 반가워요.\n이그잼 헬퍼와 함께 성장해요!`,
+          "sucess"
+        );
+        navigate(from, { replace: true });
       }
     } catch (error) {
       console.error(error);
