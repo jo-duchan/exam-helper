@@ -1,5 +1,5 @@
 import { createBrowserRouter } from "react-router-dom";
-import Layout from "Layout";
+import Layout, { loader as LayoutLoader } from "Layout";
 import ErrorPage from "pages/Error";
 import OnboardingPage, { loader as OnboardingLoader } from "pages/Onboarding";
 import MainPage, { loader as MainLoader } from "pages/Main";
@@ -62,6 +62,7 @@ const ReactRouterObject = createBrowserRouter([
     path: "/",
     errorElement: <ErrorPage />,
     element: <Layout />,
+    loader: LayoutLoader,
     children: routerInfo.map((router) => {
       return {
         path: router.path,
