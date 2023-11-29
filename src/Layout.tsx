@@ -1,19 +1,24 @@
-import React from "react";
-import { ScrollRestoration } from "react-router-dom";
-import useInAppBypassing from "hook/useInAppBypassing";
-import ProtectedRoute from "ProtectedRoute";
+import React, { useEffect } from "react";
+import { ScrollRestoration, Outlet } from "react-router-dom";
+import { auth } from "firebase-config";
+import inAppBypassing from "utils/inAppBypassing";
 
-interface Props {
-  children: React.ReactNode;
-  withAuth: boolean;
-}
+function Layout() {
+  useEffect(() => {
+    inAppBypassing();
 
-function Layout({ children, withAuth }: Props) {
-  useInAppBypassing();
+    const unsubscribe = auth.onAuthStateChanged((currentUser) => {
+      // currentUser 전역 상태 저장.
+    });
+
+    return () => {
+      unsubscribe();
+    };
+  }, []);
 
   return (
     <>
-      {withAuth ? <ProtectedRoute>{children}</ProtectedRoute> : children}
+      <Outlet />
       <ScrollRestoration />
     </>
   );

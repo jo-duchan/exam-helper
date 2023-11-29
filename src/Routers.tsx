@@ -2,7 +2,7 @@ import { createBrowserRouter } from "react-router-dom";
 import Layout from "Layout";
 import ErrorPage from "pages/Error";
 import OnboardingPage, { loader as OnboardingLoader } from "pages/Onboarding";
-import MainPage from "pages/Main";
+import MainPage, { loader as MainLoader } from "pages/Main";
 import QuizPage, { loader as QuizLoader } from "pages/Quiz";
 import CompletePage, { loader as CompleteLoader } from "pages/Complete";
 import StatsPage, { loader as StatsLoader } from "pages/Stats";
@@ -16,52 +16,44 @@ const routerInfo = [
     path: "onboarding",
     element: <OnboardingPage />,
     loader: OnboardingLoader,
-    withAuth: false,
   },
   {
-    index: true,
+    path: "",
     element: <MainPage />,
-    withAuth: false,
+    loader: MainLoader,
   },
   {
     path: "quiz",
     element: <QuizPage />,
     loader: QuizLoader,
-    withAuth: false,
   },
   {
     path: "complete/:scoreListId",
     element: <CompletePage />,
     loader: CompleteLoader,
-    withAuth: false,
   },
   {
     path: "stats",
     element: <StatsPage />,
     loader: StatsLoader,
-    withAuth: true,
   },
   {
     path: "wrongAnswerList/:scoreListId",
     element: <WrongAnswerPage />,
     loader: WALoader,
-    withAuth: true,
   },
   {
     path: "setting",
     element: <SettingPage />,
     loader: SettingLoader,
-    withAuth: true,
   },
   {
     path: "signin",
     element: <SignInPage />,
-    withAuth: false,
   },
   {
     path: "signup",
     element: <SignUpPage />,
-    withAuth: false,
   },
 ];
 
@@ -69,11 +61,11 @@ const ReactRouterObject = createBrowserRouter([
   {
     path: "/",
     errorElement: <ErrorPage />,
+    element: <Layout />,
     children: routerInfo.map((router) => {
       return {
-        index: router.index,
         path: router.path,
-        element: <Layout withAuth={router.withAuth}>{router.element}</Layout>,
+        element: router.element,
         loader: router.loader && router.loader,
       };
     }),
