@@ -1,14 +1,19 @@
 import React, { useEffect } from "react";
 import { ScrollRestoration, Outlet } from "react-router-dom";
+import { RootState } from "store/store";
+import { useDispatch } from "react-redux";
+import { setUser } from "store/auth.slice";
 import { auth } from "firebase-config";
 import inAppBypassing from "utils/inAppBypassing";
 
 function Layout() {
+  const dispatch = useDispatch();
+
   useEffect(() => {
     inAppBypassing();
 
     const unsubscribe = auth.onAuthStateChanged((currentUser) => {
-      // currentUser 전역 상태 저장.
+      dispatch(setUser(currentUser));
     });
 
     return () => {
