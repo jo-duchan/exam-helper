@@ -41,18 +41,18 @@ function Layout() {
 export default Layout;
 
 export async function loader() {
-  const user = auth.currentUser;
-
-  if (user) {
-    store.dispatch(
-      setUser({
-        uid: user.uid,
-        displayName: user.displayName!,
-        email: user.email!,
-        createdAt: user.metadata.creationTime!,
-      })
-    );
-  }
+  onAuthStateChanged(auth, (currentUser) => {
+    if (currentUser) {
+      store.dispatch(
+        setUser({
+          uid: currentUser.uid,
+          displayName: currentUser.displayName!,
+          email: currentUser.email!,
+          createdAt: currentUser.metadata.creationTime!,
+        })
+      );
+    }
+  });
 
   return null;
 }
