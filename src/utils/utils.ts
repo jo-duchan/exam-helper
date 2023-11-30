@@ -49,7 +49,7 @@ const isMobile = () => {
 };
 
 const convertValue = (value: string) => {
-  return value.replace(/ /g, "").toLocaleUpperCase();
+  return value.replace(/ /g, "").toLocaleUpperCase().trim();
 };
 
 const Utils = {
