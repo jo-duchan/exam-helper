@@ -7,20 +7,18 @@ import Color from "styles/color-system";
 import { Heading, Body } from "styles/typography-system";
 import { Onboarding } from "types/admin-data";
 import service from "utils/service";
-import useInAppBypassing from "hook/useInAppBypassing";
 import Button from "components/common/Button";
 
 function OnboardingPage() {
   const data = useLoaderData() as Onboarding;
   const navigate = useNavigate();
-  useInAppBypassing();
 
-  const handleGoToMain = () => {
+  const GoToMain = () => {
     localStorage.setItem("onboarding", "hide");
     navigate("/");
   };
 
-  const handleGoToDocument = () => {
+  const GoToDocument = () => {
     const link =
       "https://www.notion.so/exam-helper/Exam-Helper-d437612b838042a89e0bea1a7c22e066";
     window.open(link, "_blank", "noopener, noreferrer");
@@ -39,10 +37,8 @@ function OnboardingPage() {
         ))}
       </SwiperSection>
       <ButtonSection>
-        <Button label="시작하기" size="L" onClick={handleGoToMain} />
-        <MoreView onClick={handleGoToDocument}>
-          자세한 설명 확인해 볼까요?
-        </MoreView>
+        <Button label="시작하기" size="L" onClick={GoToMain} />
+        <MoreView onClick={GoToDocument}>자세한 설명 확인해 볼까요?</MoreView>
       </ButtonSection>
     </Container>
   );
