@@ -31,7 +31,7 @@ function Calendar({ scoreList }: Props) {
 
   return (
     <Container>
-      {[...Array(list)].map((item, index) => (
+      {[...Array(list)].map((_, index) => (
         <DateItem key={index} active={ActiveDate((index + 1).toString())}>
           <span>{index + 1}</span>
         </DateItem>

@@ -1,22 +1,17 @@
 import { useState, useEffect } from "react";
-import { useNavigate, useLoaderData, redirect } from "react-router-dom";
+import { RootState } from "store/store";
+import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import Color from "styles/color-system";
 import { Heading } from "styles/typography-system";
 import service from "utils/service";
 import { showToast } from "utils/overlays";
-import { Play } from "types/user-data";
+import { Play, UserData } from "types/user-data";
 import Navigation from "components/common/Navigation";
 import Input from "components/common/Input";
 import SheetName from "components/common/SheetName";
 import Button from "components/common/Button";
-
-interface LoaderData {
-  sheetUrl: string;
-  playList: Play[];
-  totalStage: string;
-  userKey: string;
-}
 
 interface StyledProps {
   paddingTop: number;
@@ -25,51 +20,47 @@ interface StyledProps {
 
 function SettingPage() {
   const navigate = useNavigate();
-  const {
-    sheetUrl: initSheetUrl,
-    playList: initPlayList,
-    totalStage: initTotalStage,
-    userKey,
-  } = useLoaderData() as LoaderData;
-
+  const user = useSelector((state: RootState) => state.auth.user);
   const [sheetUrl, setSheetUrl] = useState<string>("");
   const [playList, setPlayList] = useState<Play[]>([]);
   const [totalStage, setTotalStage] = useState<number>(0);
-
   const [sheetUrlValid, setSheetUrlValid] = useState<boolean>(true);
   const [playListValid, setPlayListValid] = useState<boolean>(true);
   const [totalStageValid, setTotalStageValid] = useState<boolean>(true);
 
   useEffect(() => {
     // init
-    setSheetUrl(initSheetUrl);
-    setPlayList(initPlayList);
-    setTotalStage(parseInt(initTotalStage));
+    const fetchData = async () => {
+      const data: UserData = await service.GET(`users/${user?.uid}`);
+      setSheetUrl(data.sheetUrl);
+      setPlayList(data.playList as Play[]);
+      setTotalStage(data.totalStage);
+    };
+
+    fetchData();
   }, []);
 
   const handleSubmit = async () => {
+    setSheetUrlValid(true);
+    setPlayListValid(true);
+    setTotalStageValid(true);
+
     if (sheetUrl.trim() === "") {
       setSheetUrlValid(false);
       return;
-    } else {
-      setSheetUrlValid(true);
     }
 
     if (!playList.length) {
       setPlayListValid(false);
       return;
-    } else {
-      setPlayListValid(true);
     }
 
     if (totalStage <= 0 || !totalStage) {
       setTotalStageValid(false);
       return;
-    } else {
-      setTotalStageValid(true);
     }
 
-    await service.UPDATE(`users/${userKey}`, {
+    await service.UPDATE(`users/${user?.uid}`, {
       sheetUrl,
       playList,
       totalStage,
@@ -118,17 +109,6 @@ function SettingPage() {
 }
 
 export default SettingPage;
-
-export async function loader() {
-  const userKey = localStorage.getItem("userKey");
-  if (!userKey) {
-    return redirect("/");
-  }
-
-  const data = await service.GET(`users/${userKey}`);
-
-  return data;
-}
 
 const Container = styled.div`
   width: 100%;

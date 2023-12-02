@@ -16,6 +16,7 @@ import { ReactComponent as Google } from "assets/icon/google.svg";
 function SignInPage() {
   const navigate = useNavigate();
   const location = useLocation();
+  // 리다이렉트 개선 필요.
   const from = location.state?.from?.pathname || "/";
 
   useEffect(() => {
@@ -36,9 +37,8 @@ function SignInPage() {
       if (isNewUser) {
         navigate("/signup");
       } else {
-        // 유저 이름 전역 상태에서 가져오기
         showToast(
-          `${auth.currentUser?.displayName}님 반가워요.\n이그잼 헬퍼와 함께 성장해요!`,
+          `${result.user.displayName}님 반가워요.\n이그잼 헬퍼와 함께 성장해요!`,
           "sucess"
         );
         navigate(from, { replace: true });

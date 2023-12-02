@@ -60,8 +60,9 @@ function SignUpPage() {
   };
 
   const handleSubmit = async () => {
-    // 로그인 또는 회원가입 시 user 정보 전역상태로 저장하자.
     const user = auth.currentUser;
+    const totalStage = 10;
+    const vibration = true;
 
     setNameValid(true);
     setSheetUrlValid(true);
@@ -100,6 +101,8 @@ function SignUpPage() {
     await service.SET(`users/${user.uid}`, {
       playList,
       sheetUrl,
+      totalStage,
+      vibration,
     });
 
     // const emailParams = {

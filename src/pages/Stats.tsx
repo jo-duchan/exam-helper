@@ -1,5 +1,7 @@
 import { useCallback } from "react";
-import { useLoaderData, redirect } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
+import { RootState } from "store/store";
+import { useSelector } from "react-redux";
 import styled from "styled-components";
 import Color from "styles/color-system";
 import { Heading } from "styles/typography-system";
@@ -21,9 +23,17 @@ interface ConvertScoreList {
 }
 
 function StatsPage() {
-  const { scoreList } = useLoaderData() as { scoreList: ScoreList };
+  const user = useSelector((state: RootState) => state.auth.user);
+  const { data: scoreList } = useQuery({
+    queryKey: ["scoreList"],
+    queryFn: (): Promise<ScoreList> => {
+      return service.GET(`users/${user?.uid}/scoreList`);
+    },
+  });
 
   const convertList = useCallback(() => {
+    if (!scoreList) return {};
+
     const convertArray = Object.keys(scoreList).map((key) => {
       return {
         key: key,
@@ -60,7 +70,7 @@ function StatsPage() {
             {"이번달 얼마나 자주\n문제를 풀었을까요?"}
             <Flag />
           </Title>
-          <Calendar scoreList={scoreList} />
+          <Calendar scoreList={scoreList || {}} />
         </InnerSection>
         <InnerSection paddingTop={30} paddingBtm={40}>
           <Title>오답 리스트</Title>
@@ -80,17 +90,6 @@ function StatsPage() {
 }
 
 export default StatsPage;
-
-export async function loader() {
-  const userKey = localStorage.getItem("userKey");
-  if (!userKey) {
-    return redirect("/");
-  }
-
-  const data = service.GET(`users/${userKey}/`);
-
-  return data;
-}
 
 const Container = styled.div`
   width: 100%;

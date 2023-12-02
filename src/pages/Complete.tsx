@@ -1,28 +1,26 @@
-import { useRef, useEffect } from "react";
-import { useNavigate, useLoaderData } from "react-router-dom";
+import { useRef, useEffect, useState } from "react";
+import { RootState } from "store/store";
+import { useSelector } from "react-redux";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import styled from "styled-components";
 import html2canvas from "html2canvas";
 import Utils from "utils/utils";
 import service from "utils/service";
 import { showProgress, hideProgress, showToast } from "utils/overlays";
-import { LoaderArgs } from "types/loader-props";
 import { Score } from "types/user-data";
 import Navigation from "components/common/Navigation";
 import CaptureArea from "components/complete/CaptureArea";
 import Button from "components/common/Button";
 import useModal from "hook/useModal";
 
-interface LoaderData {
-  data: Score;
-  scoreListId?: string;
-  userKey?: string;
-}
-
 function CompletePage() {
-  const { data, scoreListId, userKey } = useLoaderData() as LoaderData;
-  const userName = localStorage.getItem("userName");
-  const navigate = useNavigate();
+  const user = useSelector((state: RootState) => state.auth.user);
   const captureRef = useRef<HTMLDivElement>(null);
+  const navigate = useNavigate();
+  const { scoreListId } = useParams();
+  const [serchParams] = useSearchParams();
+  const [data, setData] = useState<Score>({ score: 0, date: 0 });
+  const [userName, setUserName] = useState("사용자");
   const [modal, setModal] = useModal({
     title: "문제 풀이가 끝났습니다!",
     content: "회원가입하고 나만의 문제를 \n등록해 풀어보세요!",
@@ -31,14 +29,25 @@ function CompletePage() {
   });
 
   useEffect(() => {
-    if (!userKey) {
-      setModal(true);
-    }
-
-    return () => {
-      setModal(false);
+    const fetchData = async () => {
+      if (user) {
+        const data: Score = await service.GET(
+          `users/${user.uid}/scoreList/${scoreListId}`
+        );
+        setData(data);
+        setUserName(user.displayName);
+        setModal(false);
+      } else {
+        const score = parseInt(serchParams.get("score") || "0");
+        const date = parseInt(serchParams.get("date") || "0");
+        setData({ score, date });
+        setUserName("사용자");
+        setModal(true);
+      }
     };
-  }, []);
+
+    fetchData();
+  }, [user]);
 
   const goToSignUp = () => {
     setModal(false);
@@ -62,7 +71,7 @@ function CompletePage() {
     }
   };
 
-  const handleShare = async () => {
+  const shareScore = async () => {
     const fileName = `exam-helper-${Utils.dateFormat(data.date)}-${
       data.score
     }.jpeg`;
@@ -99,11 +108,11 @@ function CompletePage() {
           ref={captureRef}
           date={data.date}
           score={data.score}
-          name={userName!}
+          name={userName}
         />
         <ButtonWrapper>
-          <Button label="공유하기" size="L" sort="gray" onClick={handleShare} />
-          {userKey && (
+          <Button label="공유하기" size="L" sort="gray" onClick={shareScore} />
+          {user && (
             <Button
               label="오답 확인하기"
               size="L"
@@ -118,25 +127,6 @@ function CompletePage() {
 }
 
 export default CompletePage;
-
-export async function loader({ request, params }: LoaderArgs) {
-  const userKey = localStorage.getItem("userKey");
-  const scoreListId = params.scoreListId;
-
-  if (!userKey) {
-    const score = parseInt(
-      new URL(request.url).searchParams.get("score") || ""
-    );
-    const date = parseInt(new URL(request.url).searchParams.get("date") || "");
-    const data = { score, date };
-
-    return { data, userKey };
-  }
-
-  const data = await service.GET(`users/${userKey}/scoreList/${scoreListId}`);
-
-  return { data, scoreListId, userKey };
-}
 
 const Container = styled.div`
   width: 100%;

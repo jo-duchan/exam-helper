@@ -5,6 +5,8 @@ import {
   useNavigate,
   useSearchParams,
 } from "react-router-dom";
+import { RootState } from "store/store";
+import { useSelector } from "react-redux";
 import styled, { keyframes, css } from "styled-components";
 import Color from "styles/color-system";
 import { Body } from "styles/typography-system";
@@ -36,6 +38,7 @@ const TIMEING = 1000;
 
 function QuizPage() {
   const { items: data, sheetName } = useLoaderData() as LoaderData;
+  const user = useSelector((state: RootState) => state.auth.user);
   const navigate = useNavigate();
   const [qNum, SetQNum] = useState(0);
   const [value, setValue] = useState("");
@@ -49,7 +52,7 @@ function QuizPage() {
   const [vibration, setVibration] = useState(false);
 
   const setTotalStage = () => {
-    const setData = parseInt(serchParams.get("stage")!) || 0;
+    const setData = parseInt(serchParams.get("stage") || "0");
     if (0 < setData && setData < data.length) {
       return setData;
     }
@@ -63,21 +66,19 @@ function QuizPage() {
 
   useEffect(() => {
     const finishStage = async () => {
-      const userKey = localStorage.getItem("userKey");
       const date = Date.now();
       const finalScore = Math.floor((score / setTotalStage()) * 100);
-      if (!userKey) {
+      if (user) {
+        const scoreListId = await service.PUSH(`users/${user.uid}/scoreList`, {
+          sheetName,
+          score: finalScore,
+          date,
+          wrongList,
+        });
+        navigate(`/complete/${scoreListId}`);
+      } else {
         navigate(`/complete/guest?score=${finalScore}&date=${date}`);
-        return;
       }
-
-      const scoreListId = await service.PUSH(`users/${userKey}/scoreList`, {
-        sheetName,
-        score: finalScore,
-        date,
-        wrongList,
-      });
-      navigate(`/complete/${scoreListId}`);
     };
 
     if (score + miss >= setTotalStage()) {
@@ -87,8 +88,8 @@ function QuizPage() {
 
   const nextStage = () => {
     const random = Utils.random(setTotalStage());
-    const overlapCheck = overlap.filter((num) => num === random).length;
-    if (overlapCheck === 0 && qNum !== random) {
+    const overlapCheck = overlap.find((num) => num === random);
+    if (!overlapCheck && qNum !== random) {
       SetQNum(random);
       setValue("");
     } else {
@@ -103,6 +104,7 @@ function QuizPage() {
   const handleConfirm = () => {
     const question = data[qNum][0] as string;
     const answer = data[qNum][1] as string;
+
     const grading = () => {
       setCorrectAnswer(answer);
       const convertAnswer = answer.split(",");
@@ -184,30 +186,31 @@ export async function loader({ request }: LoaderArgs) {
   const query = encodeURIComponent("SELECT A, B");
   const url = `${base}&sheet=${sheetName}&headers=0&tq=${query}`;
 
-  store.dispatch(show());
-  const response = await fetch(url).catch(() => {
-    store.dispatch(hide());
+  try {
+    store.dispatch(show());
+    const response = await fetch(url);
+    const data = await response.text();
+    const convert = JSON.parse(data.substring(47).slice(0, -2));
+
+    if (!response.ok) {
+      throw json({ message: NOT_FOUND_SHEET }, { status: 500 });
+    }
+
+    if (convert.table.rows.length <= 0) {
+      throw json({ message: NOT_FOUND_SHEET_VALUE }, { status: 500 });
+    }
+
+    const items = convert.table.rows.map(({ c }: { c: Items }) =>
+      Utils.cleanRow(c)
+    );
+
+    return { items, sheetName };
+  } catch (error) {
+    console.error(error);
     throw json({ message: NOT_FOUND_SHEET }, { status: 500 });
-  });
-  const data = await response.text();
-  const convert = JSON.parse(data.substring(47).slice(0, -2));
-
-  if (!response.ok) {
+  } finally {
     store.dispatch(hide());
-    throw json({ message: NOT_FOUND_SHEET }, { status: 500 });
   }
-
-  if (convert.table.rows.length <= 0) {
-    store.dispatch(hide());
-    throw json({ message: NOT_FOUND_SHEET_VALUE }, { status: 500 });
-  }
-
-  const items = convert.table.rows.map(({ c }: { c: Items }) =>
-    Utils.cleanRow(c)
-  );
-
-  store.dispatch(hide());
-  return { items, sheetName };
 }
 
 const vibrationKeyframe = keyframes`
