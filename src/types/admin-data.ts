@@ -1,17 +1,27 @@
-export type BannerData = {
+import { Play } from "types/user-data";
+
+export interface BannerData {
   [key: string]: {
     img: string;
     link: string;
   };
-};
+}
 
-export type Onboarding = {
+export interface Onboarding {
   [key: string]: {
     img: string;
     title: string;
   };
-};
+}
 
+export interface GuestData {
+  playList: Play[];
+  sheetUrl: string;
+}
 export type SheetUrl = string;
 
-export type Admin = { banner: BannerData; sheetUrl: SheetUrl };
+export interface Admin {
+  banner: BannerData;
+  guest: GuestData;
+  onboarding: Onboarding;
+}

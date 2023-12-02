@@ -1,29 +1,30 @@
-export type WrongList = {
+export interface WrongList {
   [key: string]: {
     [key: string]: string;
   };
-};
+}
 
-export type Score = {
+export interface Score {
   key?: string;
   date: number;
   score: number;
   sheetName?: string;
   wrongList?: WrongList;
-};
+}
 
-export type ScoreList = {
+export interface ScoreList {
   [key: string]: Score;
-};
+}
 
-export type Play = {
+export interface Play {
   sheetName: string;
   sheetId?: string;
-};
+}
 
-export type UserData = {
+export interface UserData {
   scoreList?: ScoreList;
   playList: Play[] | undefined;
   totalStage: number;
+  vibration: boolean;
   sheetUrl: string;
-};
+}
