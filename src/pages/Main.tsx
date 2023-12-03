@@ -47,10 +47,6 @@ function MainPage() {
     fetchData();
   }, [user]);
 
-  useEffect(() => {
-    console.log("userName", userName);
-  }, [userName]);
-
   return (
     <Container>
       <MainNavigation unsigned={unsigned} />
