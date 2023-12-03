@@ -106,20 +106,19 @@ function SignUpPage() {
       vibration,
     });
 
-    // const emailParams = {
-    //   to_name: name,
-    //   to_email: email,
-    //   from_name: "Exam Helper",
-    //   to_userKey: userKey,
-    // };
+    const emailParams = {
+      to_name: name,
+      to_email: user.email,
+      from_name: "Exam Helper",
+    };
 
-    // await emailjs
-    //   .send(
-    //     process.env.REACT_APP_SERVICE_ID as string,
-    //     process.env.REACT_APP_TEMPLATE_ID as string,
-    //     emailParams,
-    //     process.env.REACT_APP_PUBLIC_KEY as string
-    //   )
+    await emailjs
+      .send(
+        process.env.REACT_APP_SERVICE_ID as string,
+        process.env.REACT_APP_TEMPLATE_ID as string,
+        emailParams,
+        process.env.REACT_APP_PUBLIC_KEY as string
+      )
 
     showToast("가입이 축하해요. \n이그잼 헬퍼와 함께 성장해요.", "sucess");
     navigate(from, { replace: true });
