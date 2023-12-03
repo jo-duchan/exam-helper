@@ -1,8 +1,10 @@
 const Color = {
   Primary: {
     200: "#E1EBFD",
+    300: "#B0CBFF",
     400: "#80A9FA",
     500: "#568CF8",
+    600: "#3E7EFF",
     700: "#2C6FF6",
   },
   Gray: {
