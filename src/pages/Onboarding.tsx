@@ -9,6 +9,10 @@ import { Onboarding } from "types/admin-data";
 import service from "utils/service";
 import Button from "components/common/Button";
 
+interface StyledProps {
+  length: number;
+}
+
 function OnboardingPage() {
   const data = useLoaderData() as Onboarding;
   const navigate = useNavigate();
@@ -26,7 +30,12 @@ function OnboardingPage() {
 
   return (
     <Container>
-      <SwiperSection speed={450} pagination modules={[Pagination]}>
+      <SwiperSection
+        speed={450}
+        pagination
+        modules={[Pagination]}
+        length={Object.keys(data).length - 1}
+      >
         {Object.keys(data).map((key) => (
           <Item key={key}>
             <img className="item-img" src={data[key].img} />
@@ -58,7 +67,7 @@ const Container = styled.div`
   height: 100dvh;
 `;
 
-const SwiperSection = styled(Swiper)`
+const SwiperSection = styled(Swiper)<StyledProps>`
   width: 100%;
   height: 67.51879%;
   overflow: initial;
@@ -66,7 +75,7 @@ const SwiperSection = styled(Swiper)`
 
   & .swiper-pagination {
     position: absolute;
-    width: 58px;
+    width: ${({ length }) => `calc(22px + (18px * ${length}))`};
     left: 50%;
     bottom: -32px;
     padding-block: 4px;
