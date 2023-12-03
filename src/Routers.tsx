@@ -11,6 +11,7 @@ import WrongAnswerPage from "pages/WrongAnswer";
 import SettingPage from "pages/Setting";
 import SignInPage from "pages/SignIn";
 import SignUpPage from "pages/SignUp";
+import DownloadPage from "pages/Download";
 
 const routerInfo = [
   {
@@ -60,6 +61,11 @@ const routerInfo = [
     path: "signup",
     element: <SignUpPage />,
     withAuth: false,
+  },
+  {
+    path: "download",
+    element: <DownloadPage />,
+    withAuth: true,
   },
 ];
 
