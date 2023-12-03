@@ -1,10 +1,11 @@
 import { useState, useEffect } from "react";
 import { RootState } from "store/store";
+import { auth } from "firebase-config";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import Color from "styles/color-system";
-import { Heading } from "styles/typography-system";
+import { Heading, Body } from "styles/typography-system";
 import service from "utils/service";
 import { showToast } from "utils/overlays";
 import { Play, UserData } from "types/user-data";
@@ -70,6 +71,11 @@ function SettingPage() {
     navigate("/");
   };
 
+  const handleSignOut = () => {
+    auth.signOut().then(() => navigate("/"));
+    showToast("다음에 또 만나요.", "notify");
+  };
+
   return (
     <Container>
       <Navigation label="설정" />
@@ -101,7 +107,10 @@ function SettingPage() {
             value={totalStage}
             onChange={(e) => setTotalStage(parseInt(e.currentTarget.value))}
           />
-          <Button label="저장하기" size="L" onClick={handleSubmit} />
+          <ButtonWrapper>
+            <Button label="저장하기" size="L" onClick={handleSubmit} />
+            <SignOutButton onClick={handleSignOut}>로그아웃</SignOutButton>
+          </ButtonWrapper>
         </SettingSection>
       </ContentSection>
     </Container>
@@ -136,4 +145,24 @@ const SettingSection = styled.div<StyledProps>`
 const Title = styled.h2`
   color: ${Color.Gray[800]};
   ${Heading.H2};
+`;
+
+const ButtonWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+`;
+
+const SignOutButton = styled.button`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 56px;
+  border-radius: 16px;
+  cursor: pointer;
+  user-select: none;
+  background: ${Color.Gray[300]};
+  color: ${Color.Gray[600]};
+  ${Body.SemiBold.L};
 `;
