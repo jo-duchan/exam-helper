@@ -50,6 +50,7 @@ function QuizPage() {
   const [wrongList, setWrongList] = useState<WrongList>([]);
   const [serchParams] = useSearchParams();
   const [vibration, setVibration] = useState(false);
+  const vibrationOption: boolean = serchParams.get("vibration") === "on";
 
   const setTotalStage = () => {
     const setData = parseInt(serchParams.get("stage") || "0");
@@ -131,8 +132,8 @@ function QuizPage() {
       setWrongList((prev) => {
         return [...prev, [question, answer]];
       });
-      setVibration(true);
-      Utils.vibration(450);
+      vibrationOption && setVibration(true);
+      vibrationOption && Utils.vibration(450);
       setTimeout(() => {
         nextStage();
         setState("DEFAULT");

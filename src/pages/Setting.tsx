@@ -13,6 +13,7 @@ import Navigation from "components/common/Navigation";
 import Input from "components/common/Input";
 import SheetName from "components/common/SheetName";
 import Button from "components/common/Button";
+import ToggleButton from "components/common/ToggleButton";
 
 interface StyledProps {
   paddingTop: number;
@@ -25,6 +26,7 @@ function SettingPage() {
   const [sheetUrl, setSheetUrl] = useState<string>("");
   const [playList, setPlayList] = useState<Play[]>([]);
   const [totalStage, setTotalStage] = useState<number>(0);
+  const [vibration, setVibration] = useState<boolean>(true);
   const [sheetUrlValid, setSheetUrlValid] = useState<boolean>(true);
   const [playListValid, setPlayListValid] = useState<boolean>(true);
   const [totalStageValid, setTotalStageValid] = useState<boolean>(true);
@@ -36,6 +38,7 @@ function SettingPage() {
       setSheetUrl(data.sheetUrl);
       setPlayList(data.playList as Play[]);
       setTotalStage(data.totalStage);
+      setVibration(data.vibration);
     };
 
     fetchData();
@@ -65,6 +68,7 @@ function SettingPage() {
       sheetUrl,
       playList,
       totalStage,
+      vibration,
     });
 
     showToast("업데이트가 완료되었어요.", "sucess");
@@ -107,6 +111,13 @@ function SettingPage() {
             value={totalStage}
             onChange={(e) => setTotalStage(parseInt(e.currentTarget.value))}
           />
+          <ToggleWrapper>
+            <span>진동 피드백</span>
+            <ToggleButton
+              checked={vibration}
+              onClick={() => setVibration((prev) => !prev)}
+            />
+          </ToggleWrapper>
           <ButtonWrapper>
             <Button label="저장하기" size="L" onClick={handleSubmit} />
             <SignOutButton onClick={handleSignOut}>로그아웃</SignOutButton>
@@ -151,6 +162,19 @@ const ButtonWrapper = styled.div`
   display: flex;
   flex-direction: column;
   gap: 10px;
+`;
+
+const ToggleWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  width: 100%;
+  height: 48px;
+
+  & span {
+    color: ${Color.Gray[800]};
+    ${Body.SemiBold.M};
+  }
 `;
 
 const SignOutButton = styled.button`

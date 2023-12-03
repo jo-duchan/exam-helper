@@ -20,6 +20,7 @@ function Actions({ data, unsigned }: Props) {
     sheetUrl,
     scoreList = {} as ScoreList,
     totalStage = 0,
+    vibration,
   } = data;
   const navigate = useNavigate();
 
@@ -42,8 +43,11 @@ function Actions({ data, unsigned }: Props) {
 
   const goToQuizPage = (sheetId: string | undefined, sheetName: string) => {
     const genSheetId = !sheetId ? Utils.convertSheetUrl(sheetUrl) : sheetId;
+    const vibrationOption = vibration ? "on" : "off";
 
-    navigate(`/quiz?id=${genSheetId}&name=${sheetName}&stage=${totalStage}`);
+    navigate(
+      `/quiz?id=${genSheetId}&name=${sheetName}&stage=${totalStage}&vibration=${vibrationOption}`
+    );
   };
 
   const shareItem = async (sheetId: string | undefined, sheetName: string) => {
