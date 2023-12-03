@@ -16,8 +16,8 @@ import { ReactComponent as Google } from "assets/icon/google.svg";
 function SignInPage() {
   const navigate = useNavigate();
   const location = useLocation();
-  // 리다이렉트 개선 필요.
-  const from = location.state?.from?.pathname || "/";
+  const from =
+    location.state?.from?.pathname + location.state?.from?.search || "/";
 
   useEffect(() => {
     const theme = document.getElementById("theme") as HTMLMetaElement;

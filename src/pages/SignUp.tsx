@@ -32,7 +32,8 @@ interface StyledProps {
 function SignUpPage() {
   const navigate = useNavigate();
   const location = useLocation();
-  const from = location.state?.from?.pathname || "/";
+  const from =
+    location.state?.from?.pathname + location.state?.from?.search || "/";
   const [serchParams] = useSearchParams();
   const showPrivacy = serchParams.get("modal") || "";
   const [name, setName] = useState<string>("");
@@ -121,7 +122,6 @@ function SignUpPage() {
     //   )
 
     showToast("가입이 축하해요. \n이그잼 헬퍼와 함께 성장해요.", "sucess");
-    // Protected Route에서 온거면 리다이렉트로 보내주기.
     navigate(from, { replace: true });
   };
   return (
