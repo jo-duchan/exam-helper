@@ -10,8 +10,7 @@ import { useSelector } from "react-redux";
 import styled, { keyframes, css } from "styled-components";
 import Color from "styles/color-system";
 import { Body } from "styles/typography-system";
-import store from "store/store";
-import { show, hide } from "store/progress-slice";
+import { showProgress, hideProgress, showToast } from "utils/overlays";
 import service from "utils/service";
 import { NOT_FOUND_SHEET, NOT_FOUND_SHEET_VALUE } from "assets/data/error-case";
 import Utils from "utils/utils";
@@ -89,14 +88,21 @@ function QuizPage() {
   }, [score, miss]);
 
   const nextStage = () => {
+    let lastQ = setTotalStage() - (overlap.length + wrongList.length) === 1;
     const random = Utils.random(setTotalStage());
     const overlapCheck = overlap.find((num) => num === random);
-    if (!overlapCheck && qNum !== random) {
-      SetQNum(random);
+
+    if (overlapCheck === undefined && qNum !== random && !lastQ) {
+      SetQNum(random as number);
       setValue("");
-    } else {
-      setTimeout(nextStage, 0);
+      return;
     }
+    if (lastQ) {
+      showToast("마지막 문제에요.", "notify");
+      return;
+    }
+
+    nextStage();
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -189,7 +195,7 @@ export async function loader({ request }: LoaderArgs) {
   const url = `${base}&sheet=${sheetName}&headers=0&tq=${query}`;
 
   try {
-    store.dispatch(show());
+    showProgress();
     const response = await fetch(url);
     const data = await response.text();
     const convert = JSON.parse(data.substring(47).slice(0, -2));
@@ -211,7 +217,7 @@ export async function loader({ request }: LoaderArgs) {
     console.error(error);
     throw json({ message: NOT_FOUND_SHEET }, { status: 500 });
   } finally {
-    store.dispatch(hide());
+    hideProgress();
   }
 }
 
