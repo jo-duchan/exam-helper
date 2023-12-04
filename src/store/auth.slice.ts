@@ -9,11 +9,11 @@ export interface UserInfo {
 }
 
 interface UserInitState {
-  user: UserInfo | null;
+  user: UserInfo | null | undefined;
 }
 
 const initialState: UserInitState = {
-  user: null,
+  user: undefined,
 };
 
 export const authSlice = createSlice({

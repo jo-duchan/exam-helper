@@ -11,6 +11,10 @@ function ProtectedRoute({ children }: Props) {
   const user = useSelector((state: RootState) => state.auth.user);
   const location = useLocation();
 
+  if (user === undefined) {
+    return null;
+  }
+
   return user ? (
     (children as JSX.Element)
   ) : (
