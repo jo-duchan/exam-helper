@@ -2,10 +2,10 @@ import styled, { css } from "styled-components";
 import Color from "styles/color-system";
 import { Body } from "styles/typography-system";
 import { format } from "date-fns";
-import { ScoreList } from "types/user-data";
+import { Score } from "types/user-data";
 
 interface Props {
-  scoreList: ScoreList;
+  scoreList: Score[];
 }
 
 interface StyledProps {
@@ -17,14 +17,11 @@ function Calendar({ scoreList }: Props) {
   const list = currentDate.getDate();
 
   const ActiveDate = (date: string) => {
-    const validDate = Object.keys(scoreList).filter(
-      (key: string) =>
-        format(scoreList[key].date, "MM") === format(currentDate, "MM")
+    const validDate = scoreList.filter(
+      (item) => format(item.date, "MM") === format(currentDate, "MM")
     );
 
-    const active = validDate.filter(
-      (key: string) => format(scoreList[key].date, "d") === date
-    );
+    const active = validDate.filter((item) => format(item.date, "d") === date);
 
     return active.length > 0;
   };

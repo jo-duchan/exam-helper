@@ -5,14 +5,15 @@ import { useSelector } from "react-redux";
 import styled from "styled-components";
 import Color from "styles/color-system";
 import { Heading } from "styles/typography-system";
-import service from "utils/service";
+import { showProgress, hideProgress } from "utils/overlays";
 import Utils from "utils/utils";
-import { ScoreList, Score } from "types/user-data";
+import { Score } from "types/user-data";
 import Navigation from "components/common/Navigation";
 import Calendar from "components/stats/Calendar";
 import WrongAnswerList from "components/stats/WrongAnswerList";
 import { ReactComponent as Flag } from "assets/icon/flag.svg";
-
+import { ref, get, query, orderByChild } from "firebase/database";
+import { db } from "firebase-config";
 interface StyledProps {
   paddingTop: number;
   paddingBtm: number;
@@ -24,28 +25,33 @@ interface ConvertScoreList {
 
 function StatsPage() {
   const user = useSelector((state: RootState) => state.auth.user);
+
   const { data: scoreList } = useQuery({
     queryKey: ["scoreList"],
-    queryFn: (): Promise<ScoreList> => {
-      return service.GET(`users/${user?.uid}/scoreList`);
+    queryFn: async (): Promise<Score[]> => {
+      showProgress();
+      return await get(
+        query(
+          ref(db, `users/${user?.uid}/scoreList`),
+          orderByChild("order")
+          // startAfter() DB 상태에 따라 추후에 이달의 데이터만 조회
+        )
+      ).then((snapshot) => {
+        const array = [] as Score[];
+        snapshot.forEach((item) => {
+          array.push({ ...item.val(), key: item.key });
+        });
+        hideProgress();
+        return array;
+      });
     },
   });
 
   const convertList = useCallback(() => {
     if (!scoreList) return {};
 
-    const convertArray = Object.keys(scoreList).map((key) => {
-      return {
-        key: key,
-        date: scoreList[key].date,
-        score: scoreList[key].score,
-        sheetName: scoreList[key].sheetName,
-        wrongList: scoreList[key].wrongList,
-      };
-    });
-    const convertScoreList = convertArray
-      .reverse()
-      .reduce((list: ConvertScoreList, current) => {
+    const convertScoreList = scoreList.reduce(
+      (list: ConvertScoreList, current) => {
         list[Utils.dateFormat(current.date, "E")] =
           list[Utils.dateFormat(current.date, "E")] || [];
         list[Utils.dateFormat(current.date, "E")].push({
@@ -56,7 +62,9 @@ function StatsPage() {
           wrongList: current.wrongList,
         });
         return list;
-      }, {});
+      },
+      {}
+    );
 
     return convertScoreList;
   }, [scoreList]);
@@ -70,7 +78,7 @@ function StatsPage() {
             {"이번달 얼마나 자주\n문제를 풀었을까요?"}
             <Flag />
           </Title>
-          <Calendar scoreList={scoreList || {}} />
+          <Calendar scoreList={scoreList || []} />
         </InnerSection>
         <InnerSection paddingTop={30} paddingBtm={40}>
           <Title>오답 리스트</Title>

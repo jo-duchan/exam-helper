@@ -74,6 +74,7 @@ function QuizPage() {
           sheetName,
           score: finalScore,
           date,
+          order: date * -1,
           wrongList,
         });
         navigate(`/complete/${scoreListId}`);

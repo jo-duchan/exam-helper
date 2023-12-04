@@ -5,6 +5,7 @@ export interface WrongList {
 }
 
 export interface Score {
+  order?: number;
   key?: string;
   date: number;
   score: number;
