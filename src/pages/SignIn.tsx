@@ -6,6 +6,7 @@ import {
   signInWithPopup,
   getAdditionalUserInfo,
 } from "firebase/auth";
+import service from "utils/service";
 import { showToast } from "utils/overlays";
 import styled from "styled-components";
 import Color from "styles/color-system";
@@ -28,7 +29,7 @@ function SignInPage() {
     };
   }, []);
 
-  const handleSubmit = async () => {
+  const handleSign = async () => {
     try {
       const provider = new GoogleAuthProvider();
       const result = await signInWithPopup(auth, provider);
@@ -36,13 +37,21 @@ function SignInPage() {
 
       if (isNewUser) {
         navigate("/signup");
-      } else {
-        showToast(
-          `${result.user.displayName}님 반가워요.\n이그잼 헬퍼와 함께 성장해요!`,
-          "sucess"
-        );
-        navigate(from, { replace: true });
+        return;
       }
+      await service
+        .GET(`users/${result.user.uid}`)
+        .then(() => {
+          showToast(
+            `${result.user.displayName}님 반가워요.\n이그잼 헬퍼와 함께 성장해요!`,
+            "sucess"
+          );
+          navigate(from, { replace: true });
+        })
+        .catch(() => {
+          showToast(`회원가입을 완료해 주세요.`, "notify");
+          navigate("/signup");
+        });
     } catch (error) {
       console.error(error);
     }
@@ -62,7 +71,7 @@ function SignInPage() {
         <Description>
           구글 계정으로 로그인하고 이그잼 헬퍼를 시작해 봐요.
         </Description>
-        <SignInButton onClick={handleSubmit}>
+        <SignInButton onClick={handleSign}>
           <Google />
           <span>구글 계정으로 로그인</span>
         </SignInButton>
