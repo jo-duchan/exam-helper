@@ -61,7 +61,7 @@ function QuizPage() {
 
   useEffect(() => {
     // init
-    SetQNum(Utils.random(setTotalStage()));
+    SetQNum(Utils.random(data.length));
   }, []);
 
   useEffect(() => {
@@ -88,8 +88,8 @@ function QuizPage() {
   }, [score, miss]);
 
   const nextStage = () => {
-    let lastQ = setTotalStage() - (overlap.length + wrongList.length) === 1;
-    const random = Utils.random(setTotalStage());
+    let lastQ = data.length - (score + miss) === 1;
+    const random = Utils.random(data.length);
     const overlapCheck = overlap.find((num) => num === random);
 
     if (overlapCheck === undefined && qNum !== random && !lastQ) {
@@ -98,7 +98,9 @@ function QuizPage() {
       return;
     }
     if (lastQ) {
-      showToast("마지막 문제에요.", "notify");
+      // 문제 종료 후에도 호출되는 버그 개선 필요
+      // console.log(lastQ, score, miss, setTotalStage());
+      // showToast("마지막 문제에요.", "notify");
       return;
     }
 
